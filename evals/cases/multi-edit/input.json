@@ -1,0 +1,6 @@
+{
+  "source": { "path": "src/clamp.ts", "text": "export function clamp(value: number, min: number, max: number): number {\n  if (value < min) return max;\n  if (value > max) return min;\n  return value;\n}\n" },
+  "test": { "path": "tests/clamp.test.ts", "text": "import { expect, it } from 'vitest';\nimport { clamp } from '../src/clamp';\nit('clamps at both boundaries', () => {\n  expect(clamp(-2, 0, 10)).toBe(0);\n  expect(clamp(20, 0, 10)).toBe(10);\n  expect(clamp(5, 0, 10)).toBe(5);\n});\n" },
+  "log": "FAIL tests/clamp.test.ts > clamps at both boundaries\nAssertionError: expected 10 to be 0\n",
+  "expectedBehavior": "For finite numbers with min <= max, return min below the interval, max above it, and the unchanged input inside it."
+}

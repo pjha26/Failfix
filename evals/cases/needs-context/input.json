@@ -1,0 +1,6 @@
+{
+  "source": { "path": "src/display-price.ts", "text": "export function displayPrice(value: number | null): string {\n  return value!.toFixed(2);\n}\n" },
+  "test": { "path": "tests/display-price.test.ts", "text": "import { it } from 'vitest';\nimport { displayPrice } from '../src/display-price';\nit('handles missing prices', () => {\n  displayPrice(null);\n});\n" },
+  "log": "FAIL tests/display-price.test.ts > handles missing prices\nTypeError: Cannot read properties of null (reading 'toFixed')\n",
+  "expectedBehavior": ""
+}

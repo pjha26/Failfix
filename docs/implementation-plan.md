@@ -199,14 +199,14 @@ The proposal is ready for release when the three advertised examples have record
 
 Estimates assume roughly 24–30 focused engineering hours across 22–25 October. They are planning estimates, not a promise. Preserve buffer for API and deployment issues.
 
-| Milestone | Work and dependencies | Estimate | Exit condition |
-|---|---|---:|---|
-| 0. Prove the integration | Scaffold, lock versions, inspect eligible models, one real example request, validate result, deploy skeleton | 2–3h | Real structured result locally and a reachable server deployment |
-| 1. Build the patch engine | Contracts, exact-match edits, generated diff, evidence validation, downloads data | 3–4h | Boundary cases pass; original tests remain unchanged |
-| 2. Complete the user flow | Inputs, examples, API route, results, evidence links, downloads, stale state | 5–6h | One live example works from input to downloaded patch |
-| 3. Make the public app reliable | Limits, cancellation/deadline, error UI, secrets, logs, privacy copy, responsive/keyboard pass | 3–4h | Failure paths work and public endpoint has abuse limits |
-| 4. Evaluate and stabilize | Cases, reviewed local test runs, route/browser checks, prompt correction | 4–5h | Honest evaluation report and three reproducible examples |
-| 5. Package and submit | Clean-clone check, README, screenshots/video, required file, production smoke check, form submission | 3–4h | Public repo/build and recorded submission confirmation |
+| Milestone                       | Work and dependencies                                                                                        | Estimate | Exit condition                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------ | -------: | ---------------------------------------------------------------- |
+| 0. Prove the integration        | Scaffold, lock versions, inspect eligible models, one real example request, validate result, deploy skeleton |     2–3h | Real structured result locally and a reachable server deployment |
+| 1. Build the patch engine       | Contracts, exact-match edits, generated diff, evidence validation, downloads data                            |     3–4h | Boundary cases pass; original tests remain unchanged             |
+| 2. Complete the user flow       | Inputs, examples, API route, results, evidence links, downloads, stale state                                 |     5–6h | One live example works from input to downloaded patch            |
+| 3. Make the public app reliable | Limits, cancellation/deadline, error UI, secrets, logs, privacy copy, responsive/keyboard pass               |     3–4h | Failure paths work and public endpoint has abuse limits          |
+| 4. Evaluate and stabilize       | Cases, reviewed local test runs, route/browser checks, prompt correction                                     |     4–5h | Honest evaluation report and three reproducible examples         |
+| 5. Package and submit           | Clean-clone check, README, screenshots/video, required file, production smoke check, form submission         |     3–4h | Public repo/build and recorded submission confirmation           |
 
 Suggested calendar, all IST:
 

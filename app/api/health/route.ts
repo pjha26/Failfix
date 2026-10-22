@@ -1,1 +1,3 @@
-export function GET() { return Response.json({ status: "ok", service: "failfix" }); }
+export function GET() {
+  return Response.json({ status: 'ok', service: 'failfix' });
+}
