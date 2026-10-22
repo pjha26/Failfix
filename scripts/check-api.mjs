@@ -24,6 +24,7 @@ try {
     input: 'Return status ok in the required JSON structure.',
     store: false,
     max_output_tokens: 512,
+    reasoning: { effort: 'none' },
     text: {
       format: {
         type: 'json_schema',
