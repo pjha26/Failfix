@@ -510,8 +510,9 @@ export default function Workspace({
               }}
             />
             <p className="privacy-note">
-              Analysis sends these inputs to BharatCode. Use nonconfidential
-              code and remove credentials.{' '}
+              Automatic analysis sends inputs to BharatCode. Manual review makes
+              no provider requests. Use nonconfidential code and remove
+              credentials.{' '}
               <a
                 href="https://bharatcode.ai/privacy"
                 target="_blank"
