@@ -20,12 +20,29 @@ const emptyInput: AnalysisInput = {
 };
 type InputTab = 'source' | 'test' | 'log';
 
-export default function Workspace() {
-  const [input, setInput] = useState<AnalysisInput>(emptyInput);
+export default function Workspace({
+  initialExampleId,
+  initialResult,
+}: {
+  initialExampleId?: string;
+  initialResult?: AnalysisResponse;
+}) {
+  const initialExample = examples.find(
+    (example) => example.id === initialExampleId,
+  );
+  const [input, setInput] = useState<AnalysisInput>(() =>
+    structuredClone(initialExample?.input || emptyInput),
+  );
   const [tab, setTab] = useState<InputTab>('source');
-  const [result, setResult] = useState<AnalysisResponse | null>(null);
-  const [resultInput, setResultInput] = useState('');
-  const [savedExample, setSavedExample] = useState<string | null>(null);
+  const [result, setResult] = useState<AnalysisResponse | null>(
+    initialResult || null,
+  );
+  const [resultInput, setResultInput] = useState(
+    initialExample ? JSON.stringify(initialExample.input) : '',
+  );
+  const [savedExample, setSavedExample] = useState<string | null>(
+    initialExample?.title || null,
+  );
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -189,6 +206,7 @@ export default function Workspace() {
           <span className="version">BETA</span>
         </Link>
         <nav aria-label="Main">
+          <Link href="/">← Overview</Link>
           <a
             href="https://github.com/pjha26/Failfix"
             target="_blank"

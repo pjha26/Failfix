@@ -6,7 +6,7 @@ import { buildArtifacts } from '../lib/patch';
 test('a saved walkthrough exports applicable changes and invalidates stale results', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/workspace');
   await page.getByRole('button', { name: /Zero is a value/ }).click();
   await page.getByRole('button', { name: 'Open saved walkthrough' }).click();
   await expect(
@@ -52,7 +52,7 @@ test('a successful live-response flow is rendered without a saved-example label'
       },
     }),
   );
-  await page.goto('/');
+  await page.goto('/workspace');
   await page.getByRole('button', { name: /Zero is a value/ }).click();
   await page.getByRole('button', { name: 'Analyze failure' }).click();
   await expect(
@@ -78,7 +78,7 @@ test('provider errors preserve input and provide a recovery message', async ({
       },
     }),
   );
-  await page.goto('/');
+  await page.goto('/workspace');
   await page.getByRole('button', { name: /Zero is a value/ }).click();
   await page.getByRole('button', { name: 'Analyze failure' }).click();
   await expect(
@@ -105,7 +105,7 @@ test('missing context shows questions without downloads', async ({ page }) => {
       json: { analysis, artifacts: null, requestId: 'context', durationMs: 50 },
     }),
   );
-  await page.goto('/');
+  await page.goto('/workspace');
   await page.getByRole('button', { name: /Zero is a value/ }).click();
   await page.getByRole('button', { name: 'Analyze failure' }).click();
   await expect(
@@ -119,7 +119,7 @@ test('missing context shows questions without downloads', async ({ page }) => {
 test('the workspace fits the viewport and is reachable by keyboard', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('/workspace');
   await page.keyboard.press('Tab');
   await expect(page.getByRole('link', { name: 'FailFix home' })).toBeFocused();
   expect(

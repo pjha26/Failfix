@@ -22,7 +22,7 @@ npx --yes npm@11.6.4 ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Choose an example, then **Open saved walkthrough** to explore the complete interface without a key.
+Open [localhost:3000](http://localhost:3000) for the product overview and interactive illustrative preview. Select **Open workspace**, or open `/workspace` directly. Each example on the landing page opens its complete saved walkthrough without a key.
 
 For live analysis, copy `.env.example` to `.env.local` and set `BHARATCODE_API_KEY` to your developer key. Restart the development server after configuring it. API access must be enabled for your BharatCode account; creating an account or registering for the hackathon alone may not enable API access. Check [BharatCode's API documentation](https://bharatcode.ai/build).
 
