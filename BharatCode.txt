@@ -1,0 +1,4 @@
+FailFix
+A TypeScript/Vitest debugging assistant built for the BharatCode Build League.
+Planned model integration: BharatCode model API, server-side authentication.
+This is a participant-authored description; no organizer-specified file template was found.

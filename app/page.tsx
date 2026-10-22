@@ -1,0 +1,1 @@
+export default function Home() { return <main><span className="brand">ƒ FailFix</span><p className="eyebrow">DEBUG WITH EVIDENCE</p><h1>Understand the failure.<br />Review the fix.</h1><p>A focused workspace for failing TypeScript tests. Powered by BharatCode.</p><p className="status">Workspace coming together. Live analysis needs a BharatCode API key.</p></main>; }
