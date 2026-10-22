@@ -45,6 +45,15 @@ export function ResultPanel({
   }
   return (
     <div className={`result-content${stale ? ' stale-result' : ''}`}>
+      {result.origin === 'manual' && (
+        <div className="saved-banner manual-result-banner">
+          <strong>User-supplied proposal · validated structure</strong>
+          <span>
+            No model call was made by FailFix. Review the diagnosis and run
+            tests locally.
+          </span>
+        </div>
+      )}
       {savedExample && (
         <div className="saved-banner">
           <strong>Saved example · hand-authored walkthrough</strong>
@@ -55,8 +64,8 @@ export function ResultPanel({
       )}
       {stale && (
         <div className="stale-banner" role="status">
-          Inputs changed. Reanalyze before using this result. Downloads and
-          evidence links are disabled.
+          Inputs changed. Reanalyze or validate the proposal again before using
+          this result. Downloads and evidence links are disabled.
         </div>
       )}
       <div className="result-meta">
@@ -67,7 +76,9 @@ export function ResultPanel({
               ? 'MORE CONTEXT NEEDED'
               : 'OUTSIDE SUPPORTED SCOPE'}
         </span>
-        {!savedExample && <span>{(result.durationMs / 1000).toFixed(1)}s</span>}
+        {!savedExample && result.origin !== 'manual' && (
+          <span>{(result.durationMs / 1000).toFixed(1)}s</span>
+        )}
       </div>
       <h3 className="result-title">
         {artifacts ? 'Here’s what’s happening.' : 'Let’s clarify the problem.'}

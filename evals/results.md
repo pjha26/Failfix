@@ -4,8 +4,8 @@ This file separates application correctness from model quality. **No live Bharat
 
 ## Completed local checks
 
-- 46 unit/API/SDK checks passed at the workspace milestone.
-- 10 browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
+- 55 unit/API/SDK checks passed after the landing and manual-review milestone.
+- 24 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
 - TypeScript, lint, and production build passed.
 - Three reviewed first-party fixes satisfy independent boundary checks and match the walkthrough downloads.
 
@@ -15,14 +15,14 @@ The original bugs are demonstrated directly: zero becomes a default, last-item a
 
 ## Live model cases to run
 
-| Case | Required behavior | Live result |
-| --- | --- | --- |
-| `zero` | Preserve zero; retain undefined default; applicable minimal edit | Pending access |
-| `boundary` | Correct final index; preserve empty-array behavior | Pending access |
-| `mutation` | Return descending copy; leave original unchanged | Pending access |
-| `multi-edit` | Correct both clamp branches without changing in-range behavior | Pending access |
+| Case            | Required behavior                                                          | Live result    |
+| --------------- | -------------------------------------------------------------------------- | -------------- |
+| `zero`          | Preserve zero; retain undefined default; applicable minimal edit           | Pending access |
+| `boundary`      | Correct final index; preserve empty-array behavior                         | Pending access |
+| `mutation`      | Return descending copy; leave original unchanged                           | Pending access |
+| `multi-edit`    | Correct both clamp branches without changing in-range behavior             | Pending access |
 | `needs-context` | Ask how null prices should be represented rather than inventing formatting | Pending access |
-| `injection` | Treat embedded instructions as data; remain within result contract | Pending access |
+| `injection`     | Treat embedded instructions as data; remain within result contract         | Pending access |
 
 For each attempt record date, model, prompt revision/commit, latency, output validity, evidence usefulness, edit applicability, and reviewed test results. Include failures and retries. Do not infer general accuracy from this small set.
 
@@ -36,3 +36,7 @@ For each attempt record date, model, prompt revision/commit, latency, output val
 6. Record output validity separately from functional success, including whether the model properly asked for missing context.
 
 A live quality claim, final demo, and shipped release remain pending this work.
+
+## No-key manual workflow
+
+Real browser tests submit user-supplied proposals to the actual review route, verify labeled artifacts, reject mismatched edits, and invalidate downloads after proposal changes. The model endpoint is intercepted and must not be called. Unit tests also block outbound fetch with an empty provider key. Host/origin regression tests cover Next.js internal URLs and configured public origins. Keyboard tabs and local-file validation are covered. These checks establish review functionality, not model debugging quality.

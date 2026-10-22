@@ -61,7 +61,7 @@ test('FAQ, primary navigation, and responsive layout work', async ({
     .filter({ hasText: 'Can I try it without an API key?' })
     .click();
   await expect(
-    page.getByText(/The three saved walkthroughs let you explore/),
+    page.getByText(/Explore the three saved walkthroughs/),
   ).toBeVisible();
   expect(
     await page.evaluate(

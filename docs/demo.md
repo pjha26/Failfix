@@ -12,3 +12,7 @@ Target: 90 seconds. Record a live model example only after eligible API access h
 If the model is unavailable, show a recorded real run with its date or a clearly labeled saved walkthrough. Do not conceal the fallback.
 
 The current repository has no completed demo video. Record and add the link after live integration/evaluation, or explicitly state the demonstration uses illustrative results.
+
+## No-key demonstration
+
+Prepare a debugging prompt from first-party inputs, paste a clearly attributed proposal, validate it, inspect the evidence and diff, and download the patch. If the proposal is hand-authored, say so. Show a mismatched source edit being rejected. This demonstrates the real review engine without claiming a model call or execution of generated code.

@@ -49,3 +49,7 @@ In-memory counters reset after restart and are separate across processes. The 10
 - `RATE_LIMITED`: wait for concurrency/per-client capacity or inspect the process allowance. Do not restart solely to bypass usage controls.
 - npm `edgesOut` crash: use the tested `npx --yes npm@11.6.4 ci` instead of npm 11.5.2.
 - Browser tests without Chromium: install the Playwright browser, or set `PLAYWRIGHT_CHANNEL=chrome` when Chrome is installed. Use `npm.cmd` for forwarded CLI arguments in PowerShell if npm's wrapper consumes them.
+
+## Public origin
+
+Set `APP_ORIGIN` to the canonical HTTPS site origin when deploying behind a reverse proxy. Without it, the request protocol and Host header identify the browser-facing origin; forwarded-host headers are not trusted. This accommodates Next.js internal hostnames while retaining exact origin and cross-site checks.

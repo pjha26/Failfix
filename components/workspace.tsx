@@ -11,6 +11,7 @@ import {
   type AnalysisResponse,
 } from '@/lib/contracts';
 import { ResultPanel } from './result-panel';
+import { ManualWorkflow } from './manual-workflow';
 
 const emptyInput: AnalysisInput = {
   source: { path: 'src/example.ts', text: '' },
@@ -53,8 +54,14 @@ export default function Workspace({
     start: number;
     end: number;
   } | null>(null);
+  const [proposalText, setProposalText] = useState('');
+  const [reviewedProposal, setReviewedProposal] = useState('');
+  const [reviewing, setReviewing] = useState(false);
   const serialized = JSON.stringify(input);
-  const stale = !!result && resultInput !== serialized;
+  const stale =
+    !!result &&
+    (resultInput !== serialized ||
+      (result.origin === 'manual' && proposalText !== reviewedProposal));
 
   function updateText(value: string) {
     setHighlight(null);
@@ -216,7 +223,7 @@ export default function Workspace({
           </a>
           <span className="powered">
             <span className="dot" />
-            Powered by BharatCode
+            Review before you run
           </span>
         </nav>
       </header>
@@ -256,7 +263,7 @@ export default function Workspace({
               <button
                 key={example.id}
                 className="example-card"
-                disabled={loading}
+                disabled={loading || reviewing}
                 onClick={() => loadExample(i)}
               >
                 <span className="example-number">0{i + 1}</span>
@@ -280,6 +287,20 @@ export default function Workspace({
               </div>
               <span className="subtle">Your context, in one place</span>
             </div>
+            <div
+              className="input-readiness"
+              aria-label="Required input checklist"
+            >
+              <span className={input.source.text.trim() ? 'ready' : ''}>
+                {input.source.text.trim() ? '✓' : '○'} Source
+              </span>
+              <span className={input.test.text.trim() ? 'ready' : ''}>
+                {input.test.text.trim() ? '✓' : '○'} Test
+              </span>
+              <span className={input.log.trim() ? 'ready' : ''}>
+                {input.log.trim() ? '✓' : '○'} Failure output
+              </span>
+            </div>
             <div className="tabs" role="tablist" aria-label="Input files">
               {(['source', 'test', 'log'] as const).map((kind) => (
                 <button
@@ -287,6 +308,24 @@ export default function Workspace({
                   id={`tab-${kind}`}
                   aria-controls={`panel-${kind}`}
                   aria-selected={tab === kind}
+                  tabIndex={tab === kind ? 0 : -1}
+                  onKeyDown={(event) => {
+                    const kinds: InputTab[] = ['source', 'test', 'log'];
+                    const index = kinds.indexOf(kind);
+                    let next: InputTab | undefined;
+                    if (event.key === 'ArrowRight')
+                      next = kinds[(index + 1) % kinds.length];
+                    if (event.key === 'ArrowLeft')
+                      next = kinds[(index + kinds.length - 1) % kinds.length];
+                    if (event.key === 'Home') next = kinds[0];
+                    if (event.key === 'End') next = kinds[kinds.length - 1];
+                    if (next) {
+                      event.preventDefault();
+                      setTab(next);
+                      setHighlight(null);
+                      document.getElementById('tab-' + next)?.focus();
+                    }
+                  }}
                   key={kind}
                   onClick={() => {
                     setTab(kind);
@@ -425,7 +464,7 @@ export default function Workspace({
               <button
                 className="primary-button"
                 onClick={analyze}
-                disabled={loading}
+                disabled={loading || reviewing}
               >
                 {loading ? (
                   <>
@@ -449,12 +488,27 @@ export default function Workspace({
                 <button
                   className="text-button"
                   onClick={showWalkthrough}
-                  disabled={!selectedExample}
+                  disabled={!selectedExample || reviewing}
                 >
                   Open saved walkthrough
                 </button>
               )}
             </div>
+            <ManualWorkflow
+              input={input}
+              busy={loading || reviewing}
+              proposal={proposalText}
+              setProposal={setProposalText}
+              onError={setError}
+              setBusy={setReviewing}
+              onResult={(data, snapshot, proposal) => {
+                setResult(data);
+                setResultInput(snapshot);
+                setReviewedProposal(proposal);
+                setSavedExample(null);
+                setNotice('');
+              }}
+            />
             <p className="privacy-note">
               Analysis sends these inputs to BharatCode. Use nonconfidential
               code and remove credentials.{' '}
@@ -490,10 +544,12 @@ export default function Workspace({
                 {notice}
               </div>
             )}
-            {loading && (
+            {(loading || reviewing) && (
               <div className="loading-status" role="status">
                 <span className="spinner" />
-                Reading the context and checking the proposed changes…
+                {reviewing
+                  ? 'Checking the supplied proposal against your code…'
+                  : 'Reading the context and checking the proposed changes…'}
               </div>
             )}
             {result ? (

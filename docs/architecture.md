@@ -26,6 +26,14 @@ flowchart LR
 | `lib/limits.ts`               | Single-process concurrency, allowance, and optional per-client limits                              |
 | `lib/examples.ts`             | Explicitly hand-authored walkthrough content                                                       |
 
+## Manual proposal review
+
+The no-key workflow generates a copyable prompt locally with the same input and result contract. The user chooses a chat tool and pastes its JSON response; FailFix does not automate a chat website or send this prompt externally.
+
+`POST /api/review` shares bounded JSON reading, content-type/origin checks, schemas, and the deterministic patch generator with automatic analysis. The combined request limit is 128 KiB, while input and proposal limits remain 64 KiB and 48 KiB separately. It makes no outbound request, stores no code, and labels results `origin: manual`. Proposed code remains unexecuted and untrusted.
+
+`lib/http.ts` owns shared request boundaries and safe errors. `lib/manual.ts` prepares the prompt and accepts plain JSON or one complete JSON fence; it does not extract JSON from arbitrary prose. `components/manual-workflow.tsx` manages user-initiated prompt copy and proposal validation.
+
 ## Request lifecycle
 
 `POST /api/analyze` checks content type and origin, reads at most 64 KiB, validates fields, checks configuration and admission limits, and sends a stateless structured-output request to BharatCode. The provider request has a 90-second deadline and at most one retry for an explicit 503. Incomplete output is rejected even if the HTTP response succeeds.

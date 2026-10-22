@@ -23,7 +23,7 @@ const steps = [
 const faqs = [
   [
     'Can I try it without an API key?',
-    'Yes. The three saved walkthroughs let you explore diagnoses, evidence links, diffs, and downloads without a key. They are hand-authored examples, not live AI results. Live diagnosis of your own code requires configured BharatCode API access.',
+    'Yes. Explore the three saved walkthroughs, or use the no-key manual workflow with your own code: prepare a prompt, use a chat tool you already have, and paste its JSON response into FailFix for validation and downloads. Saved examples are hand-authored; manually supplied proposals are labeled. Automatic diagnosis requires configured BharatCode API access.',
   ],
   [
     'Will FailFix run or change my code?',

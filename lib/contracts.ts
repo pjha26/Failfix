@@ -111,6 +111,7 @@ export type Artifacts = {
   regressionTest: string;
 };
 export type AnalysisResponse = {
+  origin?: 'manual';
   analysis: Analysis;
   artifacts: Artifacts | null;
   requestId: string;

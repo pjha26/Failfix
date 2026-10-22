@@ -28,7 +28,21 @@ For live analysis, copy `.env.example` to `.env.local` and set `BHARATCODE_API_K
 
 Never commit `.env.local` or put the key in a `NEXT_PUBLIC_` variable. The app sends keys only from the server to BharatCode.
 
-## Use your own failure
+## Use your own code without an API key
+
+The manual workflow makes no model request and needs no provider account or key inside FailFix:
+
+1. Open `/workspace` and supply valid source, test, and failure inputs.
+2. In **Use without an API key**, select **Prepare debugging prompt**. Review and copy the prompt; it contains your inputs and the response contract.
+3. Paste it into a chat tool you already have access to. Only send nonconfidential code. Any external chat tool's terms and privacy policy apply.
+4. Copy its JSON response into **Proposal JSON** and select **Validate proposal**. A single JSON code fence is accepted; surrounding explanations and malformed JSON are rejected.
+5. FailFix checks the proposal against the supplied files and creates the same reviewable downloads as the automatic workflow. Results say **User-supplied proposal** and do not claim a model call or test execution.
+
+Changing the source context or the pasted proposal disables old manual-result downloads until validation is repeated. The review is a structural/applicability check, not a code execution sandbox or a correctness guarantee.
+
+This mode does not establish compliance with any hackathon model-API requirement; automatic BharatCode evaluation remains pending access.
+
+## Use automatic diagnosis when configured
 
 1. Paste or open one `.ts` source file and one `.test.ts` or `.spec.ts` file. Supply their relative repository paths so the new test's imports can be correct.
 2. Paste the relevant Vitest failure output and, if needed, explain the intended behavior.
@@ -62,6 +76,8 @@ npm run build
 npx playwright install chromium
 npm run test:browser
 ```
+
+Browser tests use the production server, so run `npm run build` after source changes before executing them.
 
 On Windows, browser tests can use installed Chrome instead of downloading Chromium:
 

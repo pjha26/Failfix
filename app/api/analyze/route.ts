@@ -1,56 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { AnalysisError, analyzeWithBharatCode } from '@/lib/bharatcode';
-import { MAX_BODY_BYTES, inputSchema } from '@/lib/contracts';
+import { inputSchema } from '@/lib/contracts';
+import { readJsonRequest } from '@/lib/http';
 import { buildArtifacts } from '@/lib/patch';
 import { gate, trustedClient } from '@/lib/limits';
 
 export const runtime = 'nodejs';
 export const maxDuration = 100;
-
-async function readBody(request: Request) {
-  if (Number(request.headers.get('content-length')) > MAX_BODY_BYTES)
-    throw new AnalysisError(
-      'INPUT_TOO_LARGE',
-      'Input must be at most 64 KiB in total.',
-      413,
-    );
-  const reader = request.body?.getReader();
-  if (!reader)
-    throw new AnalysisError('INVALID_INPUT', 'Request body is missing.', 400);
-  const chunks: Uint8Array[] = [];
-  let total = 0;
-  try {
-    while (true) {
-      const { value, done } = await reader.read();
-      if (done) break;
-      total += value.byteLength;
-      if (total > MAX_BODY_BYTES) {
-        await reader.cancel();
-        throw new AnalysisError(
-          'INPUT_TOO_LARGE',
-          'Input must be at most 64 KiB in total.',
-          413,
-        );
-      }
-      chunks.push(value);
-    }
-  } finally {
-    reader.releaseLock();
-  }
-  const combined = new Uint8Array(total);
-  let offset = 0;
-  for (const chunk of chunks) {
-    combined.set(chunk, offset);
-    offset += chunk.length;
-  }
-  try {
-    return JSON.parse(
-      new TextDecoder('utf-8', { fatal: true }).decode(combined),
-    ) as unknown;
-  } catch {
-    throw new AnalysisError('INVALID_INPUT', 'Send valid UTF-8 JSON.', 400);
-  }
-}
 
 export async function POST(request: Request) {
   const requestId = randomUUID();
@@ -58,22 +14,7 @@ export async function POST(request: Request) {
   const headers = { 'Cache-Control': 'no-store', 'X-Request-Id': requestId };
   let release: (() => void) | undefined;
   try {
-    if (
-      request.headers.get('content-type')?.split(';')[0].trim() !==
-      'application/json'
-    )
-      throw new AnalysisError('INVALID_INPUT', 'Send application/json.', 415);
-    const origin = request.headers.get('origin');
-    if (
-      (origin && origin !== new URL(request.url).origin) ||
-      request.headers.get('sec-fetch-site') === 'cross-site'
-    )
-      throw new AnalysisError(
-        'CROSS_ORIGIN',
-        'Use the FailFix workspace to submit this request.',
-        403,
-      );
-    const parsed = inputSchema.safeParse(await readBody(request));
+    const parsed = inputSchema.safeParse(await readJsonRequest(request));
     if (!parsed.success)
       throw new AnalysisError(
         'INVALID_INPUT',

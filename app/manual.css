@@ -1,0 +1,127 @@
+.manual-workflow {
+  margin: 22px 20px 0;
+  border: 1px solid #3b5045;
+  border-radius: 6px;
+  background: #101b16;
+}
+.manual-workflow > summary {
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 11px;
+  cursor: pointer;
+  list-style: none;
+}
+.manual-workflow > summary::-webkit-details-marker {
+  display: none;
+}
+.manual-workflow > summary > span {
+  font-family: var(--mono);
+  font-size: 8px;
+  letter-spacing: 0.04em;
+  color: var(--green);
+  border: 1px solid #40584b;
+  padding: 3px 5px;
+  border-radius: 3px;
+}
+.manual-body {
+  padding: 0 14px 14px;
+}
+.manual-body > p,
+.manual-body li {
+  font-size: 10px;
+  line-height: 1.9;
+  color: #a8bfb0;
+}
+.manual-body ol {
+  padding-left: 17px;
+  margin: 12px 0 16px;
+}
+.manual-body textarea {
+  width: 100%;
+  background: #0b1210;
+  color: #d0dfd4;
+  border: 1px solid #354a3d;
+  border-radius: 5px;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1.8;
+  resize: vertical;
+  min-height: 110px;
+  max-height: 360px;
+  padding: 10px;
+}
+.manual-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  font-size: 10px;
+  color: #c4d4c9;
+  margin: 20px 0 9px;
+}
+.manual-label > span {
+  font-size: 9px;
+  color: #90a897;
+}
+.manual-body > textarea {
+  margin-bottom: 12px;
+}
+.manual-prompt {
+  margin-top: 14px;
+}
+.manual-prompt > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+}
+.manual-prompt p {
+  font-size: 9px;
+  line-height: 1.8;
+  color: var(--green);
+}
+.manual-prompt .manual-warning {
+  color: #e6c28c;
+}
+.manual-body .manual-footnote {
+  font-size: 9px;
+  color: #8da695;
+  margin: 13px 0 0;
+}
+.manual-result-banner {
+  border-color: #3d6e54;
+  background: #162e2180;
+}
+.input-readiness {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 12px 22px 0;
+  color: #83958b;
+  font-family: var(--mono);
+  font-size: 9px;
+}
+.input-readiness .ready {
+  color: var(--green);
+}
+@media (max-width: 1000px) {
+  .manual-workflow {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+  .input-readiness {
+    padding-left: 16px;
+    gap: 14px;
+  }
+}
+@media (max-width: 760px) {
+  .manual-workflow > summary {
+    font-size: 11px;
+  }
+  .manual-body textarea {
+    font-size: 10px;
+  }
+}

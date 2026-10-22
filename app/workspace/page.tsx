@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import '../manual.css';
 import Workspace from '@/components/workspace';
 import { examples } from '@/lib/examples';
 import { buildArtifacts } from '@/lib/patch';

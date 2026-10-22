@@ -4,15 +4,8 @@ import { setTimeout as delay } from 'node:timers/promises';
 import { byteLength, resultSchema, type AnalysisInput } from './contracts';
 import { SYSTEM_PROMPT } from './prompt';
 
-export class AnalysisError extends Error {
-  constructor(
-    public code: string,
-    message: string,
-    public httpStatus: number = 502,
-  ) {
-    super(message);
-  }
-}
+import { AnalysisError } from './http';
+export { AnalysisError } from './http';
 
 export async function analyzeWithBharatCode(
   input: AnalysisInput,
