@@ -1,0 +1,8 @@
+import { expect, it } from 'vitest';
+import { retryCount } from '../src/retry-count';
+
+it('preserves zero and defaults only when missing', () => {
+  expect(retryCount(0)).toBe(0);
+  expect(retryCount(undefined)).toBe(3);
+  expect(retryCount(2)).toBe(2);
+});

@@ -1,0 +1,7 @@
+import { expect, it } from 'vitest';
+import { lastItem } from '../src/last-item';
+
+it('handles a singleton and an empty array', () => {
+  expect(lastItem([7])).toBe(7);
+  expect(lastItem([])).toBeUndefined();
+});

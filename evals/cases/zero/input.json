@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "src/retry-count.ts",
+    "text": "export function retryCount(value: number | undefined): number {\n  return value || 3;\n}\n"
+  },
+  "test": {
+    "path": "tests/retry-count.test.ts",
+    "text": "import { expect, it } from 'vitest';\nimport { retryCount } from '../src/retry-count';\n\nit('allows retries to be disabled', () => {\n  expect(retryCount(0)).toBe(0);\n});\n"
+  },
+  "log": " FAIL  tests/retry-count.test.ts > allows retries to be disabled\nAssertionError: expected 3 to be 0\nExpected: 0\nReceived: 3\n",
+  "expectedBehavior": "Preserve any numeric value, including zero. Use 3 only when the value is undefined."
+}

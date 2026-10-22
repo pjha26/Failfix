@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "src/last-item.ts",
+    "text": "export function lastItem<T>(items: T[]): T | undefined {\n  return items[items.length];\n}\n"
+  },
+  "test": {
+    "path": "tests/last-item.test.ts",
+    "text": "import { expect, it } from 'vitest';\nimport { lastItem } from '../src/last-item';\n\nit('returns the last element', () => {\n  expect(lastItem([2, 4, 6])).toBe(6);\n});\n"
+  },
+  "log": " FAIL  tests/last-item.test.ts > returns the last element\nAssertionError: expected undefined to be 6\nExpected: 6\nReceived: undefined\n",
+  "expectedBehavior": "Return the final array element, or undefined for an empty array."
+}

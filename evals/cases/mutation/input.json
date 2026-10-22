@@ -1,0 +1,12 @@
+{
+  "source": {
+    "path": "src/sorted-scores.ts",
+    "text": "export function sortedScores(scores: number[]): number[] {\n  return scores.sort((a, b) => b - a);\n}\n"
+  },
+  "test": {
+    "path": "tests/sorted-scores.test.ts",
+    "text": "import { expect, it } from 'vitest';\nimport { sortedScores } from '../src/sorted-scores';\n\nit('keeps the caller array unchanged', () => {\n  const scores = [2, 9, 1];\n  expect(sortedScores(scores)).toEqual([9, 2, 1]);\n  expect(scores).toEqual([2, 9, 1]);\n});\n"
+  },
+  "log": " FAIL  tests/sorted-scores.test.ts > keeps the caller array unchanged\nAssertionError: expected [9, 2, 1] to deeply equal [2, 9, 1]\n",
+  "expectedBehavior": "Return a new descending array without mutating the caller array."
+}
