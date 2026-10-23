@@ -2,6 +2,7 @@
 
 import { useRef, useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
+import { IdeHeader, IdeStatus } from './ide-chrome';
 import { examples } from '@/lib/examples';
 import {
   byteLength,
@@ -35,6 +36,7 @@ export default function Workspace({
     structuredClone(initialExample?.input || emptyInput),
   );
   const [tab, setTab] = useState<InputTab>('source');
+  const [explorerOpen, setExplorerOpen] = useState(true);
   const [result, setResult] = useState<AnalysisResponse | null>(
     initialResult || null,
   );
@@ -206,402 +208,469 @@ export default function Workspace({
   );
 
   return (
-    <>
-      <header className="site-header">
-        <Link href="/" className="brand" aria-label="FailFix home">
-          <span className="brand-icon">ƒ</span>FailFix
-          <span className="version">BETA</span>
-        </Link>
-        <nav aria-label="Main">
-          <Link href="/">← Overview</Link>
-          <a
-            href="https://github.com/pjha26/Failfix"
-            target="_blank"
-            rel="noreferrer"
+    <div
+      className={`ide workspace-ide${explorerOpen ? '' : ' explorer-hidden'}`}
+    >
+      <IdeHeader workspace />
+      <div className="ide-frame">
+        <aside className="ide-rail" aria-label="Studio navigation">
+          <button
+            aria-label="Toggle case explorer"
+            aria-expanded={explorerOpen}
+            aria-controls="case-explorer"
+            onClick={() => setExplorerOpen(!explorerOpen)}
           >
-            GitHub ↗
+            ☷
+          </button>
+          <Link href="/" aria-label="Getting started">
+            ⌂
+          </Link>
+          <a href="#manual-review" aria-label="Manual review workflow">
+            ↳
           </a>
-          <span className="powered">
-            <span className="dot" />
-            Review before you run
-          </span>
-        </nav>
-      </header>
-      <main className="main-shell">
-        <section className="intro">
-          <div>
-            <p className="eyebrow">LESS GUESSWORK. MORE UNDERSTANDING.</p>
-            <h1>
-              Understand the failure.
-              <br />
-              <span>Review the fix.</span>
-            </h1>
-            <p className="lede">
-              Bring a failing test. Leave with a clear diagnosis,
-              <br className="desktop-break" /> a focused patch, and a regression
-              test to review.
-            </p>
+          <span>FF</span>
+        </aside>
+        <aside
+          id="case-explorer"
+          className="ide-explorer"
+          hidden={!explorerOpen}
+          aria-label="Case explorer"
+        >
+          <div className="explorer-heading">
+            EXPLORER <span>···</span>
           </div>
-          <div className="scope-note">
-            <span className="scope-symbol">⌘</span>
-            <strong>A small, focused workspace.</strong>
-            <p>
-              TypeScript + Vitest
-              <br />
-              One source. One test. One failure.
-            </p>
-            <span className="scope-tag">You stay in control</span>
+          <div className="project-name">⌄ CURRENT SESSION</div>
+          {(['source', 'test', 'log'] as const).map((kind) => (
+            <button
+              key={kind}
+              className={`tree-file${tab === kind ? ' selected' : ''}`}
+              onClick={() => {
+                setTab(kind);
+                setHighlight(null);
+              }}
+            >
+              <span className={`file-icon ${kind === 'log' ? 'log' : 'ts'}`}>
+                {kind === 'log' ? '≡' : 'TS'}
+              </span>
+              <span className="tree-filename">
+                {kind === 'log'
+                  ? 'failure.log'
+                  : input[kind].path.split('/').pop()}
+              </span>
+              <span className="tree-state">
+                {(kind === 'log' ? input.log : input[kind].text).trim()
+                  ? '●'
+                  : '○'}
+              </span>
+            </button>
+          ))}
+          <div className="explorer-heading cases-heading">
+            SAMPLE CASES <span>3</span>
           </div>
-        </section>
-        <section className="examples-section" aria-label="Example failures">
-          <div className="section-label">
-            <span>START WITH A REAL BUG</span>
-            <span>No setup needed</span>
-          </div>
-          <div className="example-grid">
-            {examples.map((example, i) => (
-              <button
-                key={example.id}
-                className="example-card"
-                disabled={loading || reviewing}
-                onClick={() => loadExample(i)}
-              >
-                <span className="example-number">0{i + 1}</span>
-                <span>
-                  <strong>{example.title}</strong>
-                  <span className="example-description">
-                    {example.description}
-                  </span>
-                </span>
-                <span className="card-arrow">↗</span>
-              </button>
-            ))}
-          </div>
-        </section>
-        <section className="workbench" aria-label="Debugging workspace">
-          <div className="input-panel">
-            <div className="panel-heading">
+          {examples.map((example, i) => (
+            <button
+              key={example.id}
+              className="case-file"
+              disabled={loading || reviewing}
+              onClick={() => loadExample(i)}
+            >
+              <span>0{i + 1}</span>
               <div>
-                <span className="step-number">01</span>
-                <h2>The failure</h2>
+                {example.title}
+                <small>
+                  {
+                    [
+                      'Falsy defaults',
+                      'Array boundaries',
+                      'Unexpected mutation',
+                    ][i]
+                  }
+                </small>
               </div>
-              <span className="subtle">Your context, in one place</span>
-            </div>
-            <div
-              className="input-readiness"
-              aria-label="Required input checklist"
-            >
-              <span className={input.source.text.trim() ? 'ready' : ''}>
-                {input.source.text.trim() ? '✓' : '○'} Source
-              </span>
-              <span className={input.test.text.trim() ? 'ready' : ''}>
-                {input.test.text.trim() ? '✓' : '○'} Test
-              </span>
-              <span className={input.log.trim() ? 'ready' : ''}>
-                {input.log.trim() ? '✓' : '○'} Failure output
-              </span>
-            </div>
-            <div className="tabs" role="tablist" aria-label="Input files">
-              {(['source', 'test', 'log'] as const).map((kind) => (
-                <button
-                  role="tab"
-                  id={`tab-${kind}`}
-                  aria-controls={`panel-${kind}`}
-                  aria-selected={tab === kind}
-                  tabIndex={tab === kind ? 0 : -1}
-                  onKeyDown={(event) => {
-                    const kinds: InputTab[] = ['source', 'test', 'log'];
-                    const index = kinds.indexOf(kind);
-                    let next: InputTab | undefined;
-                    if (event.key === 'ArrowRight')
-                      next = kinds[(index + 1) % kinds.length];
-                    if (event.key === 'ArrowLeft')
-                      next = kinds[(index + kinds.length - 1) % kinds.length];
-                    if (event.key === 'Home') next = kinds[0];
-                    if (event.key === 'End') next = kinds[kinds.length - 1];
-                    if (next) {
-                      event.preventDefault();
-                      setTab(next);
-                      setHighlight(null);
-                      document.getElementById('tab-' + next)?.focus();
-                    }
-                  }}
-                  key={kind}
-                  onClick={() => {
-                    setTab(kind);
-                    setHighlight(null);
-                  }}
-                >
-                  {kind === 'source'
-                    ? 'Source code'
-                    : kind === 'test'
-                      ? 'Existing test'
-                      : 'Failure output'}
-                  <span
-                    className={
-                      (kind === 'log' ? input.log : input[kind].text).trim()
-                        ? 'filled-indicator'
-                        : 'empty-indicator'
-                    }
-                  />
-                </button>
-              ))}
-            </div>
-            <div
-              className="editor-panel"
-              role="tabpanel"
-              id={`panel-${tab}`}
-              aria-labelledby={`tab-${tab}`}
-            >
-              <div className="file-bar">
-                {tab !== 'log' ? (
-                  <>
-                    <label className="sr-only" htmlFor="file-path">
-                      {tab === 'source' ? 'Source path' : 'Test path'}
-                    </label>
-                    <input
-                      id="file-path"
-                      className="path-input"
-                      aria-label={
-                        tab === 'source' ? 'Source path' : 'Test path'
-                      }
-                      value={input[tab].path}
-                      onChange={(event) =>
-                        setInput((current) => ({
-                          ...current,
-                          [tab]: { ...current[tab], path: event.target.value },
-                        }))
-                      }
-                      spellCheck={false}
-                    />
-                    <label className="file-picker">
-                      Open file
-                      <input
-                        type="file"
-                        accept=".ts"
-                        onChange={loadFile}
-                        aria-label={`Open ${tab} file`}
-                      />
-                    </label>
-                  </>
-                ) : (
-                  <span>Vitest terminal output</span>
-                )}
-                <span className="file-type">
-                  {tab === 'log' ? 'LOG' : 'TS'}
+              <b>↗</b>
+            </button>
+          ))}
+          <div className="explorer-note">
+            <span className="orange-dot" /> Scope of this session
+            <p>
+              One TypeScript source.
+              <br />
+              One Vitest test.
+              <br />
+              One failure to understand.
+            </p>
+          </div>
+        </aside>
+        <main className="studio-main">
+          <div className="session-bar">
+            <h1>Investigation desk</h1>
+            <span>
+              {stale
+                ? 'INPUTS CHANGED'
+                : result
+                  ? 'REVIEW PENDING'
+                  : 'AWAITING CONTEXT'}
+            </span>
+          </div>
+          <section className="workbench" aria-label="Debugging workspace">
+            <div className="input-panel" aria-label="Input editor">
+              <div className="panel-heading">
+                <div>
+                  <span className="step-number">01</span>
+                  <h2>The failure</h2>
+                </div>
+                <span className="subtle">EDITOR</span>
+              </div>
+              <div
+                className="input-readiness"
+                aria-label="Required input checklist"
+              >
+                <span className={input.source.text.trim() ? 'ready' : ''}>
+                  {input.source.text.trim() ? '✓' : '○'} Source
+                </span>
+                <span className={input.test.text.trim() ? 'ready' : ''}>
+                  {input.test.text.trim() ? '✓' : '○'} Test
+                </span>
+                <span className={input.log.trim() ? 'ready' : ''}>
+                  {input.log.trim() ? '✓' : '○'} Failure output
                 </span>
               </div>
-              <div className="code-editor">
-                <div className="line-numbers" aria-hidden="true">
-                  {selectedText.split('\n').map((_, index) => (
-                    <span
-                      key={index}
-                      className={
-                        highlight?.tab === tab &&
-                        index + 1 >= highlight.start &&
-                        index + 1 <= highlight.end
-                          ? 'line-active'
-                          : ''
+              <div className="tabs" role="tablist" aria-label="Input files">
+                {(['source', 'test', 'log'] as const).map((kind) => (
+                  <button
+                    role="tab"
+                    aria-label={
+                      kind === 'source'
+                        ? 'Source code'
+                        : kind === 'test'
+                          ? 'Existing test'
+                          : 'Failure output'
+                    }
+                    id={`tab-${kind}`}
+                    aria-controls={`panel-${kind}`}
+                    aria-selected={tab === kind}
+                    tabIndex={tab === kind ? 0 : -1}
+                    onKeyDown={(event) => {
+                      const kinds: InputTab[] = ['source', 'test', 'log'];
+                      const index = kinds.indexOf(kind);
+                      let next: InputTab | undefined;
+                      if (event.key === 'ArrowRight')
+                        next = kinds[(index + 1) % kinds.length];
+                      if (event.key === 'ArrowLeft')
+                        next = kinds[(index + kinds.length - 1) % kinds.length];
+                      if (event.key === 'Home') next = kinds[0];
+                      if (event.key === 'End') next = kinds[kinds.length - 1];
+                      if (next) {
+                        event.preventDefault();
+                        setTab(next);
+                        setHighlight(null);
+                        document.getElementById('tab-' + next)?.focus();
                       }
+                    }}
+                    key={kind}
+                    onClick={() => {
+                      setTab(kind);
+                      setHighlight(null);
+                    }}
+                  >
+                    <span
+                      className={`file-icon ${kind === 'log' ? 'log' : 'ts'}`}
                     >
-                      {index + 1}
+                      {kind === 'log' ? '≡' : 'TS'}
                     </span>
-                  ))}
+                    {kind === 'log'
+                      ? 'failure.log'
+                      : input[kind].path.split('/').pop()}
+                    <span
+                      className={
+                        (kind === 'log' ? input.log : input[kind].text).trim()
+                          ? 'filled-indicator'
+                          : 'empty-indicator'
+                      }
+                    />
+                  </button>
+                ))}
+              </div>
+              <div
+                className="editor-panel"
+                role="tabpanel"
+                id={`panel-${tab}`}
+                aria-labelledby={`tab-${tab}`}
+              >
+                <div className="file-bar">
+                  {tab !== 'log' ? (
+                    <>
+                      <label className="sr-only" htmlFor="file-path">
+                        {tab === 'source' ? 'Source path' : 'Test path'}
+                      </label>
+                      <input
+                        id="file-path"
+                        className="path-input"
+                        aria-label={
+                          tab === 'source' ? 'Source path' : 'Test path'
+                        }
+                        value={input[tab].path}
+                        onChange={(event) =>
+                          setInput((current) => ({
+                            ...current,
+                            [tab]: {
+                              ...current[tab],
+                              path: event.target.value,
+                            },
+                          }))
+                        }
+                        spellCheck={false}
+                      />
+                      <label className="file-picker">
+                        Open file
+                        <input
+                          type="file"
+                          accept=".ts"
+                          onChange={loadFile}
+                          aria-label={`Open ${tab} file`}
+                        />
+                      </label>
+                    </>
+                  ) : (
+                    <span>Vitest terminal output</span>
+                  )}
+                  <span className="file-type">
+                    {tab === 'log' ? 'LOG' : 'TS'}
+                  </span>
                 </div>
+                <div className="code-editor">
+                  <div className="line-numbers" aria-hidden="true">
+                    {selectedText.split('\n').map((_, index) => (
+                      <span
+                        key={index}
+                        className={
+                          highlight?.tab === tab &&
+                          index + 1 >= highlight.start &&
+                          index + 1 <= highlight.end
+                            ? 'line-active'
+                            : ''
+                        }
+                      >
+                        {index + 1}
+                      </span>
+                    ))}
+                  </div>
+                  <textarea
+                    ref={inputRef}
+                    aria-label={
+                      tab === 'source'
+                        ? 'Source code'
+                        : tab === 'test'
+                          ? 'Existing test code'
+                          : 'Failure output'
+                    }
+                    value={selectedText}
+                    onChange={(event) => updateText(event.target.value)}
+                    spellCheck={false}
+                    wrap="off"
+                    placeholder={
+                      tab === 'source'
+                        ? '// Paste the TypeScript function that is failing…'
+                        : tab === 'test'
+                          ? '// Paste the Vitest test that exposes the failure…'
+                          : 'Paste the assertion error and relevant stack trace…'
+                    }
+                    onScroll={(event) => {
+                      const gutter = event.currentTarget.previousElementSibling;
+                      if (gutter)
+                        gutter.scrollTop = event.currentTarget.scrollTop;
+                    }}
+                  />
+                </div>
+                <div className="editor-footer">
+                  <span>{selectedText.split('\n').length} lines</span>
+                  <span>
+                    {byteLength(selectedText).toLocaleString()} /{' '}
+                    {tab === 'log' ? '12,288' : '20,480'} bytes
+                  </span>
+                </div>
+              </div>
+              {tab !== 'log' && (
+                <details className="failure-console" open>
+                  <summary>
+                    <span>
+                      OUTPUT{' '}
+                      <b>{input.log.trim() ? '1 FAILURE CONTEXT' : 'EMPTY'}</b>
+                    </span>
+                    <span>⌄</span>
+                  </summary>
+                  <pre aria-label="Failure console preview">
+                    {input.log ||
+                      'No failure output yet. Select failure.log to paste your test output.'}
+                  </pre>
+                  <button className="text-button" onClick={() => setTab('log')}>
+                    Edit failure output ↗
+                  </button>
+                </details>
+              )}
+              <div className="behavior-field">
+                <label htmlFor="expected">
+                  What should happen? <span>Optional</span>
+                </label>
                 <textarea
-                  ref={inputRef}
-                  aria-label={
-                    tab === 'source'
-                      ? 'Source code'
-                      : tab === 'test'
-                        ? 'Existing test code'
-                        : 'Failure output'
+                  id="expected"
+                  value={input.expectedBehavior}
+                  onChange={(event) =>
+                    setInput((current) => ({
+                      ...current,
+                      expectedBehavior: event.target.value,
+                    }))
                   }
-                  value={selectedText}
-                  onChange={(event) => updateText(event.target.value)}
-                  spellCheck={false}
-                  wrap="off"
-                  placeholder={
-                    tab === 'source'
-                      ? '// Paste the TypeScript function that is failing…'
-                      : tab === 'test'
-                        ? '// Paste the Vitest test that exposes the failure…'
-                        : 'Paste the assertion error and relevant stack trace…'
-                  }
-                  onScroll={(event) => {
-                    const gutter = event.currentTarget.previousElementSibling;
-                    if (gutter)
-                      gutter.scrollTop = event.currentTarget.scrollTop;
+                  placeholder="e.g. Zero should disable retries, not reset to the default."
+                  rows={2}
+                />
+              </div>
+              <div className="action-area">
+                <button
+                  className="primary-button"
+                  onClick={analyze}
+                  disabled={loading || reviewing}
+                >
+                  {loading ? (
+                    <>
+                      <span className="spinner" />
+                      Analyzing…
+                    </>
+                  ) : (
+                    <>
+                      Analyze failure <span>→</span>
+                    </>
+                  )}
+                </button>
+                {loading ? (
+                  <button
+                    className="text-button"
+                    onClick={() => controller.current?.abort()}
+                  >
+                    Cancel
+                  </button>
+                ) : (
+                  <button
+                    className="text-button"
+                    onClick={showWalkthrough}
+                    disabled={!selectedExample || reviewing}
+                  >
+                    Open saved walkthrough
+                  </button>
+                )}
+              </div>
+              <div id="manual-review">
+                <ManualWorkflow
+                  input={input}
+                  busy={loading || reviewing}
+                  proposal={proposalText}
+                  setProposal={setProposalText}
+                  onError={setError}
+                  setBusy={setReviewing}
+                  onResult={(data, snapshot, proposal) => {
+                    setResult(data);
+                    setResultInput(snapshot);
+                    setReviewedProposal(proposal);
+                    setSavedExample(null);
+                    setNotice('');
                   }}
                 />
               </div>
-              <div className="editor-footer">
-                <span>{selectedText.split('\n').length} lines</span>
-                <span>
-                  {byteLength(selectedText).toLocaleString()} /{' '}
-                  {tab === 'log' ? '12,288' : '20,480'} bytes
-                </span>
+              <p className="privacy-note">
+                Automatic analysis sends inputs to BharatCode. Manual review
+                makes no provider requests. Use nonconfidential code and remove
+                credentials.{' '}
+                <a
+                  href="https://bharatcode.ai/privacy"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Provider privacy ↗
+                </a>
+              </p>
+            </div>
+            <div
+              className="output-panel"
+              aria-label="Evidence and patch review"
+            >
+              <div className="panel-heading">
+                <div>
+                  <span className="step-number">02</span>
+                  <h2>Review &amp; changes</h2>
+                </div>
+                <span className="subtle">READ BEFORE APPLYING</span>
               </div>
-            </div>
-            <div className="behavior-field">
-              <label htmlFor="expected">
-                What should happen? <span>Optional</span>
-              </label>
-              <textarea
-                id="expected"
-                value={input.expectedBehavior}
-                onChange={(event) =>
-                  setInput((current) => ({
-                    ...current,
-                    expectedBehavior: event.target.value,
-                  }))
-                }
-                placeholder="e.g. Zero should disable retries, not reset to the default."
-                rows={2}
-              />
-            </div>
-            <div className="action-area">
-              <button
-                className="primary-button"
-                onClick={analyze}
-                disabled={loading || reviewing}
-              >
-                {loading ? (
-                  <>
-                    <span className="spinner" />
-                    Analyzing…
-                  </>
-                ) : (
-                  <>
-                    Analyze failure <span>→</span>
-                  </>
-                )}
-              </button>
-              {loading ? (
-                <button
-                  className="text-button"
-                  onClick={() => controller.current?.abort()}
+              {error && (
+                <div
+                  className="error-message"
+                  role="alert"
+                  aria-label="Analysis error"
                 >
-                  Cancel
-                </button>
+                  <strong>Analysis needs attention</strong>
+                  <p>{error}</p>
+                </div>
+              )}
+              {notice && (
+                <div className="notice" role="status">
+                  {notice}
+                </div>
+              )}
+              {(loading || reviewing) && (
+                <div className="loading-status" role="status">
+                  <span className="spinner" />
+                  {reviewing
+                    ? 'Checking the supplied proposal against your code…'
+                    : 'Reading the context and checking the proposed changes…'}
+                </div>
+              )}
+              {result ? (
+                <ResultPanel
+                  result={result}
+                  input={input}
+                  stale={stale}
+                  savedExample={savedExample}
+                  onEvidence={jumpToEvidence}
+                />
               ) : (
-                <button
-                  className="text-button"
-                  onClick={showWalkthrough}
-                  disabled={!selectedExample || reviewing}
-                >
-                  Open saved walkthrough
-                </button>
+                <div className="empty-state">
+                  <div className="empty-symbol" aria-hidden="true">
+                    ⌁
+                  </div>
+                  <h3>Clarity starts with context.</h3>
+                  <p>
+                    Add your code, test, and failure output.
+                    <br />
+                    We’ll connect the evidence to a focused fix.
+                  </p>
+                  <div className="empty-checklist">
+                    <span>
+                      <b>01</b> Understand the root cause
+                    </span>
+                    <span>
+                      <b>02</b> Inspect a minimal source diff
+                    </span>
+                    <span>
+                      <b>03</b> Review a regression test
+                    </span>
+                  </div>
+                  <span className="empty-caption">
+                    No code runs on this server. You review every change.
+                  </span>
+                </div>
               )}
             </div>
-            <ManualWorkflow
-              input={input}
-              busy={loading || reviewing}
-              proposal={proposalText}
-              setProposal={setProposalText}
-              onError={setError}
-              setBusy={setReviewing}
-              onResult={(data, snapshot, proposal) => {
-                setResult(data);
-                setResultInput(snapshot);
-                setReviewedProposal(proposal);
-                setSavedExample(null);
-                setNotice('');
-              }}
-            />
-            <p className="privacy-note">
-              Automatic analysis sends inputs to BharatCode. Manual review makes
-              no provider requests. Use nonconfidential code and remove
-              credentials.{' '}
-              <a
-                href="https://bharatcode.ai/privacy"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Provider privacy ↗
-              </a>
-            </p>
-          </div>
-          <div className="output-panel">
-            <div className="panel-heading">
-              <div>
-                <span className="step-number">02</span>
-                <h2>The way forward</h2>
-              </div>
-              <span className="subtle">Evidence before edits</span>
-            </div>
-            {error && (
-              <div
-                className="error-message"
-                role="alert"
-                aria-label="Analysis error"
-              >
-                <strong>Analysis needs attention</strong>
-                <p>{error}</p>
-              </div>
-            )}
-            {notice && (
-              <div className="notice" role="status">
-                {notice}
-              </div>
-            )}
-            {(loading || reviewing) && (
-              <div className="loading-status" role="status">
-                <span className="spinner" />
-                {reviewing
-                  ? 'Checking the supplied proposal against your code…'
-                  : 'Reading the context and checking the proposed changes…'}
-              </div>
-            )}
-            {result ? (
-              <ResultPanel
-                result={result}
-                input={input}
-                stale={stale}
-                savedExample={savedExample}
-                onEvidence={jumpToEvidence}
-              />
-            ) : (
-              <div className="empty-state">
-                <div className="empty-symbol" aria-hidden="true">
-                  ⌁
-                </div>
-                <h3>Clarity starts with context.</h3>
-                <p>
-                  Add your code, test, and failure output.
-                  <br />
-                  We’ll connect the evidence to a focused fix.
-                </p>
-                <div className="empty-checklist">
-                  <span>
-                    <b>01</b> Understand the root cause
-                  </span>
-                  <span>
-                    <b>02</b> Inspect a minimal source diff
-                  </span>
-                  <span>
-                    <b>03</b> Review a regression test
-                  </span>
-                </div>
-                <span className="empty-caption">
-                  No code runs on this server. You review every change.
-                </span>
-              </div>
-            )}
-          </div>
-        </section>
-        <footer className="site-footer">
-          <span>
-            FailFix <span className="footer-separator">/</span> Small fixes.
-            Clear reasoning.
-          </span>
-          <span>
-            Built for BharatCode Build League{' '}
-            <span className="footer-separator">·</span> Proposed fixes need
-            local verification.
-          </span>
-        </footer>
-      </main>
-    </>
+          </section>
+        </main>
+      </div>
+      <IdeStatus
+        message={
+          loading || reviewing
+            ? 'Review in progress'
+            : stale
+              ? 'Inputs changed · validate again'
+              : 'No code executed'
+        }
+      />
+    </div>
   );
 }

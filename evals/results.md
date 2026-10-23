@@ -1,13 +1,15 @@
-# Evaluation status — 22 October 2026
+# Evaluation status — 23 October 2026
 
 This file separates application correctness from model quality. **No live BharatCode evaluation has been performed yet; eligible API access is pending.**
 
 ## Completed local checks
 
-- 55 unit/API/SDK checks passed after the landing and manual-review milestone.
-- 24 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
+- 55 unit/API/SDK checks passed after the IDE interface redesign.
+- 26 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
 - TypeScript, lint, and production build passed.
 - Three reviewed first-party fixes satisfy independent boundary checks and match the walkthrough downloads.
+
+The IDE checks include case navigation, keyboard input tabs, editor state across explorer changes, and failure-console editing.
 
 The SDK tests intercept HTTP; they do not call a real model. Browser tests mock successful/error model responses and use the real saved-example route. These results establish app behavior, not model accuracy.
 

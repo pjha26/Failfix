@@ -22,7 +22,7 @@ npx --yes npm@11.6.4 ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000) for the product overview and interactive illustrative preview. Select **Open workspace**, or open `/workspace` directly. Each example on the landing page opens its complete saved walkthrough without a key.
+Open [localhost:3000](http://localhost:3000) for the IDE-style getting-started document. Select **Open workspace**, or open `/workspace` directly. Each sample case in the explorer opens its complete saved walkthrough without a key.
 
 For live analysis, copy `.env.example` to `.env.local` and set `BHARATCODE_API_KEY` to your developer key. Restart the development server after configuring it. API access must be enabled for your BharatCode account; creating an account or registering for the hackathon alone may not enable API access. Check [BharatCode's API documentation](https://bharatcode.ai/build).
 
@@ -116,3 +116,7 @@ Deploy later as a Node.js web service with server-side secrets, a request timeou
 - [Evaluation status](evals/results.md)
 
 `BharatCode.txt` is included in the repository root. Its contents are participant-authored because an organizer template has not been confirmed. Confirm the format and exact project deadline before final submission. No project license has been selected yet.
+
+### Investigation desk
+
+The interface uses an IDE layout: a getting-started document, sample-case explorer, editable file tabs, failure-output console, and an evidence-and-patch review pane. Collapse the explorer to focus on your input; switching files preserves edits. On smaller screens the review pane follows the editor and cases remain available above it. The console displays supplied output; it does not execute tests.
