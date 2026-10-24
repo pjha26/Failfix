@@ -184,3 +184,9 @@ The failure console shows user-supplied test output. It is not a terminal emulat
 ## Design tradeoffs
 
 One language and one test framework keep the scope reviewable. Nonstreaming structured output keeps partial patches out of the result flow. Deterministic diff generation avoids accepting arbitrary generated patch text. No hosted execution avoids introducing a code runner into this release. Deployment and shared infrastructure remain deferred until hosting is selected; see [operations](operations.md).
+
+## Scroll presentation
+
+The homepage uses `components/scroll-experience.tsx` for IntersectionObserver section reveals and chapter selection, plus one passive scroll listener scheduled through requestAnimationFrame for reading progress and a small hero offset. `components/build-signal.tsx` renders the original decorative SVG. All effects use native browser APIs and CSS; there is no animation or WebGL dependency.
+
+The server renders readable content by default. Motion enhancements are added after hydration, can be paused, and respect `prefers-reduced-motion`. The chapter preview is explicitly illustrative and does not make GitHub, model, or deployment requests. Real actions navigate to the deployment or test desk.

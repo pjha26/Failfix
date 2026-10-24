@@ -30,11 +30,17 @@ FailFix puts those review steps in one desk. Its focus is the **review between a
 > A patch that matches the supplied source is not proof of a correct fix. FailFix does not execute your code, run tests, or modify your repository.
 
 <details>
-<summary>See the getting-started screen</summary>
+<summary>See the scroll-driven homepage</summary>
 
-![FailFix getting-started document inside the IDE interface](docs/images/getting-started.jpg)
+![FailFix scroll-driven homepage with a build-trace illustration](docs/images/getting-started.jpg)
+
+![Scroll-driven investigation chapter showing repository configuration](docs/images/scroll-workflow.jpg)
 
 </details>
+
+## The interface
+
+The homepage tells the investigation story through native scroll reveals, a moving SVG build trace, and a sticky three-chapter preview. Motion can be paused and follows reduced-motion preferences; content remains readable without JavaScript. There is no scroll hijacking or animation-library dependency. The build desk at `/deployments` and test desk at `/workspace` keep editing and review interactions separate from the presentation.
 
 ## Quick start
 
@@ -50,7 +56,7 @@ npx --yes npm@11.6.4 ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Select a sample case in the explorer to open its complete saved walkthrough, or select **Open workspace** to use your own inputs.
+Open [localhost:3000](http://localhost:3000). Select **Investigate a build** for public repository context and log review. Scroll to the case files for saved TypeScript walkthroughs, or open `/workspace` for your own source and test.
 
 No environment file, account, or API key is required for saved examples and manual review. Inputs and results are kept in memory; refreshing or leaving the workspace loses the session.
 
@@ -70,7 +76,7 @@ Public import reads supported root configuration and failed Actions-step metadat
 
 ### 1. Explore a saved case
 
-Choose a case on the start screen to see its inputs and reviewed example result immediately. In the workspace, selecting a case loads its inputs; select **Open saved walkthrough** to view the result.
+Choose a case in the homepage case files to see its inputs and reviewed example result immediately. In the workspace, selecting a case loads its inputs; select **Open saved walkthrough** to view the result.
 
 | Case                   | Bug illustrated                           | Proposed change                              |
 | ---------------------- | ----------------------------------------- | -------------------------------------------- |
@@ -213,9 +219,12 @@ See [the detailed architecture](docs/architecture.md) for route responsibilities
 
 ```text
 app/
-  page.tsx                    Getting-started screen
-  workspace/page.tsx          Workspace and deep-linked saved cases
-  api/analyze/route.ts        Optional automatic diagnosis
+  page.tsx                    Scroll-driven investigation story
+  workspace/page.tsx          Test workspace and deep-linked saved cases
+  deployments/page.tsx        Public repository and build-log investigation
+  api/github/import/route.ts  Credential-free public configuration import
+  api/deployments/analyze/route.ts  Build-error signature review
+  api/analyze/route.ts        Optional automatic test diagnosis
   api/review/route.ts         No-key proposal validation
   api/examples/[id]/route.ts  Saved walkthrough results
   api/health/route.ts         Process health, no model call
@@ -246,7 +255,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm run test:browser
 ```
 
-The latest recorded local verification is **55 unit/API/SDK checks and 26 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
+The latest recorded local verification is **83 unit/API/SDK checks and 38 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
 
 For a local production preview:
 
@@ -278,6 +287,8 @@ The automatic-analysis limiter allows two concurrent analyses and defaults to 10
 Code and results are not saved to a database or browser storage. The app does not log code or prompt text. Manual review sends content to the FailFix server without a provider call; automatic analysis sends it to BharatCode. Copying a prompt into another service is your choice and subject to that service's privacy terms. Use nonconfidential code and remove secrets. The interface loads Google Fonts with system fallbacks.
 
 Public hosting is pending. Deploy as a Node.js service, not a static export, with server-side secrets and a timeout compatible with the analysis deadline. The current automatic limiter assumes one process/replica. Read the [operations guide](docs/operations.md) for origin configuration, trusted proxy headers, limits, troubleshooting, and release checks. Recheck dependency advisories before release; the operations and evaluation notes are not a current security certification.
+
+Design inspiration: the cinematic composition and section pacing of [GetLayers](https://www.getlayers.ai/) informed the new homepage. FailFix uses its own SVG scene, copy, and implementation; no paid templates or assets were imported.
 
 ## Project status and contributing
 

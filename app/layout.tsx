@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import './globals.css';
 export const metadata: Metadata = {
-  title: 'FailFix — understand the failure. Review the fix.',
+  title: 'FailFix — build failed. Keep moving.',
   description:
-    'Turn failing TypeScript tests into an evidence-linked explanation, a reviewable patch, and a regression test with BharatCode.',
+    'Investigate build failures with public GitHub context, log evidence, and reviewable repair steps. Debug TypeScript tests in a focused IDE workspace.',
 };
 export default function RootLayout({
   children,

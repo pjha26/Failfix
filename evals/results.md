@@ -5,7 +5,7 @@ This file separates application correctness from model quality. **No live Bharat
 ## Completed local checks
 
 - 83 unit/API/SDK checks passed after adding deployment signature review and public GitHub import.
-- 32 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
+- 38 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
 - TypeScript, lint, and production build passed.
 - Three reviewed first-party fixes satisfy independent boundary checks and match the walkthrough downloads.
 
@@ -48,3 +48,7 @@ A live quality claim, final demo, and shipped release remain pending this work.
 ## No-key manual workflow
 
 Real browser tests submit user-supplied proposals to the actual review route, verify labeled artifacts, reject mismatched edits, and invalidate downloads after proposal changes. The model endpoint is intercepted and must not be called. Unit tests also block outbound fetch with an empty provider key. Host/origin regression tests cover Next.js internal URLs and configured public origins. Keyboard tabs and local-file validation are covered. These checks establish review functionality, not model debugging quality.
+
+## Scroll-interface checks
+
+The animated landing was checked on desktop and 390px mobile. Coverage includes chapter navigation, paused motion, reduced-motion preferences, server-rendered content without JavaScript, real navigation to both desks, and an SVG-position regression check after mobile visual QA found an offset illustration. The original SVG and native CSS/IntersectionObserver implementation add no application dependencies.

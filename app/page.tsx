@@ -1,192 +1,316 @@
 import Link from 'next/link';
-import { IdeHeader, IdeStatus } from '@/components/ide-chrome';
 import { examples } from '@/lib/examples';
-import './ide.css';
+import {
+  ScrollExperience,
+  ScrollInvestigation,
+} from '@/components/scroll-experience';
+import { BuildSignal } from '@/components/build-signal';
+import './story.css';
 
 export default function Home() {
   return (
-    <div className="ide welcome-ide">
-      <a className="skip-link" href="#welcome-content">
+    <ScrollExperience>
+      <a className="story-skip" href="#main-content">
         Skip to content
       </a>
-      <IdeHeader />
-      <div className="ide-frame">
-        <aside className="ide-rail" aria-label="Studio navigation">
-          <Link href="/" aria-label="Getting started" aria-current="page">
-            ⌂
-          </Link>
-          <Link href="/workspace" aria-label="Debugging workspace">
-            ⌘
-          </Link>
-          <a href="#guide" aria-label="Workflow guide">
-            ?
-          </a>
-          <span>FF</span>
-        </aside>
-        <aside
-          className="ide-explorer welcome-explorer"
-          aria-label="Project explorer"
+      <header className="story-header">
+        <Link href="/" className="story-brand" aria-label="FailFix home">
+          <span>ƒ↯</span> FailFix<span className="brand-period">.</span>
+        </Link>
+        <nav aria-label="Main navigation">
+          <a href="#workflow">The workflow</a>
+          <a href="#cases">Case files</a>
+          <Link href="/workspace">Test desk</Link>
+        </nav>
+        <Link className="nav-launch" href="/deployments">
+          Open build desk <span>↗</span>
+        </Link>
+      </header>
+      <main id="main-content">
+        <section className="story-hero" aria-labelledby="hero-title">
+          <div className="hero-copy">
+            <div className="hero-label">
+              <span /> A CLEARER WAY THROUGH BROKEN BUILDS
+            </div>
+            <h1 id="hero-title">
+              Build <span className="hero-failed">failed.</span>
+              <br />
+              Keep <em>moving.</em>
+            </h1>
+            <p>
+              The error is a starting point. Connect the log to the config,
+              understand what broke, and review your next change.
+            </p>
+            <div className="hero-actions">
+              <Link className="story-primary" href="/deployments">
+                Investigate a build <span>↗</span>
+              </Link>
+              <a className="story-secondary" href="#workflow">
+                Follow the trace <span>↓</span>
+              </a>
+            </div>
+            <p className="hero-footnote">
+              PUBLIC GITHUB IMPORT <b>·</b> NO MODEL KEY REQUIRED
+            </p>
+          </div>
+          <BuildSignal />
+          <div className="hero-bottom">
+            <span>BUILT FOR THE MOMENT THE PIPELINE TURNS RED.</span>
+            <span className="scroll-cue">
+              SCROLL TO INVESTIGATE <i>↓</i>
+            </span>
+          </div>
+        </section>
+        <div className="scope-strip">
+          <span>01 / PUBLIC REPOSITORY CONTEXT</span>
+          <span>02 / EVIDENCE FROM YOUR LOGS</span>
+          <span>03 / A CHANGE YOU CAN REVIEW</span>
+        </div>
+        <section className="workflow-section story-section" id="workflow">
+          <div className="section-intro" data-reveal>
+            <p className="story-kicker">
+              THE INVESTIGATION / THREE DELIBERATE MOVES
+            </p>
+            <h2>
+              Less guessing.
+              <br />
+              <span>More understanding.</span>
+            </h2>
+            <p>
+              A small, visible path from a failed build to a decision you can
+              defend.
+            </p>
+          </div>
+          <ScrollInvestigation />
+        </section>
+        <section
+          className="github-section story-section"
+          id="github"
+          aria-label="GitHub deployment workflow"
         >
-          <div className="explorer-heading">
-            EXPLORER <span>···</span>
+          <div className="github-copy" data-reveal>
+            <p className="story-kicker">YOUR REPOSITORY, IN CONTEXT</p>
+            <h2>
+              Bring the repo.
+              <br />
+              <span>Keep the control.</span>
+            </h2>
+            <p>
+              Start with a public GitHub URL. Read supported root configuration,
+              inspect failed Actions steps, and add the actual build error. No
+              repository clone or account connection needed.
+            </p>
+            <Link className="story-primary" href="/deployments">
+              Import a public repository <span>↗</span>
+            </Link>
+            <p className="github-boundary">
+              Public, read-only import is available now. Private repositories
+              and account connection come later.
+            </p>
           </div>
-          <div className="project-name">⌄ FAILFIX STUDIO</div>
-          <a className="tree-file selected" href="#welcome-content">
-            <span className="file-icon">M↓</span> START_HERE.md
-          </a>
-          <Link className="tree-file" href="/workspace">
-            <span className="file-icon ts">TS</span> new-session.ts{' '}
-            <span>↗</span>
-          </Link>
-          <div className="explorer-heading cases-heading">
-            SAMPLE CASES <span>3</span>
+          <div className="repo-illustration" data-reveal>
+            <div className="repo-illustration-top">
+              <span>⌘ / PUBLIC REPOSITORY</span>
+              <span>READ ONLY</span>
+            </div>
+            <div className="repo-path">
+              your-team / <strong>next-big-thing</strong>
+            </div>
+            <div className="repo-branch">
+              <span>⑂ main</span>
+              <span>configuration pinned to a commit</span>
+            </div>
+            <div className="repo-file">
+              <span>{'{ }'}</span> package.json <b>CONFIG</b>
+            </div>
+            <div className="repo-file">
+              <span>≡</span> .github/workflows/build.yml <b>WORKFLOW</b>
+            </div>
+            <div className="repo-file">
+              <span>↳</span> failed Actions step <b>CONTEXT</b>
+            </div>
+            <div className="repo-bottom">
+              <i /> Add the actual build log to investigate.
+            </div>
+            <p className="illustration-label">
+              ILLUSTRATIVE REPOSITORY · NO ACCOUNT CONNECTED
+            </p>
           </div>
-          {examples.map((example, i) => (
-            <Link
-              key={example.id}
-              className="case-file"
-              href={`/workspace?example=${example.id}`}
-            >
-              <span>0{i + 1}</span>
-              <div>
-                {example.title}
-                <small>
+        </section>
+        <section
+          className="coverage-section story-section"
+          aria-label="Supported build investigations"
+        >
+          <div data-reveal>
+            <p className="story-kicker">
+              RECOGNIZE THE FAILURE. RESPECT THE BOUNDARY.
+            </p>
+            <h2>
+              Common breaks.
+              <br />
+              <span>Concrete next steps.</span>
+            </h2>
+          </div>
+          <div className="failure-index" data-reveal>
+            {[
+              [
+                '01',
+                'Missing build script',
+                'A narrow package.json patch when Next.js context supports it.',
+              ],
+              [
+                '02',
+                'Lockfile or runtime mismatch',
+                'Check the installer, committed lockfile, and Node version.',
+              ],
+              [
+                '03',
+                'Environment or module resolution',
+                'Trace missing settings, dependencies, and path casing.',
+              ],
+              [
+                '04',
+                'Type errors or memory pressure',
+                'Surface the signature and a verification checklist.',
+              ],
+            ].map(([number, title, text]) => (
+              <div key={number}>
+                <span>{number}</span>
+                <h3>{title}</h3>
+                <p>{text}</p>
+                <span>↗</span>
+              </div>
+            ))}
+          </div>
+          <p className="coverage-note">
+            Signature checks are transparent rules, not an AI diagnosis. Unknown
+            failures ask for more context. No deployment or code is executed
+            here.
+          </p>
+        </section>
+        <section className="cases-section story-section" id="cases">
+          <div className="cases-heading" data-reveal>
+            <div>
+              <p className="story-kicker">SMALL BUGS. FAMILIAR CONSEQUENCES.</p>
+              <h2>
+                Open a <span>case file.</span>
+              </h2>
+            </div>
+            <Link href="/workspace">Open workspace ↗</Link>
+          </div>
+          <div className="story-case-list">
+            {examples.map((example, index) => (
+              <Link
+                data-reveal
+                key={example.id}
+                href={`/workspace?example=${example.id}`}
+              >
+                <div>
+                  <span>CASE / 00{index + 1}</span>
+                  <span>TYPESCRIPT / VITEST</span>
+                </div>
+                <h3>{example.title}</h3>
+                <p>{example.description}</p>
+                <code>
                   {
                     [
-                      'Falsy defaults',
-                      'Array boundaries',
-                      'Unexpected mutation',
-                    ][i]
+                      'return value || 3;',
+                      'return items[items.length];',
+                      'return scores.sort(...);',
+                    ][index]
                   }
-                </small>
-              </div>
-              <b>↗</b>
-            </Link>
-          ))}
-          <div className="explorer-note">
-            <span className="orange-dot" /> A patch is a hypothesis.
-            <p>The test suite gets the final word.</p>
-          </div>
-        </aside>
-        <main className="welcome-main" id="welcome-content" tabIndex={-1}>
-          <div className="ide-document-tab">
-            <span className="file-icon">M↓</span> START_HERE.md{' '}
-            <span className="tab-mark">●</span>
-            <span className="tab-context">preview</span>
-          </div>
-          <div className="welcome-document">
-            <div className="document-meta">
-              <span>FAILFIX / FIELD NOTES</span>
-              <span>001 — GETTING STARTED</span>
-            </div>
-            <div className="welcome-intro">
-              <span className="document-kicker">
-                FROM FAILURE TO UNDERSTANDING
-              </span>
-              <h1>
-                Every failure
-                <br />
-                leaves a <em>trace.</em>
-              </h1>
-              <p>
-                A debugging desk for the moment a test turns red.
-                <br className="wide-only" /> Bring the evidence. Trace the
-                cause. Review the change.
-              </p>
-              <Link className="launch-button" href="/workspace">
-                Open workspace <span>↗</span>
-              </Link>
-              <span className="launch-caption">
-                No account needed · Try a saved case first
-              </span>
-            </div>
-            <div className="case-study">
-              <div className="case-study-head">
-                <span>
-                  <i /> CASE 001 / THE FALSY DEFAULT
+                </code>
+                <span className="case-link-label">
+                  Follow the evidence <b>↗</b>
                 </span>
-                <span>TypeScript</span>
-              </div>
-              <div className="case-code">
-                <span>01</span>
-                <code>
-                  <b>function</b> retryCount(value: number | undefined) {'{'}
-                </code>
-                <span>02</span>
-                <code className="marked-code">
-                  {' '}
-                  return value <s>||</s> <strong>??</strong> 3;
-                </code>
-                <span>03</span>
-                <code>{'}'}</code>
-              </div>
-              <div className="case-observation">
-                <span>↳</span>
-                <p>
-                  <strong>Zero isn’t missing.</strong> The default swallowed a
-                  valid value. A two-character change preserves it.
-                </p>
-                <Link href="/workspace?example=zero">
-                  Follow the evidence ↗
-                </Link>
-              </div>
-              <div className="case-disclaimer">
-                Hand-authored example · Proposed change · Tests not run here
-              </div>
-            </div>
-            <section
-              className="welcome-guide"
-              id="guide"
-              aria-label="Workflow guide"
-            >
-              <div className="document-meta">
-                <span>THE REVIEW LOOP</span>
-                <span>THREE DELIBERATE STEPS</span>
-              </div>
-              <div className="guide-steps">
-                <div>
-                  <b>01 / COLLECT</b>
-                  <h2>Keep the context small.</h2>
-                  <p>
-                    One .ts source, one Vitest test, and the failure output.
-                    Enough to investigate, small enough to review.
-                  </p>
-                </div>
-                <div>
-                  <b>02 / TRACE</b>
-                  <h2>Make the reasoning visible.</h2>
-                  <p>
-                    Follow evidence back to input lines. Inspect assumptions and
-                    the proposed diff before downloading it.
-                  </p>
-                </div>
-                <div>
-                  <b>03 / VERIFY</b>
-                  <h2>Let your tests decide.</h2>
-                  <p>
-                    Download the patch and regression test. Apply and run them
-                    locally. FailFix never executes your code.
-                  </p>
-                </div>
-              </div>
-            </section>
-            <details className="welcome-faq">
+              </Link>
+            ))}
+          </div>
+          <p className="case-note">
+            Hand-authored test walkthroughs. No model call or remote test
+            execution.
+          </p>
+        </section>
+        <section className="review-principle story-section" data-reveal>
+          <span className="review-symbol" aria-hidden="true">
+            [ ± ]
+          </span>
+          <p className="story-kicker">A PATCH IS A HYPOTHESIS.</p>
+          <h2>
+            Your test suite
+            <br />
+            gets the <em>final word.</em>
+          </h2>
+          <p>
+            FailFix makes the proposed change visible. You decide what to apply,
+            run the checks, and deploy on your terms.
+          </p>
+          <Link className="story-primary" href="/deployments">
+            Find your next step <span>↗</span>
+          </Link>
+        </section>
+        <section
+          className="story-faq story-section"
+          aria-label="Frequently asked questions"
+        >
+          <p className="story-kicker">BEFORE YOUR NEXT BUILD</p>
+          <div>
+            <details>
               <summary>Can I use this without an API key?</summary>
               <p>
-                Yes. Explore the three saved walkthroughs, or prepare a prompt
-                for a chat tool you already use and paste its JSON proposal into
-                the workspace for validation. Automatic analysis needs
-                configured BharatCode access.
+                Yes. Explore the three saved walkthroughs, import public GitHub
+                configuration, or investigate build logs with signature checks.
+                For your own TypeScript test bugs, prepare a prompt for a chat
+                tool you already use and paste its JSON proposal into the test
+                workspace. Automatic test diagnosis needs configured BharatCode
+                access.
               </p>
             </details>
-            <div className="document-signoff">
-              <span>BUILT TO INVESTIGATE, NOT TO GUESS.</span>
-              <Link href="/workspace">Start your own investigation →</Link>
-            </div>
+            <details>
+              <summary>
+                Will FailFix fix and redeploy my repository automatically?
+              </summary>
+              <p>
+                No. This release provides a review workflow: evidence, repair
+                steps, and narrowly supported downloadable patches. It never
+                changes GitHub files, executes your code, or triggers
+                deployments.
+              </p>
+            </details>
+            <details>
+              <summary>Can I connect a private GitHub repository?</summary>
+              <p>
+                Account connection and private repository access are deferred.
+                Public import works without credentials. Build logs can also be
+                pasted manually; remove secrets and confidential content first.
+              </p>
+            </details>
+            <details>
+              <summary>What happens to my code and logs?</summary>
+              <p>
+                Inputs stay in browser memory and are sent to this app’s server
+                when you request review. Build signature review makes no
+                model-provider call and uses no application database. Automatic
+                test analysis, when enabled, sends its inputs to BharatCode.
+              </p>
+            </details>
           </div>
-        </main>
-      </div>
-      <IdeStatus message="Ready to investigate" />
-    </div>
+        </section>
+      </main>
+      <footer className="story-footer">
+        <Link href="/" className="story-brand">
+          <span>ƒ↯</span> FailFix.
+        </Link>
+        <p>Small changes. Clear reasoning.</p>
+        <a
+          href="https://github.com/pjha26/Failfix"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Source &amp; architecture ↗
+        </a>
+        <span>REVIEW BEFORE EXECUTION</span>
+      </footer>
+    </ScrollExperience>
   );
 }
