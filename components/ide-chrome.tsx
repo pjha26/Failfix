@@ -1,6 +1,12 @@
 import Link from 'next/link';
 
-export function IdeHeader({ workspace = false }: { workspace?: boolean }) {
+export function IdeHeader({
+  workspace = false,
+  context,
+}: {
+  workspace?: boolean;
+  context?: string;
+}) {
   return (
     <header className="ide-titlebar">
       <Link href="/" className="ide-brand" aria-label="FailFix home">
@@ -11,15 +17,9 @@ export function IdeHeader({ workspace = false }: { workspace?: boolean }) {
       </Link>
       <span className="ide-breadcrumb">
         review studio <span>/</span>{' '}
-        {workspace ? 'untitled session' : 'getting started'}
+        {context || (workspace ? 'untitled session' : 'getting started')}
       </span>
-      <a
-        href="https://github.com/pjha26/Failfix"
-        target="_blank"
-        rel="noreferrer"
-      >
-        Source on GitHub ↗
-      </a>
+      <Link href="/deployments">Build investigations ↗</Link>
     </header>
   );
 }

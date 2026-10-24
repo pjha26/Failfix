@@ -1,0 +1,441 @@
+.deployment-shell {
+  max-width: 1440px;
+  margin: auto;
+  padding: 52px 40px 20px;
+}
+.deployment-intro {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+.deploy-kicker {
+  color: var(--orange);
+  font: 9px var(--mono);
+  letter-spacing: 1.5px;
+  margin: 0 0 18px;
+}
+.deployment-intro h1 {
+  font-size: clamp(30px, 4vw, 48px);
+  letter-spacing: -1.8px;
+  font-weight: 500;
+  margin: 0 0 14px;
+}
+.deployment-intro p:not(.deploy-kicker) {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.8;
+}
+.deployment-intro > a {
+  font: 10px var(--mono);
+  color: var(--green);
+  padding-bottom: 15px;
+  white-space: nowrap;
+}
+.repo-import {
+  border: 1px solid var(--line);
+  background: #202127;
+  padding: 25px;
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 20px 40px;
+}
+.repo-import h2,
+.deployment-grid h2 {
+  font-size: 13px;
+}
+.repo-import h2 span,
+.deployment-grid h2 span {
+  color: var(--orange);
+  font: 9px var(--mono);
+  margin-right: 12px;
+}
+.repo-import p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.8;
+}
+.repo-import form > label {
+  font: 9px var(--mono);
+  color: #c1b9ca;
+  display: block;
+  margin-bottom: 9px;
+}
+.repo-import form > div {
+  display: flex;
+  gap: 10px;
+}
+.repo-import input {
+  min-width: 0;
+  flex: 1;
+  background: #17181c;
+  border: 1px solid #45414d;
+  border-radius: 2px;
+  color: var(--text);
+  padding: 12px;
+  font: 11px var(--mono);
+}
+.deployment-ide .primary-button {
+  border-radius: 2px;
+  background: var(--green);
+  padding: 12px 15px;
+  font-size: 11px;
+}
+.repo-import .text-button {
+  text-align: left;
+  justify-self: start;
+  color: var(--green);
+  font-size: 11px;
+}
+.repo-import .repo-boundary {
+  margin: 0;
+  font-size: 10px;
+}
+.deployment-shell > .error-message,
+.deployment-shell > .notice {
+  margin: 20px 0;
+}
+.repo-snapshot {
+  margin-top: 20px;
+  border: 1px solid #494e3f;
+  padding: 20px 24px;
+  background: #23281e;
+}
+.repo-snapshot > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+.repo-snapshot a {
+  color: var(--green);
+  font: 13px var(--mono);
+}
+.repo-snapshot > div > span {
+  color: #b6c3a1;
+  font: 8px var(--mono);
+}
+.repo-snapshot > label {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 20px;
+  font-size: 11px;
+}
+.repo-snapshot select,
+.config-editor-heading select {
+  background: #1a1c1b;
+  border: 1px solid #4c5146;
+  color: #d4dcc8;
+  padding: 8px;
+  max-width: 100%;
+  font: 10px var(--mono);
+}
+.repo-snapshot details {
+  font-size: 10px;
+  color: #b2bda4;
+  margin-top: 15px;
+}
+.repo-snapshot summary {
+  cursor: pointer;
+}
+.repo-snapshot li {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #bec5b2;
+  overflow-wrap: anywhere;
+}
+.deployment-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  border: 1px solid var(--line);
+  margin-top: 25px;
+  background: var(--panel);
+}
+.deployment-context,
+.deployment-review {
+  min-width: 0;
+}
+.deployment-context {
+  border-right: 1px solid var(--line);
+}
+.deployment-grid .panel-heading {
+  height: 55px;
+  padding: 0 20px;
+}
+.deployment-grid .subtle {
+  font: 7px var(--mono);
+}
+.build-log-heading,
+.config-editor-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 20px 12px;
+  gap: 12px;
+  font-size: 11px;
+}
+.build-log-heading .file-picker {
+  font-size: 10px;
+}
+.build-log-editor,
+.build-config-editor {
+  display: block;
+  width: calc(100% - 40px);
+  margin: 0 20px;
+  min-height: 230px;
+  padding: 14px;
+  background: #141619;
+  border: 1px solid #3c3742;
+  color: #dfc6b4;
+  font: 11px/20px var(--mono);
+  resize: vertical;
+  tab-size: 2;
+}
+.build-config-editor {
+  min-height: 210px;
+  color: #d3d5c4;
+}
+.deployment-editor-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 20px;
+  color: var(--muted);
+  font: 8px var(--mono);
+}
+.config-editor-heading label span {
+  color: var(--muted);
+  font-size: 9px;
+  margin-left: 8px;
+}
+.config-path {
+  color: #bbb2c4;
+  font: 9px var(--mono);
+  padding: 0 20px;
+  overflow-wrap: anywhere;
+}
+.config-path span {
+  color: #8f9c7d;
+}
+.build-actions {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+.build-actions > span {
+  color: var(--green);
+  font: 9px var(--mono);
+}
+.deployment-privacy {
+  font-size: 10px;
+  color: var(--muted);
+  line-height: 1.85;
+  margin: 0;
+  padding: 0 20px 24px;
+}
+.deployment-empty {
+  padding: 65px 35px;
+  color: #aaa1b2;
+}
+.deployment-empty > span {
+  color: var(--orange);
+  font: 38px var(--mono);
+}
+.deployment-empty h3 {
+  color: #e5ddcf;
+  font:
+    29px/1.25 Georgia,
+    serif;
+  margin-top: 28px;
+}
+.deployment-empty p,
+.deployment-empty li {
+  font-size: 12px;
+  line-height: 1.9;
+}
+.deployment-empty ol {
+  padding-left: 20px;
+  margin: 25px 0;
+}
+.deployment-empty .rule-scope {
+  font-size: 10px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+.deployment-report {
+  padding: 22px;
+}
+.deployment-provenance {
+  color: var(--orange);
+  font: 8px/1.8 var(--mono);
+  letter-spacing: 0.6px;
+}
+.deployment-provenance span {
+  display: block;
+  color: #b7bca4;
+  margin-top: 6px;
+}
+.deployment-report > h3 {
+  font-size: 23px;
+  letter-spacing: -0.5px;
+  margin: 24px 0;
+}
+.deployment-report p,
+.deployment-report li {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #beb6c7;
+}
+.build-finding {
+  padding: 24px 0;
+  border-top: 1px solid var(--line);
+}
+.build-finding h4,
+.build-patch h4,
+.build-verification h4 {
+  font-size: 13px;
+  margin: 0;
+  color: #e1dbca;
+}
+.build-finding ol {
+  padding-left: 20px;
+}
+.build-evidence {
+  margin: 16px 0;
+}
+.build-evidence button {
+  display: block;
+  width: 100%;
+  border: 1px solid #4a3b34;
+  background: #29221e;
+  padding: 13px;
+  text-align: left;
+  margin-bottom: 6px;
+  color: #dfc6ac;
+}
+.build-evidence b {
+  display: block;
+  color: var(--orange);
+  font: 8px var(--mono);
+  margin-bottom: 8px;
+}
+.build-evidence code {
+  font: 10px/1.8 var(--mono);
+  overflow-wrap: anywhere;
+}
+.build-patch {
+  border-top: 1px solid var(--line);
+  padding: 22px 0;
+}
+.build-patch > div {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.build-patch > div span {
+  font: 9px var(--mono);
+  color: var(--green);
+}
+.build-patch pre {
+  font: 10px/1.9 var(--mono);
+  background: #111713;
+  border: 1px solid #394532;
+  padding: 14px;
+  max-height: 320px;
+  overflow: auto;
+}
+.build-patch .secondary-button {
+  border-radius: 2px;
+  font-size: 11px;
+}
+.build-verification {
+  padding: 20px;
+  border: 1px solid #464b3d;
+  background: #262b21;
+  margin-bottom: 22px;
+}
+.build-verification ul {
+  padding-left: 15px;
+  margin-bottom: 0;
+}
+.deployment-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 30px 0 12px;
+  font: 8px var(--mono);
+  color: var(--muted);
+}
+.deployment-footer a {
+  color: var(--green);
+}
+@media (max-width: 900px) {
+  .deployment-shell {
+    padding: 35px 22px 20px;
+  }
+  .deployment-intro {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .repo-import {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+  .deployment-grid {
+    grid-template-columns: 1fr;
+  }
+  .deployment-context {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .deployment-empty {
+    padding: 35px 24px;
+  }
+}
+@media (max-width: 520px) {
+  .deployment-shell {
+    padding: 28px 14px 14px;
+  }
+  .deployment-intro h1 {
+    letter-spacing: -1px;
+    font-size: 32px;
+  }
+  .repo-import {
+    padding: 20px 16px;
+  }
+  .repo-import form > div {
+    flex-direction: column;
+  }
+  .repo-snapshot {
+    padding: 18px 15px;
+  }
+  .repo-snapshot select {
+    width: 100%;
+  }
+  .deployment-grid .panel-heading {
+    padding: 0 14px;
+  }
+  .deployment-grid .subtle {
+    display: none;
+  }
+  .deployment-report {
+    padding: 18px 14px;
+  }
+  .build-log-editor,
+  .build-config-editor {
+    margin: 0 14px;
+    width: calc(100% - 28px);
+  }
+  .deployment-footer {
+    font-size: 7px;
+    flex-direction: column;
+  }
+}

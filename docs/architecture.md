@@ -1,6 +1,6 @@
 # Architecture and workflow
 
-FailFix is a single Next.js App Router application. React components manage an in-memory browser session; Node.js route handlers validate requests and generate review artifacts. There is no database, authentication service, repository checkout, or code-execution service.
+FailFix is a single Next.js App Router application. React components manage an in-memory browser session; Node.js route handlers validate requests and generate review artifacts. There is no database, authentication service, repository checkout, or code-execution service. A separate [deployment workflow](deployments.md) adds limited public GitHub configuration import and deterministic build-log review; the diagrams below describe the test-debugging workflow.
 
 The [README](../README.md#architecture) includes system and end-to-end workflow diagrams. This document maps those diagrams to code and describes the three request paths.
 

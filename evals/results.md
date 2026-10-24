@@ -1,11 +1,11 @@
-# Evaluation status — 23 October 2026
+# Evaluation status — 24 October 2026
 
 This file separates application correctness from model quality. **No live BharatCode evaluation has been performed yet; eligible API access is pending.**
 
 ## Completed local checks
 
-- 55 unit/API/SDK checks passed after the IDE interface redesign.
-- 26 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
+- 83 unit/API/SDK checks passed after adding deployment signature review and public GitHub import.
+- 32 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
 - TypeScript, lint, and production build passed.
 - Three reviewed first-party fixes satisfy independent boundary checks and match the walkthrough downloads.
 
@@ -14,6 +14,12 @@ The IDE checks include case navigation, keyboard input tabs, editor state across
 The SDK tests intercept HTTP; they do not call a real model. Browser tests mock successful/error model responses and use the real saved-example route. These results establish app behavior, not model accuracy.
 
 The original bugs are demonstrated directly: zero becomes a default, last-item access returns undefined, and sorting mutates caller input. Reviewed fixes then satisfy broader cases including negative values, empty arrays, singleton arrays, duplicate values, and unchanged inputs. The regression fixture bytes are checked against downloaded artifacts.
+
+## Deployment workflow checks
+
+Public GitHub import was smoke-tested against `pjha26/Failfix` without credentials. It imported root package.json at commit `89a88d171047d4b14647f1d92873f72a705e40ab`; no failed Actions runs were returned. Failed-run selection and pinned-file behavior are covered by mocked API and browser checks, not that live smoke test.
+
+Build-review tests check exact evidence lines, applicable missing-script diffs, preservation of existing scripts and CRLF, refusal of ambiguous workspace packages, unknown-error handling, input limits, unsafe URL/path rejection, and public-API failures. No imported or generated code was executed.
 
 ## Live model cases to run
 

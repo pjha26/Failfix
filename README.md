@@ -4,13 +4,13 @@
 
 [![CI](https://github.com/pjha26/Failfix/actions/workflows/ci.yml/badge.svg)](https://github.com/pjha26/Failfix/actions/workflows/ci.yml)
 
-FailFix is an IDE-style debugging workspace for failing **TypeScript + Vitest** tests. Bring one source file, its test, and the failure output. Follow a diagnosis back to the supplied lines, inspect a focused source patch, and review a separate regression test before trying the changes locally.
+FailFix is a review workspace for **build failures and TypeScript + Vitest bugs**. The [deployment desk](docs/deployments.md) imports limited public GitHub configuration, matches build-error signatures, and offers repair steps or narrowly supported patches without a model key. The test-debugging desk handles failing TypeScript/Vitest tests. Bring one source file, its test, and the failure output. Follow a diagnosis back to the supplied lines, inspect a focused source patch, and review a separate regression test before trying the changes locally.
 
 **You can try it without an API key.** Open a saved walkthrough, or bring a JSON proposal from a chat tool you already use. Automatic BharatCode analysis is implemented, but live provider compatibility and debugging quality remain unverified pending API access.
 
 ![FailFix investigation desk with case explorer, source editor, failure output, and evidence review](docs/images/workspace.jpg)
 
-[Quick start](#quick-start) · [How to use it](#how-to-use-it) · [Architecture](#architecture) · [Complete workflow](#complete-workflow) · [Development](#development) · [Limitations](#limitations)
+[Quick start](#quick-start) · [Usage](#how-to-use-the-test-debugging-desk) · [Architecture](#architecture) · [Complete workflow](#complete-workflow) · [Development](#development) · [Limitations](#limitations)
 
 ## The problem
 
@@ -54,7 +54,13 @@ Open [localhost:3000](http://localhost:3000). Select a sample case in the explor
 
 No environment file, account, or API key is required for saved examples and manual review. Inputs and results are kept in memory; refreshing or leaving the workspace loses the session.
 
-## How to use it
+## Investigate a deployment failure
+
+Open `/deployments`, import a public GitHub repository or paste package.json, and add the actual failing build output. Select **Investigate build** to view matched error lines, a repair checklist, and an optional supported config patch. You can also start with **Try a build-failure example**.
+
+Public import reads supported root configuration and failed Actions-step metadata at a specific commit. It does not download logs, clone repositories, connect accounts, or write to GitHub. Private repository access and account connection are deferred. No model API is used by build signature review. See [deployment workflow and boundaries](docs/deployments.md).
+
+## How to use the test-debugging desk
 
 | Mode               | What supplies the diagnosis?                     | Provider key in FailFix? | Result label                                  |
 | ------------------ | ------------------------------------------------ | ------------------------ | --------------------------------------------- |
@@ -115,7 +121,7 @@ Run the apply step only if the check succeeds and you approve the changes. Downl
 
 ## Architecture
 
-One Next.js application serves the IDE interface and Node.js API routes. There is no database, account system, repository integration, or hosted code runner.
+One Next.js application serves the IDE interface and Node.js API routes. There is no database, account system, repository write integration, or hosted code runner. Public GitHub build-context import is described in [the deployment architecture](docs/deployments.md).
 
 ```mermaid
 flowchart LR
@@ -263,7 +269,7 @@ npm start
 | Manual proposal / combined review request | 48 KiB / 128 KiB                                       |
 | Proposed source edits                     | At most three                                          |
 
-Whole-repository import, TSX, multi-file repair, dependency installation, automatic patch application, and hosted test execution are outside this release. Literal import checks are limited validation, not a sandbox. Evidence bounds do not establish that an explanation is true. Syntax, behavior, safety, and test coverage must be reviewed locally.
+Whole-repository import, TSX, multi-file repair, dependency installation, automatic patch application, and hosted test execution are outside this release. The separate deployment desk supports limited public configuration import and build-log signature checks, not whole-repository repair. Literal import checks are limited validation, not a sandbox. Evidence bounds do not establish that an explanation is true. Syntax, behavior, safety, and test coverage must be reviewed locally.
 
 The automatic-analysis limiter allows two concurrent analyses and defaults to 100 accepted analyses per server process. Counters reset on restart and are not shared across replicas. Manual review does not use that provider admission gate. These are demo controls, not durable abuse prevention or a billing guarantee.
 
@@ -286,3 +292,5 @@ No project license has been selected yet.
 - [Evaluation status](evals/results.md)
 - [Demo walkthrough](docs/demo.md)
 - [Original implementation plan](docs/implementation-plan.md) — planning baseline, not current completion status
+
+- [Deployment investigations and public GitHub import](docs/deployments.md)
