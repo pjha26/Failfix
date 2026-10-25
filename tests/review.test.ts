@@ -16,7 +16,7 @@ const request = (body: unknown, headers: Record<string, string> = {}) =>
   });
 describe('no-key manual review', () => {
   it('validates a real proposal and generates artifacts without a key or outbound request', async () => {
-    vi.stubEnv('BHARATCODE_API_KEY', '');
+    vi.stubEnv('GROQ_API_KEY', '');
     const fetch = vi.fn(() => {
       throw new Error('Outbound request forbidden');
     });

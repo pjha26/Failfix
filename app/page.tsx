@@ -262,7 +262,7 @@ export default function Home() {
                 configuration, or investigate build logs with signature checks.
                 For your own TypeScript test bugs, prepare a prompt for a chat
                 tool you already use and paste its JSON proposal into the test
-                workspace. Automatic test diagnosis needs configured BharatCode
+                workspace. Automatic test diagnosis needs configured Groq
                 access.
               </p>
             </details>
@@ -291,7 +291,7 @@ export default function Home() {
                 Inputs stay in browser memory and are sent to this app’s server
                 when you request review. Build signature review makes no
                 model-provider call and uses no application database. Automatic
-                test analysis, when enabled, sends its inputs to BharatCode.
+                test analysis, when enabled, sends its inputs to Groq.
               </p>
             </details>
           </div>

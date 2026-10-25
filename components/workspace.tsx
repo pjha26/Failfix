@@ -577,11 +577,11 @@ export default function Workspace({
                 />
               </div>
               <p className="privacy-note">
-                Automatic analysis sends inputs to BharatCode. Manual review
-                makes no provider requests. Use nonconfidential code and remove
+                Automatic analysis sends inputs to Groq. Manual review makes no
+                provider requests. Use nonconfidential code and remove
                 credentials.{' '}
                 <a
-                  href="https://bharatcode.ai/privacy"
+                  href="https://console.groq.com/docs/your-data"
                   target="_blank"
                   rel="noreferrer"
                 >

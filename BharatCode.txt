@@ -1,7 +1,8 @@
 Project: FailFix
 Repository: https://github.com/pjha26/Failfix
-Purpose: Explain failing TypeScript/Vitest tests and propose an evidence-linked source patch plus a regression test.
-BharatCode integration: Server-side Responses API at https://bharatcode.ai/api/model/v1, with qwen-3.8-27b as the default model. API keys are stored in server environment variables.
-Verification: The app checks patch applicability. Developers review and test changes locally; no uploaded code is executed by the hosted app.
-Status: Local implementation and mocked integration checks complete. Live API evaluation and public hosting are pending.
+Purpose: Investigate build failures and failing TypeScript/Vitest tests with evidence-linked review and downloadable proposals.
+Active AI integration: Native Groq SDK Chat Completions, with openai/gpt-oss-20b as the default model. GROQ_API_KEY stays in server-side local/host configuration. The original BharatCode provider adapter has been replaced.
+Deployment investigations: Public GitHub configuration import and deterministic build-log signature checks; no model call in that workflow.
+Verification: The app checks patch applicability. Developers review and test changes locally; no uploaded code is executed by the app. A tiny live Groq check and one full first-party request passed; broader debugging evaluation and public hosting remain pending.
+Hackathon note: This project is associated with BharatCode Build League, but currently does not call the BharatCode API. Organizer-specific provider requirements must be checked independently.
 Format note: This description is participant-authored. An organizer-specified BharatCode.txt template has not been confirmed.

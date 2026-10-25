@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { POST } from '../app/api/analyze/route';
-import { analyzeWithBharatCode, AnalysisError } from '../lib/bharatcode';
+import { analyzeWithGroq } from '../lib/groq';
+import { AnalysisError } from '../lib/http';
 import type { AnalysisInput } from '../lib/contracts';
 
-vi.mock('../lib/bharatcode', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('../lib/bharatcode')>();
-  return { ...actual, analyzeWithBharatCode: vi.fn() };
+vi.mock('../lib/groq', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../lib/groq')>();
+  return { ...actual, analyzeWithGroq: vi.fn() };
 });
 const input: AnalysisInput = {
   source: {
@@ -40,10 +41,10 @@ const request = (body: unknown = input, headers: Record<string, string> = {}) =>
     body: JSON.stringify(body),
   });
 beforeEach(() => {
-  vi.stubEnv('BHARATCODE_API_KEY', 'test-only-not-a-real-key');
+  vi.stubEnv('GROQ_API_KEY', 'test-only-not-a-real-key');
   vi.stubEnv('ANALYSIS_ENABLED', 'true');
   vi.stubEnv('ANALYSIS_SESSION_LIMIT', '1000');
-  vi.mocked(analyzeWithBharatCode).mockReset().mockResolvedValue({
+  vi.mocked(analyzeWithGroq).mockReset().mockResolvedValue({
     result,
     model: 'test-model',
     providerRequestId: 'test-request',
@@ -67,7 +68,7 @@ describe('analysis boundary', () => {
     expect(body).not.toHaveProperty('tokens');
   });
   it('retains concrete missing-context questions', async () => {
-    vi.mocked(analyzeWithBharatCode).mockResolvedValueOnce({
+    vi.mocked(analyzeWithGroq).mockResolvedValueOnce({
       result: {
         ...result,
         status: 'needs_context',
@@ -76,7 +77,7 @@ describe('analysis boundary', () => {
         questions: ['What should undefined return?'],
       },
       model: 'test-model',
-      providerRequestId: null,
+      providerRequestId: 'test-request',
       tokens: 0,
     });
     const body = await (await POST(request())).json();
@@ -94,7 +95,7 @@ describe('analysis boundary', () => {
         )
       ).status,
     ).toBe(400);
-    expect(analyzeWithBharatCode).not.toHaveBeenCalled();
+    expect(analyzeWithGroq).not.toHaveBeenCalled();
   });
   it('enforces actual body bytes before JSON parsing, even without content length', async () => {
     const req = new Request('http://localhost:3000/api/analyze', {
@@ -103,7 +104,7 @@ describe('analysis boundary', () => {
       body: ' '.repeat(65537),
     });
     expect((await POST(req)).status).toBe(413);
-    expect(analyzeWithBharatCode).not.toHaveBeenCalled();
+    expect(analyzeWithGroq).not.toHaveBeenCalled();
   });
   it('rejects malformed JSON and wrong content type', async () => {
     expect(
@@ -126,21 +127,21 @@ describe('analysis boundary', () => {
       (await POST(request(input, { origin: 'https://another.example' })))
         .status,
     ).toBe(403);
-    expect(analyzeWithBharatCode).not.toHaveBeenCalled();
+    expect(analyzeWithGroq).not.toHaveBeenCalled();
   });
   it('reports missing access without returning a fabricated fix', async () => {
-    vi.stubEnv('BHARATCODE_API_KEY', '');
+    vi.stubEnv('GROQ_API_KEY', '');
     const response = await POST(request());
     expect(response.status).toBe(503);
     expect((await response.json()).code).toBe('API_NOT_CONFIGURED');
-    expect(analyzeWithBharatCode).not.toHaveBeenCalled();
+    expect(analyzeWithGroq).not.toHaveBeenCalled();
   });
   it('supports the operator kill switch', async () => {
     vi.stubEnv('ANALYSIS_ENABLED', 'false');
     expect((await (await POST(request())).json()).code).toBe(
       'ANALYSIS_DISABLED',
     );
-    expect(analyzeWithBharatCode).not.toHaveBeenCalled();
+    expect(analyzeWithGroq).not.toHaveBeenCalled();
   });
   it.each([
     {},
@@ -150,10 +151,10 @@ describe('analysis boundary', () => {
       evidence: [{ ...result.evidence[0], startLine: 999, endLine: 999 }],
     },
   ])('rejects unusable model output', async (badResult) => {
-    vi.mocked(analyzeWithBharatCode).mockResolvedValueOnce({
+    vi.mocked(analyzeWithGroq).mockResolvedValueOnce({
       result: badResult,
       model: 'test-model',
-      providerRequestId: null,
+      providerRequestId: 'test-request',
       tokens: 0,
     });
     const response = await POST(request());
@@ -165,7 +166,7 @@ describe('analysis boundary', () => {
     ['PROVIDER_BUSY', 503],
     ['INCOMPLETE_OUTPUT', 502],
   ] as const)('preserves safe error %s', async (code, status) => {
-    vi.mocked(analyzeWithBharatCode).mockRejectedValueOnce(
+    vi.mocked(analyzeWithGroq).mockRejectedValueOnce(
       new AnalysisError(code, 'Safe explanation.', status),
     );
     const response = await POST(request());
@@ -173,7 +174,7 @@ describe('analysis boundary', () => {
     expect((await response.json()).code).toBe(code);
   });
   it('never exposes raw provider errors or user text in logs', async () => {
-    vi.mocked(analyzeWithBharatCode).mockRejectedValueOnce(
+    vi.mocked(analyzeWithGroq).mockRejectedValueOnce(
       new Error('private-provider-detail'),
     );
     const response = await POST(request());

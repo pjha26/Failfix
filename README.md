@@ -6,7 +6,7 @@
 
 FailFix is a review workspace for **build failures and TypeScript + Vitest bugs**. The [deployment desk](docs/deployments.md) imports limited public GitHub configuration, matches build-error signatures, and offers repair steps or narrowly supported patches without a model key. The test-debugging desk handles failing TypeScript/Vitest tests. Bring one source file, its test, and the failure output. Follow a diagnosis back to the supplied lines, inspect a focused source patch, and review a separate regression test before trying the changes locally.
 
-**You can try it without an API key.** Open a saved walkthrough, or bring a JSON proposal from a chat tool you already use. Automatic BharatCode analysis is implemented, but live provider compatibility and debugging quality remain unverified pending API access.
+**You can try it without an API key.** Open a saved walkthrough, or bring a JSON proposal from a chat tool you already use. Automatic Groq analysis is implemented, but live connectivity and one first-party debugging request have passed. A broader model-quality evaluation remains pending.
 
 ![FailFix investigation desk with case explorer, source editor, failure output, and evidence review](docs/images/workspace.jpg)
 
@@ -68,11 +68,11 @@ Public import reads supported root configuration and failed Actions-step metadat
 
 ## How to use the test-debugging desk
 
-| Mode               | What supplies the diagnosis?                     | Provider key in FailFix? | Result label                                  |
-| ------------------ | ------------------------------------------------ | ------------------------ | --------------------------------------------- |
-| Saved walkthrough  | First-party, hand-authored example               | No                       | Saved example                                 |
-| Manual review      | JSON you paste from your chosen chat tool        | No                       | User-supplied proposal                        |
-| Automatic analysis | Server-side BharatCode Responses API integration | Yes                      | Proposed fix, questions, or unsupported scope |
+| Mode               | What supplies the diagnosis?                      | Provider key in FailFix? | Result label                                  |
+| ------------------ | ------------------------------------------------- | ------------------------ | --------------------------------------------- |
+| Saved walkthrough  | First-party, hand-authored example                | No                       | Saved example                                 |
+| Manual review      | JSON you paste from your chosen chat tool         | No                       | User-supplied proposal                        |
+| Automatic analysis | Server-side Groq Chat Completions API integration | Yes                      | Proposed fix, questions, or unsupported scope |
 
 ### 1. Explore a saved case
 
@@ -99,18 +99,18 @@ FailFix prepares the prompt in the browser. It does not send it to a chat servic
 
 ### 3. Enable automatic analysis (optional)
 
-Copy `.env.example` to `.env.local`, set your server-side `BHARATCODE_API_KEY`, and restart the app. Never commit the key or put it in a `NEXT_PUBLIC_*` variable.
+Copy `.env.example` to `.env.local`, set your server-side `GROQ_API_KEY`, and restart the app. Never commit the key or put it in a `NEXT_PUBLIC_*` variable.
 
 | Variable                   | Default                        | Purpose                                                       |
 | -------------------------- | ------------------------------ | ------------------------------------------------------------- |
-| `BHARATCODE_API_KEY`       | Unset                          | Required only for automatic analysis                          |
-| `BHARATCODE_MODEL`         | `qwen-3.8-27b`                 | Model identifier sent to BharatCode                           |
+| `GROQ_API_KEY`             | Unset                          | Required only for automatic analysis                          |
+| `GROQ_MODEL`               | `openai/gpt-oss-20b`           | Model identifier sent to Groq                                 |
 | `ANALYSIS_ENABLED`         | `true`                         | Set exactly `false` to pause automatic analysis               |
 | `ANALYSIS_SESSION_LIMIT`   | `100`                          | Accepted analyses per server process                          |
 | `APP_ORIGIN`               | Request protocol + Host header | Canonical site origin when deployed behind a proxy            |
 | `TRUSTED_CLIENT_IP_HEADER` | Unset                          | Optional host-verified single-IP header for per-client limits |
 
-Supply the same inputs and select **Analyze failure**. The integration uses the OpenAI SDK against BharatCode's endpoint; an OpenAI key is not used by this integration. Provider access must be enabled for the configured account and model. See [operations](docs/operations.md) before configuring a public host.
+Supply the same inputs and select **Analyze failure**. The integration uses the native `groq-sdk` package and Groq Chat Completions with strict JSON-schema output. The default model is `openai/gpt-oss-20b`, hosted by Groq; use a Groq key, not an OpenAI key. Keep examples small enough for the account’s token limits. See [operations](docs/operations.md) before configuring a public host.
 
 ### 4. Apply and verify locally
 
@@ -153,7 +153,7 @@ flowchart LR
     Check --> Artifacts
   end
   Chat["User-selected external chat tool"]
-  Provider["BharatCode Responses API"]
+  Provider["Groq Chat Completions API"]
   Local["Developer's local repository and tests"]
   UI -->|"Load example"| Examples
   UI -->|"Inputs and pasted proposal"| Manual
@@ -183,7 +183,7 @@ flowchart TD
   Choice -->|"Automatic analysis"| Auto["POST /api/analyze"]
   Auto --> Access{"Valid input, API configuration and capacity?"}
   Access -->|"No"| Error["Show safe error and retain current inputs"]
-  Access -->|"Yes"| Model["BharatCode structured response, 90-second deadline"]
+  Access -->|"Yes"| Model["Groq structured response, 90-second deadline"]
   Model -->|"Provider error or incomplete output"| Error
   Model -->|"Completed output"| Validate
   Manual -->|"Request or JSON error"| Error
@@ -208,14 +208,14 @@ See [the detailed architecture](docs/architecture.md) for route responsibilities
 
 ## Technology and repository layout
 
-| Layer                      | Implementation                                         |
-| -------------------------- | ------------------------------------------------------ |
-| Web application            | Next.js 16 App Router, React 19, TypeScript 6          |
-| Interface                  | CSS, browser text/file APIs, responsive IDE layout     |
-| Validation                 | Zod schemas and explicit UTF-8 byte limits             |
-| Patch generation           | `diff`, exact-text source edits                        |
-| Optional model integration | OpenAI SDK pointed at BharatCode's Responses endpoint  |
-| Verification               | Vitest, Playwright, ESLint, TypeScript, GitHub Actions |
+| Layer                      | Implementation                                          |
+| -------------------------- | ------------------------------------------------------- |
+| Web application            | Next.js 16 App Router, React 19, TypeScript 6           |
+| Interface                  | CSS, browser text/file APIs, responsive IDE layout      |
+| Validation                 | Zod schemas and explicit UTF-8 byte limits              |
+| Patch generation           | `diff`, exact-text source edits                         |
+| Optional model integration | Native Groq SDK with strict structured Chat Completions |
+| Verification               | Vitest, Playwright, ESLint, TypeScript, GitHub Actions  |
 
 ```text
 app/
@@ -255,7 +255,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm run test:browser
 ```
 
-The latest recorded local verification is **83 unit/API/SDK checks and 38 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
+The latest recorded local verification is **99 unit/API/SDK checks and 38 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
 
 For a local production preview:
 
@@ -284,7 +284,7 @@ The automatic-analysis limiter allows two concurrent analyses and defaults to 10
 
 ## Privacy and deployment
 
-Code and results are not saved to a database or browser storage. The app does not log code or prompt text. Manual review sends content to the FailFix server without a provider call; automatic analysis sends it to BharatCode. Copying a prompt into another service is your choice and subject to that service's privacy terms. Use nonconfidential code and remove secrets. The interface loads Google Fonts with system fallbacks.
+Code and results are not saved to a database or browser storage. The app does not log code or prompt text. Manual review sends content to the FailFix server without a provider call; automatic analysis sends it to Groq. [Groq data controls](https://console.groq.com/docs/your-data) apply; this application does not claim provider-side zero retention. Copying a prompt into another service is your choice and subject to that service's privacy terms. Use nonconfidential code and remove secrets. The interface loads Google Fonts with system fallbacks.
 
 Public hosting is pending. Deploy as a Node.js service, not a static export, with server-side secrets and a timeout compatible with the analysis deadline. The current automatic limiter assumes one process/replica. Read the [operations guide](docs/operations.md) for origin configuration, trusted proxy headers, limits, troubleshooting, and release checks. Recheck dependency advisories before release; the operations and evaluation notes are not a current security certification.
 
@@ -292,7 +292,7 @@ Design inspiration: the cinematic composition and section pacing of [GetLayers](
 
 ## Project status and contributing
 
-Built for the BharatCode Build League. The local interface, saved examples, manual review, and provider adapter are implemented. **Live model evaluation, public deployment, and final hackathon submission are pending.** Manual review does not itself establish compliance with organizer API requirements. The root `BharatCode.txt` is participant-authored; organizer format and submission requirements still need confirmation.
+Built for the BharatCode Build League. The local interface, saved examples, manual review, and provider adapter are implemented. **Full live model evaluation, public deployment, and final hackathon submission are pending.** A tiny Groq connectivity check and one first-party end-to-end debugging request have passed. The active AI provider is now Groq, replacing the original BharatCode adapter. Neither Groq use nor manual review establishes compliance with organizer-specific BharatCode API requirements. The root `BharatCode.txt` is participant-authored; organizer format and submission requirements still need confirmation.
 
 To report a problem, [open an issue](https://github.com/pjha26/Failfix/issues) with reproduction steps, expected behavior, and a small nonconfidential example. Never include API keys or private source. For a change, keep the scope focused, update relevant documentation, and run the applicable checks before opening a pull request.
 

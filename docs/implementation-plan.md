@@ -1,5 +1,7 @@
 # FailFix — implementation and shipping plan
 
+> Provider migration note — 25 October 2026: the current implementation uses native Groq SDK Chat Completions and GROQ_API_KEY. This document remains the original BharatCode planning baseline; use README.md and operations.md for current setup.
+
 Prepared 22 October 2026. Planning baseline: submit by 25 October, with a working public build ready on 24 October. This is an implementation plan; development, live API verification, hosting, and submission have not happened yet.
 
 ## 1. Product promise

@@ -73,7 +73,7 @@ test('provider errors preserve input and provide a recovery message', async ({
     route.fulfill({
       status: 503,
       json: {
-        error: 'BharatCode is busy. Please try later.',
+        error: 'Groq is busy. Please try later.',
         requestId: 'test-error',
       },
     }),
@@ -83,7 +83,7 @@ test('provider errors preserve input and provide a recovery message', async ({
   await page.getByRole('button', { name: 'Analyze failure' }).click();
   await expect(
     page.getByRole('alert', { name: 'Analysis error' }),
-  ).toContainText('BharatCode is busy');
+  ).toContainText('Groq is busy');
   await expect(
     page.getByRole('textbox', { name: 'Source code', exact: true }),
   ).toHaveValue(examples[0].input.source.text);

@@ -57,9 +57,7 @@ export function ResultPanel({
       {savedExample && (
         <div className="saved-banner">
           <strong>Saved example · hand-authored walkthrough</strong>
-          <span>
-            This is an illustrative result, not a live BharatCode response.
-          </span>
+          <span>This is an illustrative result, not a live Groq response.</span>
         </div>
       )}
       {stale && (

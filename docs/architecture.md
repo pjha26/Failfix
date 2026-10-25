@@ -23,7 +23,7 @@ flowchart TB
     Auto["/api/analyze: configuration and admission gate"]
     Manual["/api/review: manual input and proposal limits"]
     Examples["Saved case page or /api/examples/id"]
-    SDK["lib/bharatcode.ts and lib/prompt.ts"]
+    SDK["lib/groq.ts and lib/prompt.ts"]
     Patch["lib/patch.ts: buildArtifacts"]
     HTTP --> Contract
     Contract --> Auto
@@ -32,11 +32,11 @@ flowchart TB
     Manual --> Patch
     Examples --> Patch
   end
-  Provider["BharatCode · external provider"]
+  Provider["Groq · external provider"]
   Workspace -->|"Automatic POST"| HTTP
   ManualUI -->|"Manual POST"| HTTP
   Workspace -->|"Load saved case"| Examples
-  SDK -->|"Stateless structured-output request"| Provider
+  SDK -->|"Structured-output request"| Provider
   Provider -->|"Untrusted proposal"| Patch
   Patch -->|"Validated result, optional artifacts"| ResultUI
   ResultUI --> Local["Developer downloads, reviews, applies and tests locally"]
@@ -89,8 +89,8 @@ sequenceDiagram
   participant UI as Browser workspace
   participant API as POST /api/analyze
   participant Gate as Process-local admission gate
-  participant SDK as BharatCode adapter
-  participant Model as BharatCode Responses API
+  participant SDK as Groq adapter
+  participant Model as Groq Chat Completions API
   participant Patch as Shared patch engine
   Developer->>UI: Supply context and select Analyze failure
   UI->>API: Validated input JSON
@@ -102,7 +102,7 @@ sequenceDiagram
   else Admitted
     Gate-->>API: Release callback
     API->>SDK: Input and combined cancellation/deadline signal
-    SDK->>Model: Structured response request, store false
+    SDK->>Model: Strict JSON-schema Chat Completions request
     opt First request returns HTTP 503
       SDK->>Model: One retry after cancellable delay
     end
@@ -125,7 +125,7 @@ sequenceDiagram
 
 The route validates inputs server-side even though the browser validates before sending. Requests have a combined 90-second deadline/cancellation signal. The SDK's automatic retry behavior is disabled; the adapter permits one retry only after an explicit 503. The process allowance counts admitted analyses, including attempts that later fail; releasing a slot does not replenish that allowance.
 
-The adapter uses the OpenAI SDK with BharatCode's base URL, a strict JSON-schema response format, and a 6,000-token output cap. Incomplete output is rejected. HTTP-mocked tests cover this adapter; live compatibility and model quality remain pending.
+The adapter uses the native `groq-sdk` Chat Completions API, `openai/gpt-oss-20b` by default, a strict JSON-schema response format, and a 6,000-token completion cap. GPT-OSS requests use low reasoning effort. Only a `stop` finish reason with nonempty, bounded JSON content is accepted. Length-limited, tool-call, empty, malformed, and oversized results are rejected before patch validation. A tiny live connectivity check and one first-party end-to-end request have passed; broader debugging quality evaluation remains pending.
 
 ### Saved walkthroughs
 
@@ -153,21 +153,21 @@ The failure console shows user-supplied test output. It is not a terminal emulat
 
 ## Module map
 
-| Module                               | Responsibility                                                                          |
-| ------------------------------------ | --------------------------------------------------------------------------------------- |
-| `app/page.tsx`, `app/ide.css`        | Getting-started document and IDE layout                                                 |
-| `app/workspace/page.tsx`             | Workspace route, example deep links and server-built initial results                    |
-| `components/ide-chrome.tsx`          | Shared header and status bar                                                            |
-| `components/workspace.tsx`           | Explorer, input tabs, file reads, cancellation, result snapshots and evidence selection |
-| `components/manual-workflow.tsx`     | Prompt preparation, clipboard feedback and manual review submission                     |
-| `components/result-panel.tsx`        | Diagnosis, evidence, changes, stale-result controls and downloads                       |
-| `lib/contracts.ts`                   | Input/result schemas, types and shared byte limits                                      |
-| `lib/http.ts`                        | Bounded JSON reading, content-type/origin checks and safe errors                        |
-| `lib/manual.ts`                      | Local prompt creation and pasted JSON parsing                                           |
-| `lib/bharatcode.ts`, `lib/prompt.ts` | Provider adapter and debugging instructions                                             |
-| `lib/patch.ts`                       | Result validation, exact edits, regression path/import checks and diff generation       |
-| `lib/limits.ts`                      | Process-local concurrency, allowance and optional trusted-client limits                 |
-| `lib/examples.ts`                    | First-party walkthrough inputs and proposals                                            |
+| Module                           | Responsibility                                                                          |
+| -------------------------------- | --------------------------------------------------------------------------------------- |
+| `app/page.tsx`, `app/ide.css`    | Getting-started document and IDE layout                                                 |
+| `app/workspace/page.tsx`         | Workspace route, example deep links and server-built initial results                    |
+| `components/ide-chrome.tsx`      | Shared header and status bar                                                            |
+| `components/workspace.tsx`       | Explorer, input tabs, file reads, cancellation, result snapshots and evidence selection |
+| `components/manual-workflow.tsx` | Prompt preparation, clipboard feedback and manual review submission                     |
+| `components/result-panel.tsx`    | Diagnosis, evidence, changes, stale-result controls and downloads                       |
+| `lib/contracts.ts`               | Input/result schemas, types and shared byte limits                                      |
+| `lib/http.ts`                    | Bounded JSON reading, content-type/origin checks and safe errors                        |
+| `lib/manual.ts`                  | Local prompt creation and pasted JSON parsing                                           |
+| `lib/groq.ts`, `lib/prompt.ts`   | Provider adapter and debugging instructions                                             |
+| `lib/patch.ts`                   | Result validation, exact edits, regression path/import checks and diff generation       |
+| `lib/limits.ts`                  | Process-local concurrency, allowance and optional trusted-client limits                 |
+| `lib/examples.ts`                | First-party walkthrough inputs and proposals                                            |
 
 `GET /api/health` reports process availability without spending provider resources. It is not a provider-readiness check. Analysis and review responses use `Cache-Control: no-store` and request IDs. Automatic-analysis logs contain operational status/timing/model/token metadata, not submitted code or prompts.
 
@@ -176,7 +176,7 @@ The failure console shows user-supplied test output. It is not a terminal emulat
 - Source, logs, manually supplied proposals, and model outputs are untrusted data. There are no model tools, shell commands, or code-runner privileges.
 - The server checks input paths as relative identifiers; it never writes uploaded paths to its filesystem.
 - React renders code as text; model HTML is not inserted as HTML.
-- Provider credentials stay server-side. `store: false` is requested from the provider; this is not a claim about all provider retention policies.
+- Provider credentials stay server-side. No Responses-only `store` flag is sent. [Groq data controls](https://console.groq.com/docs/your-data) govern provider retention; the app makes no provider-side zero-retention claim.
 - Code, prompts, and results have no application database or browser-storage persistence. Requests still transmit content to the relevant server; manual use of a chat tool follows that tool's terms.
 - Exact source matching establishes applicability, not semantic correctness, test coverage, or security. Prompt instructions do not establish immunity to prompt injection.
 - The current automatic-analysis gate is process-local. It is not a multi-replica limit or durable billing cap, and it does not govern manual review.
@@ -190,3 +190,5 @@ One language and one test framework keep the scope reviewable. Nonstreaming stru
 The homepage uses `components/scroll-experience.tsx` for IntersectionObserver section reveals and chapter selection, plus one passive scroll listener scheduled through requestAnimationFrame for reading progress and a small hero offset. `components/build-signal.tsx` renders the original decorative SVG. All effects use native browser APIs and CSS; there is no animation or WebGL dependency.
 
 The server renders readable content by default. Motion enhancements are added after hydration, can be paused, and respect `prefers-reduced-motion`. The chapter preview is explicitly illustrative and does not make GitHub, model, or deployment requests. Real actions navigate to the deployment or test desk.
+
+The provider request includes server-computed `lineLimits` alongside the raw context to reduce out-of-range citations. The server still validates every returned range independently. Groq-side `json_validate_failed` errors are surfaced as invalid output rather than accepted proposals or configuration errors; no automatic generation retry or relaxed validation is used.

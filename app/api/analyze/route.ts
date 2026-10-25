@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { AnalysisError, analyzeWithBharatCode } from '@/lib/bharatcode';
+import { analyzeWithGroq } from '@/lib/groq';
+import { AnalysisError } from '@/lib/http';
 import { inputSchema } from '@/lib/contracts';
 import { readJsonRequest } from '@/lib/http';
 import { buildArtifacts } from '@/lib/patch';
@@ -32,10 +33,10 @@ export async function POST(request: Request) {
         'Live analysis is paused. You can still explore saved examples.',
         503,
       );
-    if (!process.env.BHARATCODE_API_KEY?.trim())
+    if (!process.env.GROQ_API_KEY?.trim())
       throw new AnalysisError(
         'API_NOT_CONFIGURED',
-        'Live analysis is not configured yet. Try a saved example, or add a BharatCode API key when running locally.',
+        'Live analysis is not configured yet. Try a saved example, or add a Groq API key when running locally.',
         503,
       );
     const admission = gate.acquire(trustedClient(request));
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
       request.signal,
       AbortSignal.timeout(90_000),
     ]);
-    const provider = await analyzeWithBharatCode(parsed.data, signal);
+    const provider = await analyzeWithGroq(parsed.data, signal);
     let result: ReturnType<typeof buildArtifacts>;
     try {
       result = buildArtifacts(parsed.data, provider.result);

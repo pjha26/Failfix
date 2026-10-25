@@ -6,21 +6,21 @@ Hosting is deferred at the owner's request. These are setup instructions, not a 
 
 | Variable                   | Purpose                                                                                           |
 | -------------------------- | ------------------------------------------------------------------------------------------------- |
-| `BHARATCODE_API_KEY`       | Required for live calls; developer API key, server-side only                                      |
-| `BHARATCODE_MODEL`         | Defaults to `qwen-3.8-27b`; must be eligible for the account                                      |
+| `GROQ_API_KEY`             | Required for live calls; developer API key, server-side only                                      |
+| `GROQ_MODEL`               | Defaults to `openai/gpt-oss-20b`; must be eligible for the account                                |
 | `ANALYSIS_ENABLED`         | Set exactly `false` to pause live analysis                                                        |
 | `ANALYSIS_SESSION_LIMIT`   | Positive integer accepted-analysis ceiling per process; defaults to 100                           |
 | `TRUSTED_CLIENT_IP_HEADER` | Optional; configure only after verifying that the host overwrites it with a single trustworthy IP |
 
 Do not share `.env.local`, print keys, or put keys in `NEXT_PUBLIC_*` variables. The key-check script loads `.env.local` locally. CI needs no API key.
 
-The provider requires eligible API access. Once configured, run `npm run check:api` to test the model list and a tiny real structured response. This checks connectivity/schema compatibility, not debugging quality. Then run the six cases described in `evals/results.md` manually, recording every attempt. Do not run newly generated code before reviewing it.
+Create a Groq key in the [Groq Console](https://console.groq.com/keys), store it only in ignored `.env.local`, and select a model supporting strict structured outputs. If a key is pasted into chat or a tracked file, revoke it and replace it. Once configured, run `npm run check:api` to test the model list and a tiny real structured response. This checks connectivity/schema compatibility, not debugging quality. Then run the six cases described in `evals/results.md` manually, recording every attempt. Do not run newly generated code before reviewing it.
 
 ## Host requirements
 
 - Node.js runtime compatible with the locked dependencies.
 - Installation `npx --yes npm@11.6.4 ci`, build `npm run build`, start `npm start`.
-- HTTPS, server-side environment secrets, outbound HTTPS to BharatCode, health route `/api/health`.
+- HTTPS, server-side environment secrets, outbound HTTPS to api.groq.com, health route `/api/health`.
 - Timeout long enough for a 90-second provider deadline plus app overhead. A host with a shorter limit needs an explicitly shorter app deadline or a different hosting configuration.
 - Exactly one process and one replica for the current in-memory limiter. Do not treat Next.js's `maxDuration` declaration as proof a selected host allows that duration.
 - Confirm same-origin checks with the real public URL behind the host's proxy. Configure request origin using documented host behavior if needed; do not blindly trust forwarded headers.
@@ -53,3 +53,13 @@ In-memory counters reset after restart and are separate across processes. The 10
 ## Public origin
 
 Set `APP_ORIGIN` to the canonical HTTPS site origin when deploying behind a reverse proxy. Without it, the request protocol and Host header identify the browser-facing origin; forwarded-host headers are not trusted. This accommodates Next.js internal hostnames while retaining exact origin and cross-site checks.
+
+## Groq compatibility and free-tier limits
+
+The adapter uses native `groq-sdk` Chat Completions rather than the old OpenAI SDK Responses path. Requests use `messages`, `response_format.json_schema` with `strict: true`, and `max_completion_tokens: 6000`. GPT-OSS models use low reasoning effort; no `store` field or model tools are sent. The SDK automatic retries are disabled. The application retries one explicit 503, but never retries a 429, authentication failure, or model/schema configuration error automatically.
+
+The 64 KiB application input ceiling is not a promise that an account quota can accept the request. Start with the small first-party examples. Check current token/request limits in the Groq account; a large prompt plus reserved completion budget can exhaust a free-tier token allowance. The app does not upgrade plans or switch to a paid provider automatically.
+
+`API_NOT_CONFIGURED` means GROQ_API_KEY is missing; `API_ACCESS` indicates a key or permissions problem; `PROVIDER_CONFIGURATION` means the selected model/request was not accepted. Full output still passes local Zod, evidence, and exact-source patch checks. A successful key check does not establish diagnosis accuracy.
+
+Official references: [SDK libraries](https://console.groq.com/docs/libraries), [structured outputs and supported models](https://console.groq.com/docs/structured-outputs), [rate limits](https://console.groq.com/docs/rate-limits), and [data controls](https://console.groq.com/docs/your-data).
