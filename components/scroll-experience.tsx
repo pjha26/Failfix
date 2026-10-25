@@ -55,6 +55,14 @@ export function ScrollExperience({ children }: { children: ReactNode }) {
           ),
         );
         element.style.setProperty(
+          '--hero-turn',
+          `${Math.min(window.scrollY / 45, 16)}deg`,
+        );
+        element.style.setProperty(
+          '--hero-lift',
+          `${Math.min(window.scrollY * 0.08, 65)}px`,
+        );
+        element.style.setProperty(
           '--hero-shift',
           `${Math.min(window.scrollY * 0.11, 90)}px`,
         );
@@ -70,11 +78,37 @@ export function ScrollExperience({ children }: { children: ReactNode }) {
       window.removeEventListener('resize', update);
       element.classList.remove('motion-ready');
       element.style.removeProperty('--hero-shift');
+      element.style.removeProperty('--hero-turn');
+      element.style.removeProperty('--hero-lift');
+      element.style.removeProperty('--page-progress');
     };
   }, [enabled]);
   return (
     <div className={`story-site${enabled ? '' : ' motion-muted'}`} ref={root}>
       <div className="reading-progress" aria-hidden="true" />
+      <svg
+        className="page-light"
+        viewBox="0 0 1000 2200"
+        preserveAspectRatio="none"
+        aria-hidden="true"
+      >
+        <path
+          className="light-bloom"
+          d="M850 0C1100 250 70 190 170 490S1050 700 860 1000S40 1200 180 1500S1070 1750 740 2200"
+        />
+        <path
+          className="light-core"
+          pathLength="1"
+          d="M850 0C1100 250 70 190 170 490S1050 700 860 1000S40 1200 180 1500S1070 1750 740 2200"
+        />
+      </svg>
+      <div className="scroll-dial" aria-hidden="true">
+        <svg viewBox="0 0 48 48">
+          <circle cx="24" cy="24" r="21" />
+          <circle className="dial-fill" cx="24" cy="24" r="21" pathLength="1" />
+        </svg>
+        <span>ƒ↯</span>
+      </div>
       {children}
       <button
         className="motion-toggle"

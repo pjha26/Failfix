@@ -52,11 +52,11 @@
 }
 .ide-titlebar > a:last-child {
   margin-left: auto;
-  font-size: 11px;
+  font-size: 12px;
   color: #c6c3cc;
 }
 .ide-breadcrumb {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   color: #b1aeb9;
 }
 .ide-breadcrumb span {
@@ -103,7 +103,7 @@
   height: 27px;
   display: grid;
   place-items: center;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: #b6b2bc;
 }
 .ide-explorer {
@@ -117,11 +117,11 @@
   display: flex;
   justify-content: space-between;
   color: #aaa7b2;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 1.2px;
 }
 .project-name {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   color: #e0dce6;
   padding: 9px 14px;
 }
@@ -135,7 +135,7 @@
   color: #b8b5c0;
   padding: 10px 16px 10px 25px;
   text-align: left;
-  font: 10px var(--mono);
+  font: 12px var(--mono);
 }
 .tree-file.selected {
   background: #303038;
@@ -154,7 +154,7 @@
 }
 .file-icon {
   color: #b9a1e9;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   white-space: nowrap;
 }
 .file-icon.ts {
@@ -165,7 +165,7 @@
 }
 .tree-state {
   color: #a6b685;
-  font-size: 8px;
+  font-size: 12px;
 }
 .cases-heading {
   margin-top: 30px;
@@ -181,17 +181,17 @@
   border: 0;
   text-align: left;
   color: #dbd7e1;
-  font-size: 11px;
+  font-size: 12px;
 }
 .case-file > span {
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: var(--orange);
   line-height: 17px;
 }
 .case-file small {
   display: block;
   color: #9a96a4;
-  font-size: 9px;
+  font-size: 12px;
   margin-top: 6px;
 }
 .case-file b {
@@ -208,7 +208,7 @@
   padding: 22px 18px;
   border-top: 1px solid var(--line);
   margin: 28px 14px 0;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.6;
   color: #c6bfb6;
 }
@@ -236,7 +236,7 @@
   justify-content: space-between;
   gap: 16px;
   color: #bebac7;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
 }
 .ide-status i {
   display: inline-block;
@@ -258,16 +258,16 @@
   gap: 12px;
   padding: 0 24px;
   color: #d7d1dd;
-  font: 11px var(--mono);
+  font: 12px var(--mono);
   border-top: 1px solid var(--orange);
   border-bottom: 1px solid #3b3941;
 }
 .tab-mark {
   color: #97909f;
-  font-size: 7px;
+  font-size: 12px;
 }
 .tab-context {
-  font-size: 10px;
+  font-size: 12px;
   color: #918897;
   margin-left: auto;
   font-style: italic;
@@ -287,7 +287,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 15px;
-  font: 8px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 1.1px;
   color: #706e69;
 }
@@ -296,7 +296,7 @@
   position: relative;
 }
 .document-kicker {
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: #77756e;
   letter-spacing: 1.5px;
 }
@@ -338,7 +338,7 @@
   display: block;
   margin-top: 12px;
   color: #79766d;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
 }
 .case-study {
   border: 1px solid #c9c7bf;
@@ -349,7 +349,7 @@
   justify-content: space-between;
   gap: 14px;
   padding: 13px 18px;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: #6f6b62;
   border-bottom: 1px solid #cfccc2;
 }
@@ -400,7 +400,7 @@
 }
 .case-observation p {
   flex: 1;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
   margin: 0;
   color: #68645d;
@@ -410,14 +410,14 @@
 }
 .case-observation a {
   white-space: nowrap;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: #7b492f;
   text-decoration: underline;
   text-underline-offset: 4px;
 }
 .case-disclaimer {
   color: #777369;
-  font: 8px var(--mono);
+  font: 12px var(--mono);
   padding: 10px 18px;
   border-top: 1px solid #cfccc2;
 }
@@ -435,7 +435,7 @@
 }
 .guide-steps b {
   color: #a25138;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
 }
 .guide-steps h2 {
   font-size: 13px;
@@ -444,7 +444,7 @@
 }
 .guide-steps p {
   color: #737066;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.85;
   margin: 0;
 }
@@ -452,7 +452,7 @@
   border-top: 1px solid #ccc9bf;
   padding: 19px 0;
   color: #615d54;
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
 }
 .welcome-faq summary {
@@ -465,7 +465,7 @@
   justify-content: space-between;
   border-top: 1px solid #ccc9bf;
   padding: 22px 0;
-  font: 8px var(--mono);
+  font: 12px var(--mono);
   color: #6c675c;
 }
 .document-signoff a {
@@ -489,13 +489,13 @@
   background: #222329;
 }
 .session-bar h1 {
-  font: 11px var(--mono);
+  font: 12px var(--mono);
   margin: 0;
   color: #d1cdd8;
 }
 .session-bar > span {
   color: var(--orange);
-  font: 8px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 0.7px;
 }
 .workspace-ide .workbench {
@@ -516,16 +516,16 @@
   padding: 0 18px;
 }
 .workspace-ide .panel-heading h2 {
-  font-size: 11px;
+  font-size: 12px;
 }
 .workspace-ide .step-number {
   border: 0;
   padding: 0;
   color: var(--orange);
-  font-size: 9px;
+  font-size: 12px;
 }
 .workspace-ide .subtle {
-  font: 7px var(--mono);
+  font: 12px var(--mono);
   color: #a9a3b2;
   letter-spacing: 0.8px;
 }
@@ -550,7 +550,7 @@
   border-bottom: 0;
   border-top: 1px solid transparent;
   padding: 0 14px;
-  font: 10px var(--mono);
+  font: 12px var(--mono);
 }
 .workspace-ide .tabs button[aria-selected='true'] {
   background: #1b1c21;
@@ -569,7 +569,7 @@
   height: 38px;
 }
 .workspace-ide .path-input {
-  font-size: 10px;
+  font-size: 12px;
   color: #ada7b7;
 }
 .workspace-ide .code-editor {
@@ -596,7 +596,7 @@
 .workspace-ide .editor-footer {
   padding: 10px 18px;
   border-bottom: 1px solid var(--line);
-  font-size: 8px;
+  font-size: 12px;
   color: #a8a1b0;
 }
 .failure-console {
@@ -610,14 +610,14 @@
   display: flex;
   justify-content: space-between;
   padding: 13px 18px;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: #d3cdda;
 }
 .failure-console summary::-webkit-details-marker {
   display: none;
 }
 .failure-console b {
-  font-size: 7px;
+  font-size: 12px;
   color: var(--orange);
   font-weight: 400;
   margin-left: 15px;
@@ -628,24 +628,24 @@
   overflow: auto;
   max-height: 110px;
   color: #dfb2a3;
-  font: 10px/1.8 var(--mono);
+  font: 12px/1.8 var(--mono);
 }
 .failure-console > button {
   margin-left: 18px;
-  font-size: 9px;
+  font-size: 12px;
   color: #a59cab;
 }
 .workspace-ide .behavior-field {
   padding: 16px 18px 0;
 }
 .workspace-ide .behavior-field label {
-  font-size: 10px;
+  font-size: 12px;
 }
 .workspace-ide .behavior-field textarea {
   background: #202127;
   border-color: var(--line);
   border-radius: 2px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .workspace-ide .action-area {
   padding: 16px 18px;
@@ -655,11 +655,11 @@
 .workspace-ide .primary-button {
   background: var(--green);
   border-radius: 3px;
-  font-size: 11px;
+  font-size: 12px;
   padding: 11px 13px;
 }
 .workspace-ide .text-button {
-  font-size: 10px;
+  font-size: 12px;
 }
 .workspace-ide .manual-workflow {
   margin: 0 18px;
@@ -679,7 +679,7 @@
 .workspace-ide .privacy-note {
   padding: 0 18px 18px;
   color: #a8a0b0;
-  font-size: 9px;
+  font-size: 12px;
 }
 .workspace-ide .result-content {
   padding: 20px 18px;
@@ -833,7 +833,7 @@
     padding: 0 14px;
   }
   .ide-titlebar > a:last-child {
-    font-size: 9px;
+    font-size: 12px;
   }
   .ide-breadcrumb {
     display: none;
@@ -867,13 +867,13 @@
   }
   .ide-explorer .case-file {
     padding: 9px 14px;
-    font-size: 10px;
+    font-size: 12px;
     align-items: center;
   }
   .ide-explorer .case-file small {
     display: inline;
     margin-left: 12px;
-    font-size: 8px;
+    font-size: 12px;
   }
   .welcome-main,
   .studio-main {
@@ -881,14 +881,14 @@
     min-width: 0;
   }
   .ide-document-tab {
-    font-size: 9px;
+    font-size: 12px;
     padding: 0 16px;
   }
   .welcome-document {
     padding: 24px 18px 0;
   }
   .document-meta {
-    font-size: 7px;
+    font-size: 12px;
     letter-spacing: 0.4px;
   }
   .document-meta > span:last-child {
@@ -898,7 +898,7 @@
     padding: 33px 0 28px;
   }
   .document-kicker {
-    font-size: 7px;
+    font-size: 12px;
     letter-spacing: 1px;
   }
   .welcome-intro h1 {
@@ -913,13 +913,13 @@
   }
   .case-study-head {
     padding: 12px;
-    font-size: 7px;
+    font-size: 12px;
   }
   .case-study-head > span:last-child {
     display: none;
   }
   .case-code {
-    font-size: 9px;
+    font-size: 12px;
     padding: 17px 12px;
     column-gap: 3px;
     grid-template-columns: 20px 1fr;
@@ -929,13 +929,13 @@
     gap: 8px;
   }
   .case-observation p {
-    font-size: 10px;
+    font-size: 12px;
   }
   .case-observation a {
-    font-size: 8px;
+    font-size: 12px;
   }
   .case-disclaimer {
-    font-size: 7px;
+    font-size: 12px;
     line-height: 1.8;
     padding: 10px 12px;
   }
@@ -949,13 +949,13 @@
   }
   .ide-status {
     padding: 8px 12px;
-    font-size: 8px;
+    font-size: 12px;
   }
   .ide-status > span:last-child {
     display: none;
   }
   .workspace-ide .tabs button {
-    font-size: 9px;
+    font-size: 12px;
     padding: 0 10px;
   }
   .workspace-ide .panel-heading,
@@ -963,28 +963,28 @@
     padding: 0 12px;
   }
   .workspace-ide .subtle {
-    font-size: 6px;
+    font-size: 12px;
   }
   .workspace-ide .input-readiness {
     gap: 12px;
     padding: 10px 12px;
-    font-size: 8px;
+    font-size: 12px;
   }
   .workspace-ide .result-content {
     padding: 18px 12px;
   }
   .workspace-ide .session-bar h1 {
-    font-size: 10px;
+    font-size: 12px;
   }
   .workspace-ide .session-bar > span {
-    font-size: 6px;
+    font-size: 12px;
   }
   .workspace-ide .manual-workflow {
     margin: 0 12px;
   }
   .workspace-ide .manual-workflow > summary {
     flex-wrap: wrap;
-    font-size: 10px;
+    font-size: 12px;
   }
   .workspace-ide .downloads {
     flex-wrap: wrap;

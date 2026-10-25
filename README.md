@@ -32,7 +32,7 @@ FailFix puts those review steps in one desk. Its focus is the **review between a
 <details>
 <summary>See the scroll-driven homepage</summary>
 
-![FailFix scroll-driven homepage with a build-trace illustration](docs/images/getting-started.jpg)
+![FailFix scroll-driven homepage with a perspective glass investigation window](docs/images/getting-started.jpg)
 
 ![Scroll-driven investigation chapter showing repository configuration](docs/images/scroll-workflow.jpg)
 
@@ -40,7 +40,7 @@ FailFix puts those review steps in one desk. Its focus is the **review between a
 
 ## The interface
 
-The homepage tells the investigation story through native scroll reveals, a moving SVG build trace, and a sticky three-chapter preview. Motion can be paused and follows reduced-motion preferences; content remains readable without JavaScript. There is no scroll hijacking or animation-library dependency. The build desk at `/deployments` and test desk at `/workspace` keep editing and review interactions separate from the presentation.
+The homepage tells the investigation story through a continuous lime signal, a glass investigation window that tilts with scroll, focus-to-sharp section reveals, and a sticky three-chapter preview. A circular dial follows reading progress. Larger text carries through the landing page and both debugging desks. Motion can be paused and follows reduced-motion preferences; content remains readable without JavaScript. There is no scroll hijacking or animation-library dependency. The build desk at `/deployments` and test desk at `/workspace` keep editing and review interactions separate from the presentation.
 
 ## Quick start
 
@@ -255,7 +255,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm run test:browser
 ```
 
-The latest recorded local verification is **99 unit/API/SDK checks and 38 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
+The latest recorded local verification is **99 unit/API/SDK checks and 42 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
 
 For a local production preview:
 

@@ -12,7 +12,7 @@
 }
 .deploy-kicker {
   color: var(--orange);
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   letter-spacing: 1.5px;
   margin: 0 0 18px;
 }
@@ -28,7 +28,7 @@
   line-height: 1.8;
 }
 .deployment-intro > a {
-  font: 10px var(--mono);
+  font: 12px var(--mono);
   color: var(--green);
   padding-bottom: 15px;
   white-space: nowrap;
@@ -48,16 +48,16 @@
 .repo-import h2 span,
 .deployment-grid h2 span {
   color: var(--orange);
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   margin-right: 12px;
 }
 .repo-import p {
   color: var(--muted);
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
 }
 .repo-import form > label {
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: #c1b9ca;
   display: block;
   margin-bottom: 9px;
@@ -74,23 +74,23 @@
   border-radius: 2px;
   color: var(--text);
   padding: 12px;
-  font: 11px var(--mono);
+  font: 12px var(--mono);
 }
 .deployment-ide .primary-button {
   border-radius: 2px;
   background: var(--green);
   padding: 12px 15px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .repo-import .text-button {
   text-align: left;
   justify-self: start;
   color: var(--green);
-  font-size: 11px;
+  font-size: 12px;
 }
 .repo-import .repo-boundary {
   margin: 0;
-  font-size: 10px;
+  font-size: 12px;
 }
 .deployment-shell > .error-message,
 .deployment-shell > .notice {
@@ -115,7 +115,7 @@
 }
 .repo-snapshot > div > span {
   color: #b6c3a1;
-  font: 8px var(--mono);
+  font: 12px var(--mono);
 }
 .repo-snapshot > label {
   display: flex;
@@ -123,7 +123,7 @@
   flex-wrap: wrap;
   gap: 14px;
   margin-top: 20px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .repo-snapshot select,
 .config-editor-heading select {
@@ -132,10 +132,10 @@
   color: #d4dcc8;
   padding: 8px;
   max-width: 100%;
-  font: 10px var(--mono);
+  font: 12px var(--mono);
 }
 .repo-snapshot details {
-  font-size: 10px;
+  font-size: 12px;
   color: #b2bda4;
   margin-top: 15px;
 }
@@ -143,7 +143,7 @@
   cursor: pointer;
 }
 .repo-snapshot li {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.8;
   color: #bec5b2;
   overflow-wrap: anywhere;
@@ -167,7 +167,7 @@
   padding: 0 20px;
 }
 .deployment-grid .subtle {
-  font: 7px var(--mono);
+  font: 12px var(--mono);
 }
 .build-log-heading,
 .config-editor-heading {
@@ -176,10 +176,10 @@
   align-items: center;
   padding: 20px 20px 12px;
   gap: 12px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .build-log-heading .file-picker {
-  font-size: 10px;
+  font-size: 12px;
 }
 .build-log-editor,
 .build-config-editor {
@@ -191,7 +191,7 @@
   background: #141619;
   border: 1px solid #3c3742;
   color: #dfc6b4;
-  font: 11px/20px var(--mono);
+  font: 12px/20px var(--mono);
   resize: vertical;
   tab-size: 2;
 }
@@ -205,16 +205,16 @@
   gap: 10px;
   padding: 10px 20px;
   color: var(--muted);
-  font: 8px var(--mono);
+  font: 12px var(--mono);
 }
 .config-editor-heading label span {
   color: var(--muted);
-  font-size: 9px;
+  font-size: 12px;
   margin-left: 8px;
 }
 .config-path {
   color: #bbb2c4;
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   padding: 0 20px;
   overflow-wrap: anywhere;
 }
@@ -230,10 +230,10 @@
 }
 .build-actions > span {
   color: var(--green);
-  font: 9px var(--mono);
+  font: 12px var(--mono);
 }
 .deployment-privacy {
-  font-size: 10px;
+  font-size: 12px;
   color: var(--muted);
   line-height: 1.85;
   margin: 0;
@@ -264,7 +264,7 @@
   margin: 25px 0;
 }
 .deployment-empty .rule-scope {
-  font-size: 10px;
+  font-size: 12px;
   padding-top: 20px;
   border-top: 1px solid var(--line);
 }
@@ -273,7 +273,7 @@
 }
 .deployment-provenance {
   color: var(--orange);
-  font: 8px/1.8 var(--mono);
+  font: 12px/1.8 var(--mono);
   letter-spacing: 0.6px;
 }
 .deployment-provenance span {
@@ -288,7 +288,7 @@
 }
 .deployment-report p,
 .deployment-report li {
-  font-size: 11px;
+  font-size: 12px;
   line-height: 1.9;
   color: #beb6c7;
 }
@@ -322,11 +322,11 @@
 .build-evidence b {
   display: block;
   color: var(--orange);
-  font: 8px var(--mono);
+  font: 12px var(--mono);
   margin-bottom: 8px;
 }
 .build-evidence code {
-  font: 10px/1.8 var(--mono);
+  font: 12px/1.8 var(--mono);
   overflow-wrap: anywhere;
 }
 .build-patch {
@@ -340,11 +340,11 @@
   flex-wrap: wrap;
 }
 .build-patch > div span {
-  font: 9px var(--mono);
+  font: 12px var(--mono);
   color: var(--green);
 }
 .build-patch pre {
-  font: 10px/1.9 var(--mono);
+  font: 12px/1.9 var(--mono);
   background: #111713;
   border: 1px solid #394532;
   padding: 14px;
@@ -353,7 +353,7 @@
 }
 .build-patch .secondary-button {
   border-radius: 2px;
-  font-size: 11px;
+  font-size: 12px;
 }
 .build-verification {
   padding: 20px;
@@ -370,7 +370,7 @@
   justify-content: space-between;
   gap: 20px;
   padding: 30px 0 12px;
-  font: 8px var(--mono);
+  font: 12px var(--mono);
   color: var(--muted);
 }
 .deployment-footer a {
@@ -435,7 +435,7 @@
     width: calc(100% - 28px);
   }
   .deployment-footer {
-    font-size: 7px;
+    font-size: 12px;
     flex-direction: column;
   }
 }
