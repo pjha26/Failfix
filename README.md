@@ -36,11 +36,13 @@ FailFix puts those review steps in one desk. Its focus is the **review between a
 
 ![Scroll-driven investigation chapter showing repository configuration](docs/images/scroll-workflow.jpg)
 
+![Pinned evidence cards assembling as the page scrolls](docs/images/evidence-sequence.jpg)
+
 </details>
 
 ## The interface
 
-The homepage tells the investigation story through a continuous lime signal, a glass investigation window that tilts with scroll, focus-to-sharp section reveals, and a sticky three-chapter preview. A circular dial follows reading progress. Larger text carries through the landing page and both debugging desks. Motion can be paused and follows reduced-motion preferences; content remains readable without JavaScript. There is no scroll hijacking or animation-library dependency. The build desk at `/deployments` and test desk at `/workspace` keep editing and review interactions separate from the presentation.
+The homepage tells the investigation story through a continuous lime signal, a glass investigation window that tilts with scroll, focus-to-sharp section reveals, and a sticky three-chapter preview. A circular dial follows reading progress. A pinned evidence scene assembles log, configuration, and proposed-patch cards; case files settle into alignment and the closing headline fills with light as you scroll. Small or short screens use the normal document layout for the evidence cards. Larger text carries through the landing page and both debugging desks. Motion can be paused and follows reduced-motion preferences; content remains readable without JavaScript. There is no scroll hijacking or animation-library dependency. The build desk at `/deployments` and test desk at `/workspace` keep editing and review interactions separate from the presentation.
 
 ## Quick start
 
@@ -255,7 +257,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm run test:browser
 ```
 
-The latest recorded local verification is **99 unit/API/SDK checks and 42 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
+The latest recorded local verification is **99 unit/API/SDK checks and 46 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
 
 For a local production preview:
 
@@ -288,7 +290,7 @@ Code and results are not saved to a database or browser storage. The app does no
 
 Public hosting is pending. Deploy as a Node.js service, not a static export, with server-side secrets and a timeout compatible with the analysis deadline. The current automatic limiter assumes one process/replica. Read the [operations guide](docs/operations.md) for origin configuration, trusted proxy headers, limits, troubleshooting, and release checks. Recheck dependency advisories before release; the operations and evaluation notes are not a current security certification.
 
-Design inspiration: the cinematic composition and section pacing of [GetLayers](https://www.getlayers.ai/) informed the new homepage. FailFix uses its own SVG scene, copy, and implementation; no paid templates or assets were imported.
+Design inspiration: the cinematic composition and section pacing of [GetLayers](https://www.getlayers.ai/) informed the homepage. The product-focused staging of [Linear](https://linear.app/) informed the evidence assembly sequence. FailFix uses its own SVG scene, copy, and implementation; no paid templates or assets were imported.
 
 ## Project status and contributing
 

@@ -1,0 +1,304 @@
+/* Pinned product staging; the default layout remains a readable document. */
+.evidence-sequence {
+  position: relative;
+  max-width: 1450px;
+  margin: auto;
+  padding: 85px 5%;
+}
+.evidence-sticky {
+  position: relative;
+}
+.assembly-heading {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.assembly-heading h2 {
+  font-size: clamp(38px, 5.2vw, 74px);
+  font-weight: 400;
+  letter-spacing: -0.06em;
+  line-height: 1.06;
+  margin: 18px 0;
+}
+.assembly-heading h2 em {
+  font-family: Georgia, serif;
+  color: var(--lime);
+  font-weight: 400;
+}
+.assembly-heading > p:last-child {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #b4beaa;
+}
+.assembly-stage {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  padding: 55px 0 30px;
+  perspective: 1200px;
+}
+.assembly-card {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  border: 1px solid #62734b;
+  border-radius: 12px;
+  background: linear-gradient(140deg, #293422ed, #10180ff7 70%);
+  box-shadow:
+    0 20px 55px #0006,
+    inset 0 1px #d0f99916;
+  padding: 22px;
+  transform-origin: center;
+}
+.assembly-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font: 11px var(--mono);
+  color: #aabb94;
+}
+.assembly-card header b {
+  font: 20px var(--mono);
+  color: var(--lime);
+}
+.assembly-card h3 {
+  font-size: clamp(18px, 1.8vw, 26px);
+  font-weight: 400;
+  margin: 25px 0 18px;
+  letter-spacing: -0.04em;
+}
+.assembly-card pre {
+  font: 12px/1.8 var(--mono);
+  min-height: 100px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  color: #b2bda6;
+}
+.assembly-card footer {
+  border-top: 1px solid #7f995633;
+  padding-top: 18px;
+  margin-top: 24px;
+  font-size: 12px;
+  color: #bdc9af;
+  line-height: 1.5;
+}
+.assembly-error {
+  border-color: #965f4b;
+}
+.assembly-error header b,
+.assembly-error pre {
+  color: var(--coral);
+}
+.assembly-patch {
+  border-color: #a0c36a;
+}
+.assembly-patch pre {
+  color: #d0f6a5;
+}
+.assembly-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: #b8db87;
+  border-radius: 50%;
+  margin-right: 7px;
+}
+.assembly-error .assembly-dot {
+  background: var(--coral);
+}
+.assembly-orbit {
+  position: absolute;
+  inset: -15% 25% -5%;
+  border: 1px solid #c3ef8920;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, #c6ff6c0c, transparent 66%);
+  display: grid;
+  place-items: center;
+  color: #c2ef8933;
+  font:
+    italic 180px Georgia,
+    serif;
+  pointer-events: none;
+}
+.assembly-rail {
+  position: absolute;
+  top: 53%;
+  left: 2%;
+  right: 2%;
+  height: 1px;
+  background: #65774650;
+}
+.assembly-rail i {
+  display: block;
+  height: 2px;
+  background: var(--lime);
+  box-shadow: 0 0 18px #b7fc7a;
+}
+.assembly-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding-top: 20px;
+  font: 11px/1.6 var(--mono);
+  color: #9eae8a;
+}
+.motion-ready .evidence-sequence {
+  height: 185svh;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.motion-ready .evidence-sticky {
+  position: sticky;
+  top: 0;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 35px 0;
+}
+.motion-ready .assembly-error {
+  transform: translate3d(
+      calc(-25px * (1 - var(--scene-progress, 0))),
+      calc(75px * (1 - var(--scene-progress, 0))),
+      0
+    )
+    rotateY(calc(22deg * (1 - var(--scene-progress, 0))))
+    rotateZ(calc(-7deg * (1 - var(--scene-progress, 0))));
+}
+.motion-ready .assembly-context {
+  transform: translateY(calc(-40px * (1 - var(--scene-progress, 0))))
+    rotateX(calc(18deg * (1 - var(--scene-progress, 0))))
+    scale(calc(0.93 + 0.07 * var(--scene-progress, 0)));
+}
+.motion-ready .assembly-patch {
+  transform: translate3d(
+      calc(25px * (1 - var(--scene-progress, 0))),
+      calc(75px * (1 - var(--scene-progress, 0))),
+      0
+    )
+    rotateY(calc(-22deg * (1 - var(--scene-progress, 0))))
+    rotateZ(calc(7deg * (1 - var(--scene-progress, 0))));
+}
+.motion-ready .assembly-orbit {
+  transform: rotateX(calc(60deg * (1 - var(--scene-progress, 0))))
+    rotateZ(calc(45deg * var(--scene-progress, 0)))
+    scale(calc(0.85 + 0.15 * var(--scene-progress, 0)));
+}
+.motion-ready .assembly-rail i {
+  transform: scaleX(var(--scene-progress, 0));
+  transform-origin: left;
+}
+.motion-ready .cases-section .story-case-list > a {
+  --fan-angle: -5deg;
+  --fan-shift: -22px;
+  transform: translateY(calc(35px * (1 - var(--scene-progress, 1))))
+    translateX(calc(var(--fan-shift) * (1 - var(--scene-progress, 1))))
+    rotate(calc(var(--fan-angle) * (1 - var(--scene-progress, 1))));
+  opacity: 1;
+  filter: none;
+  transition: box-shadow 0.2s ease;
+}
+.motion-ready .cases-section .story-case-list > a:nth-child(2) {
+  --fan-angle: 0deg;
+  --fan-shift: 0px;
+}
+.motion-ready .cases-section .story-case-list > a:nth-child(3) {
+  --fan-angle: 5deg;
+  --fan-shift: 22px;
+}
+.review-principle .scroll-ink {
+  color: inherit;
+}
+.motion-ready .review-principle .scroll-ink {
+  color: #84917b;
+  background: linear-gradient(90deg, #edeee5 0%, #d2f3a9 100%) no-repeat;
+  background-size: calc(var(--scene-progress, 1) * 100%) 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-color: #84917b;
+}
+@media (max-width: 820px) {
+  .assembly-stage {
+    gap: 12px;
+  }
+  .assembly-card {
+    padding: 16px;
+  }
+  .assembly-card header {
+    font-size: 10px;
+  }
+  .assembly-card pre {
+    font-size: 11px;
+  }
+  .motion-ready .assembly-error {
+    transform: translateY(calc(40px * (1 - var(--scene-progress, 0))))
+      rotateZ(calc(-4deg * (1 - var(--scene-progress, 0))));
+  }
+  .motion-ready .assembly-patch {
+    transform: translateY(calc(40px * (1 - var(--scene-progress, 0))))
+      rotateZ(calc(4deg * (1 - var(--scene-progress, 0))));
+  }
+}
+@media (max-width: 580px), (max-height: 650px) {
+  .evidence-sequence,
+  .motion-ready .evidence-sequence {
+    height: auto;
+    padding: 65px 20px;
+  }
+  .motion-ready .evidence-sticky {
+    position: relative;
+    top: auto;
+    min-height: 0;
+    padding: 0;
+  }
+  .assembly-stage {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    padding-top: 35px;
+  }
+  .assembly-card,
+  .motion-ready .assembly-card {
+    transform: none;
+  }
+  .assembly-card {
+    padding: 22px;
+  }
+  .assembly-card h3 {
+    margin: 15px 0;
+    font-size: 23px;
+  }
+  .assembly-card pre {
+    min-height: 0;
+    font-size: 13px;
+  }
+  .assembly-card header {
+    font-size: 12px;
+  }
+  .assembly-card footer {
+    font-size: 14px;
+  }
+  .assembly-orbit {
+    inset: 0;
+    font-size: 150px;
+  }
+  .assembly-caption {
+    flex-direction: column;
+    gap: 8px;
+    font-size: 10px;
+  }
+  .assembly-caption > span:last-child {
+    display: none;
+  }
+  .motion-ready .cases-section .story-case-list > a {
+    transform: none;
+  }
+}
+
+@media (min-width: 581px) and (min-height: 651px) {
+  .assembly-caption {
+    padding-left: 110px;
+  }
+}

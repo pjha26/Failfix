@@ -42,10 +42,32 @@ export function ScrollExperience({ children }: { children: ReactNode }) {
     element
       .querySelectorAll('[data-reveal]')
       .forEach((target) => observer.observe(target));
+    const scenes = [
+      ...element.querySelectorAll<HTMLElement>('[data-scroll-scene]'),
+    ];
     let frame = 0;
     const update = () => {
       cancelAnimationFrame(frame);
       frame = requestAnimationFrame(() => {
+        for (const scene of scenes) {
+          const rect = scene.getBoundingClientRect();
+          const travel =
+            scene.classList.contains('evidence-sequence') &&
+            window.innerWidth > 580 &&
+            window.innerHeight > 650
+              ? rect.height - window.innerHeight
+              : window.innerHeight * 0.65;
+          const start =
+            scene.classList.contains('evidence-sequence') &&
+            window.innerWidth > 580 &&
+            window.innerHeight > 650
+              ? -rect.top
+              : window.innerHeight * 0.85 - rect.top;
+          scene.style.setProperty(
+            '--scene-progress',
+            String(Math.max(0, Math.min(1, start / Math.max(1, travel)))),
+          );
+        }
         const range =
           document.documentElement.scrollHeight - window.innerHeight;
         element.style.setProperty(
@@ -81,6 +103,7 @@ export function ScrollExperience({ children }: { children: ReactNode }) {
       element.style.removeProperty('--hero-turn');
       element.style.removeProperty('--hero-lift');
       element.style.removeProperty('--page-progress');
+      scenes.forEach((scene) => scene.style.removeProperty('--scene-progress'));
     };
   }, [enabled]);
   return (

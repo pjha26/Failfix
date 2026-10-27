@@ -1,4 +1,4 @@
-# Evaluation status — updated 27 October 2026
+# Evaluation status — updated 28 October 2026
 
 This file separates application correctness from model quality. **The active provider is now Groq. Live connectivity/schema checks and first-party debugging requests have passed; broader model-quality evaluation remains pending.**
 
@@ -74,3 +74,7 @@ The accepted proposal also contained an incorrect assumption about null: the dec
 - The live connectivity check returned a strict structured response from `openai/gpt-oss-20b` using 144 total tokens.
 - One real production `POST /api/analyze` request with the first-party zero-value fixture returned HTTP 200 and `proposed_fix`. The patch changed `value || 3` to `value ?? 3`; the proposed regression test covered both zero and undefined. The server recorded 1,035 ms and 1,462 total tokens.
 - The generated patch and regression test were inspected as text; generated code was not executed in this check. This result does not complete the remaining live cases or establish repeatable debugging accuracy.
+
+## Scroll-scene verification — 28 October 2026
+
+The production browser suite now contains 46 checks across desktop and 390px mobile. New coverage checks reversible scene progress, desktop sticky staging, static mobile cards, motion-pause cleanup, and reduced-motion text readability. The no-JavaScript check also verifies that the evidence cards remain in normal document flow. The scenes use the existing native scroll/requestAnimationFrame mechanism and CSS transforms without new runtime dependencies. Desktop and mobile screenshots were inspected; physical-device GPU performance remains unverified.

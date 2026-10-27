@@ -186,6 +186,11 @@ test('the server-rendered landing remains readable without JavaScript', async ({
       'opacity',
       '1',
     );
+    await expect(page.locator('.assembly-card')).toHaveCount(3);
+    await expect(page.locator('.evidence-sticky')).toHaveCSS(
+      'position',
+      'relative',
+    );
     await expect(
       page.getByRole('link', { name: /Zero is a value/ }),
     ).toBeVisible();

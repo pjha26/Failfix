@@ -5,7 +5,9 @@ import {
   ScrollInvestigation,
 } from '@/components/scroll-experience';
 import { BuildSignal } from '@/components/build-signal';
+import { ScrollEvidence } from '@/components/scroll-evidence';
 import './story.css';
+import './scroll-scenes.css';
 
 export default function Home() {
   return (
@@ -66,6 +68,7 @@ export default function Home() {
           <span>02 / EVIDENCE FROM YOUR LOGS</span>
           <span>03 / A CHANGE YOU CAN REVIEW</span>
         </div>
+        <ScrollEvidence />
         <section className="workflow-section story-section" id="workflow">
           <div className="section-intro" data-reveal>
             <p className="story-kicker">
@@ -188,7 +191,11 @@ export default function Home() {
             here.
           </p>
         </section>
-        <section className="cases-section story-section" id="cases">
+        <section
+          className="cases-section story-section"
+          id="cases"
+          data-scroll-scene
+        >
           <div className="cases-heading" data-reveal>
             <div>
               <p className="story-kicker">SMALL BUGS. FAMILIAR CONSEQUENCES.</p>
@@ -231,15 +238,21 @@ export default function Home() {
             execution.
           </p>
         </section>
-        <section className="review-principle story-section" data-reveal>
+        <section
+          className="review-principle story-section"
+          data-reveal
+          data-scroll-scene
+        >
           <span className="review-symbol" aria-hidden="true">
             [ ± ]
           </span>
           <p className="story-kicker">A PATCH IS A HYPOTHESIS.</p>
           <h2>
-            Your test suite
-            <br />
-            gets the <em>final word.</em>
+            <span className="scroll-ink">
+              Your test suite
+              <br />
+              gets the <em>final word.</em>
+            </span>
           </h2>
           <p>
             FailFix makes the proposed change visible. You decide what to apply,
