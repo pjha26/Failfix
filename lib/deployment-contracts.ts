@@ -26,8 +26,10 @@ export const deploymentInputSchema = z
   .object({
     log: z
       .string()
-      .trim()
-      .min(1, 'Add the relevant build error first.')
+      .refine(
+        (text) => text.trim().length > 0,
+        'Add the relevant build error first.',
+      )
       .refine(
         (text) => byteLength(text) <= 32 * 1024,
         'Build log must be at most 32 KiB.',

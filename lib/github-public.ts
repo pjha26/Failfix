@@ -224,11 +224,15 @@ export async function importPublicRepository(
       warnings.push(`Skipped ${path}: not a supported text file up to 16 KiB.`);
       continue;
     }
-    const text = new TextDecoder('utf-8', { fatal: true }).decode(
-      Buffer.from(file.content, 'base64'),
-    );
-    if (text.includes('\0') || byteLength(text) > 16 * 1024) {
-      warnings.push(`Skipped ${path}: unsupported text content.`);
+    let text: string;
+    try {
+      text = new TextDecoder('utf-8', { fatal: true }).decode(
+        Buffer.from(file.content, 'base64'),
+      );
+      if (text.includes('\0') || byteLength(text) > 16 * 1024)
+        throw new Error('Unsupported text content');
+    } catch {
+      warnings.push(`Skipped ${path}: unsupported UTF-8 text content.`);
       continue;
     }
     files.push({ path, text });

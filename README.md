@@ -257,7 +257,7 @@ $env:PLAYWRIGHT_CHANNEL = 'chrome'
 npm run test:browser
 ```
 
-The latest recorded local verification is **99 unit/API/SDK checks and 46 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
+The latest recorded local verification is **107 unit/API/SDK checks and 48 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
 
 For a local production preview:
 
@@ -303,6 +303,7 @@ No project license has been selected yet.
 - [Architecture and request sequences](docs/architecture.md)
 - [Operations and deployment](docs/operations.md)
 - [Evaluation status](evals/results.md)
+- [Audit and fixes — 28 October 2026](docs/audit-2026-10-28.md)
 - [Demo walkthrough](docs/demo.md)
 - [Implementation and release plan](docs/implementation-plan.md) — current scope and remaining release work
 

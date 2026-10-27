@@ -129,6 +129,35 @@ describe('deployment signature review', () => {
   });
 });
 
+describe('audit regressions: deployment evidence and script matching', () => {
+  it('keeps evidence aligned with leading blank and indented log lines', () => {
+    const log = '\n\n  npm error Missing script: "build"\n';
+    const report = inspectDeployment({ log, files: [] });
+    expect(report.findings[0].evidence).toEqual([
+      { line: 3, text: '  npm error Missing script: "build"' },
+    ]);
+  });
+  it('bounds the original log bytes and still rejects whitespace-only input', () => {
+    expect(() =>
+      inspectDeployment({ log: ' '.repeat(32 * 1024) + 'failure', files: [] }),
+    ).toThrow();
+    expect(() => inspectDeployment({ log: '\n  \n', files: [] })).toThrow();
+  });
+  it.each(['build:prod', 'build-test', 'build_test', 'build2'])(
+    'does not propose a build patch for a missing %s script',
+    (script) => {
+      const report = inspectDeployment({
+        ...context,
+        log: 'npm error Missing script: "' + script + '"',
+      });
+      expect(report.patch).toBeNull();
+      expect(
+        report.findings.some((finding) => finding.id === 'missing-build'),
+      ).toBe(false);
+    },
+  );
+});
+
 describe('public GitHub import', () => {
   it.each([
     'pjha26/Failfix',
@@ -215,6 +244,48 @@ describe('public GitHub import', () => {
       ),
     ).toBe(false);
   });
+  it.each([
+    ['invalid UTF-8', Buffer.from([0xc3, 0x28])],
+    ['binary content', Buffer.from([0x00, 0x32])],
+  ])(
+    'retains valid configuration when another file has %s',
+    async (_label, bytes) => {
+      vi.stubGlobal(
+        'fetch',
+        vi.fn(async (url: string) => {
+          if (url.endsWith('/owner/repo'))
+            return json({
+              full_name: 'owner/repo',
+              private: false,
+              default_branch: 'main',
+            });
+          if (url.includes('/actions/runs?'))
+            return json({ workflow_runs: [] });
+          if (url.endsWith('/commits/main')) return json({ sha });
+          if (url.includes('/contents/package.json'))
+            return json({
+              type: 'file',
+              size: packageText.length,
+              encoding: 'base64',
+              content: Buffer.from(packageText).toString('base64'),
+            });
+          if (url.includes('/contents/.nvmrc'))
+            return json({
+              type: 'file',
+              size: bytes.length,
+              encoding: 'base64',
+              content: bytes.toString('base64'),
+            });
+          return json({}, 404);
+        }),
+      );
+      const snapshot = await importPublicRepository('owner/repo');
+      expect(snapshot.files).toEqual([
+        { path: 'package.json', text: packageText },
+      ]);
+      expect(snapshot.warnings.join(' ')).toContain('Skipped .nvmrc');
+    },
+  );
   it('uses the default branch commit when no failed run exists', async () => {
     vi.stubGlobal(
       'fetch',

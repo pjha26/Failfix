@@ -161,11 +161,8 @@ export default function DeploymentWorkspace() {
   function selectEvidence(line: number) {
     const area = logRef.current;
     if (!area) return;
-    const lines = input.log.split(/\r?\n/);
-    const prefix = input.log
-      .split('\n')
-      .slice(0, line - 1)
-      .join('\n');
+    const lines = area.value.split('\n');
+    const prefix = lines.slice(0, line - 1).join('\n');
     const start = line === 1 ? 0 : prefix.length + 1;
     area.focus();
     area.setSelectionRange(start, start + (lines[line - 1]?.length || 0));

@@ -26,7 +26,7 @@ export function inspectDeployment(untrusted: unknown): DeploymentReport {
   };
   add(
     'missing-build',
-    /Missing script:\s*["']?build\b/i,
+    /Missing script:\s*(?:"build"|'build'|build(?=\s|$))/i,
     'The requested build script is missing',
     'The package manager could not find a build script in the package selected by the deployment command. Check the working directory as well as package.json.',
     [

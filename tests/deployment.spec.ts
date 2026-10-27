@@ -17,6 +17,14 @@ test('a build failure produces a real no-key patch and invalidates exports after
   const original = await page
     .getByRole('textbox', { name: 'Configuration', exact: false })
     .inputValue();
+  const log = page.getByRole('textbox', { name: 'Failing build output' });
+  await page.getByLabel('Open build log').setInputFiles({
+    name: 'build.log',
+    mimeType: 'text/plain',
+    buffer: Buffer.from(
+      '\r\n\r\n' + (await log.inputValue()).replace(/\n/g, '\r\n'),
+    ),
+  });
   await page.getByRole('button', { name: 'Investigate build' }).click();
   await expect(
     page.getByRole('heading', {
@@ -33,13 +41,17 @@ test('a build failure produces a real no-key patch and invalidates exports after
   const fixed = applyPatch(original, patch);
   expect(fixed).not.toBe(false);
   expect(JSON.parse(fixed as string).scripts.build).toBe('next build');
-  await page.getByRole('button', { name: /LOG L2/ }).click();
+  await page.getByRole('button', { name: /LOG L4/ }).click();
   await expect(
     page.getByRole('textbox', { name: 'Failing build output' }),
   ).toBeFocused();
-  await page
-    .getByRole('textbox', { name: 'Failing build output' })
-    .fill('Build changed');
+  expect(
+    await log.evaluate((area) => {
+      const text = area as HTMLTextAreaElement;
+      return text.value.slice(text.selectionStart, text.selectionEnd);
+    }),
+  ).toBe('npm error Missing script: "build"');
+  await log.fill('Build changed');
   await expect(
     page.getByText('Build context changed.', { exact: false }),
   ).toBeVisible();

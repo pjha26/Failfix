@@ -186,7 +186,10 @@ export default function Workspace({
   function jumpToEvidence(kind: InputTab, start: number, end: number) {
     setTab(kind);
     setHighlight({ tab: kind, start, end });
-    const value = kind === 'log' ? input.log : input[kind].text;
+    const value = (kind === 'log' ? input.log : input[kind].text).replace(
+      /\r\n/g,
+      '\n',
+    );
     const lines = value.split('\n');
     const offset = lines
       .slice(0, start - 1)

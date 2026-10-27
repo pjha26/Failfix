@@ -78,3 +78,7 @@ The accepted proposal also contained an incorrect assumption about null: the dec
 ## Scroll-scene verification — 28 October 2026
 
 The production browser suite now contains 46 checks across desktop and 390px mobile. New coverage checks reversible scene progress, desktop sticky staging, static mobile cards, motion-pause cleanup, and reduced-motion text readability. The no-JavaScript check also verifies that the evidence cards remain in normal document flow. The scenes use the existing native scroll/requestAnimationFrame mechanism and CSS transforms without new runtime dependencies. Desktop and mobile screenshots were inspected; physical-device GPU performance remains unverified.
+
+## Audit regression verification — 28 October 2026
+
+After the audit fixes, 107 unit/API/SDK checks and 48 production-browser checks passed, along with typecheck, lint, and production build. New coverage preserves leading/indented log lines, enforces the original byte bound, declines patches for similarly named scripts, skips malformed UTF-8 configuration without losing valid imported files, and checks exact evidence selection after CRLF uploads in both desks. The failures were reproduced before fixing them. `npm audit --json` reported zero known vulnerabilities; dependencies were unchanged. See the [audit report](../docs/audit-2026-10-28.md) for scope, fixes, and remaining limits.

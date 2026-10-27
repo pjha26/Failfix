@@ -136,3 +136,40 @@ test('the workspace fits the viewport and is reachable by keyboard', async ({
     ),
   ).toBe(true);
 });
+
+test('evidence selects the exact source line after a CRLF file upload', async ({
+  page,
+}) => {
+  const example = examples[0];
+  await page.route('**/api/analyze', async (route) => {
+    const input = route.request().postDataJSON();
+    await route.fulfill({
+      json: {
+        ...buildArtifacts(input, example.analysis),
+        requestId: 'crlf-review',
+        durationMs: 1,
+      },
+    });
+  });
+  await page.goto('/workspace?example=zero');
+  await page.getByLabel('Open source file').setInputFiles({
+    name: 'retry-count.ts',
+    mimeType: 'text/plain',
+    buffer: Buffer.from(example.input.source.text.replace(/\n/g, '\r\n')),
+  });
+  await page
+    .getByRole('button', { name: 'Analyze failure', exact: false })
+    .click();
+  await page.getByRole('button', { name: /source L2/ }).click();
+  const source = page.getByRole('textbox', {
+    name: 'Source code',
+    exact: true,
+  });
+  await expect(source).toBeFocused();
+  expect(
+    await source.evaluate((el) => {
+      const area = el as HTMLTextAreaElement;
+      return area.value.slice(area.selectionStart, area.selectionEnd);
+    }),
+  ).toBe(example.input.source.text.split('\n')[1]);
+});
