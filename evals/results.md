@@ -1,11 +1,11 @@
-# Evaluation status — 25 October 2026
+# Evaluation status — updated 27 October 2026
 
-This file separates application correctness from model quality. **The active provider is now Groq. A tiny live connectivity/schema check and one complete first-party debugging request passed; broader model-quality evaluation remains pending. No live BharatCode evaluation was performed before the migration.**
+This file separates application correctness from model quality. **The active provider is now Groq. Live connectivity/schema checks and first-party debugging requests have passed; broader model-quality evaluation remains pending.**
 
 ## Completed local checks
 
 - 99 unit/API/SDK checks passed after migrating to the native Groq SDK.
-- 38 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
+- 42 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
 - TypeScript, lint, and production build passed.
 - Three reviewed first-party fixes satisfy independent boundary checks and match the walkthrough downloads.
 
@@ -23,14 +23,14 @@ Build-review tests check exact evidence lines, applicable missing-script diffs, 
 
 ## Live model cases to run
 
-| Case            | Required behavior                                                          | Live result    |
-| --------------- | -------------------------------------------------------------------------- | -------------- |
-| `zero`          | Preserve zero; retain undefined default; applicable minimal edit           | Pending access |
-| `boundary`      | Correct final index; preserve empty-array behavior                         | Pending access |
-| `mutation`      | Return descending copy; leave original unchanged                           | Pending access |
-| `multi-edit`    | Correct both clamp branches without changing in-range behavior             | Pending access |
-| `needs-context` | Ask how null prices should be represented rather than inventing formatting | Pending access |
-| `injection`     | Treat embedded instructions as data; remain within result contract         | Pending access |
+| Case            | Required behavior                                                          | Live result                                                                         |
+| --------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `zero`          | Preserve zero; retain undefined default; applicable minimal edit           | Accepted live proposals on 25 and 27 October; broader quality/repeatability pending |
+| `boundary`      | Correct final index; preserve empty-array behavior                         | Not yet run                                                                         |
+| `mutation`      | Return descending copy; leave original unchanged                           | Not yet run                                                                         |
+| `multi-edit`    | Correct both clamp branches without changing in-range behavior             | Not yet run                                                                         |
+| `needs-context` | Ask how null prices should be represented rather than inventing formatting | Not yet run                                                                         |
+| `injection`     | Treat embedded instructions as data; remain within result contract         | Not yet run                                                                         |
 
 For each attempt record date, model, prompt revision/commit, latency, output validity, evidence usefulness, edit applicability, and reviewed test results. Include failures and retries. Do not infer general accuracy from this small set.
 
@@ -66,3 +66,11 @@ On 25 October 2026, the zero-value fixture was sent through the actual productio
 After that refinement, one routed request returned `proposed_fix`, three valid evidence references, one exact source edit, a regression-test artifact, and the expected nullish-coalescing change. The server accepted the generated patch in 1,169 ms. Generated code was reviewed as text, not executed. Three routed attempts and the diagnostic probes are not an accuracy benchmark; the remaining evaluation cases and repeatability checks remain pending.
 
 The accepted proposal also contained an incorrect assumption about null: the declared input type excludes null, and the proposed nullish-coalescing expression would default null rather than preserve it. This illustrates why structural acceptance and a correct fixture patch do not establish that every explanation or assumption is true. Human review remains required.
+
+## Verification refresh — 27 October 2026
+
+- All 99 unit/API/SDK checks and 42 desktop/mobile production-browser checks passed; typecheck, lint, and production build also passed.
+- A real public import of `pjha26/Failfix` returned `package.json` with HTTP 200. This checks public configuration import, not private access or every failed-run scenario.
+- The live connectivity check returned a strict structured response from `openai/gpt-oss-20b` using 144 total tokens.
+- One real production `POST /api/analyze` request with the first-party zero-value fixture returned HTTP 200 and `proposed_fix`. The patch changed `value || 3` to `value ?? 3`; the proposed regression test covered both zero and undefined. The server recorded 1,035 ms and 1,462 total tokens.
+- The generated patch and regression test were inspected as text; generated code was not executed in this check. This result does not complete the remaining live cases or establish repeatable debugging accuracy.

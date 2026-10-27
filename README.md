@@ -292,7 +292,7 @@ Design inspiration: the cinematic composition and section pacing of [GetLayers](
 
 ## Project status and contributing
 
-Built for the BharatCode Build League. The local interface, saved examples, manual review, and provider adapter are implemented. **Full live model evaluation, public deployment, and final hackathon submission are pending.** A tiny Groq connectivity check and one first-party end-to-end debugging request have passed. The active AI provider is now Groq, replacing the original BharatCode adapter. Neither Groq use nor manual review establishes compliance with organizer-specific BharatCode API requirements. The root `BharatCode.txt` is participant-authored; organizer format and submission requirements still need confirmation.
+FailFix is an independent developer tool maintained by [pjha26](https://github.com/pjha26). The test desk, saved examples, manual proposal review, public GitHub configuration import, and deployment-log investigation are implemented. Automatic test diagnosis uses the native Groq SDK. **Broader live-model evaluation and public deployment remain pending.** Local checks, a real public repository import, and a first-party live debugging request were verified on 27 October 2026; see the [evaluation record](evals/results.md) for results and limitations.
 
 To report a problem, [open an issue](https://github.com/pjha26/Failfix/issues) with reproduction steps, expected behavior, and a small nonconfidential example. Never include API keys or private source. For a change, keep the scope focused, update relevant documentation, and run the applicable checks before opening a pull request.
 
@@ -302,6 +302,6 @@ No project license has been selected yet.
 - [Operations and deployment](docs/operations.md)
 - [Evaluation status](evals/results.md)
 - [Demo walkthrough](docs/demo.md)
-- [Original implementation plan](docs/implementation-plan.md) — planning baseline, not current completion status
+- [Implementation and release plan](docs/implementation-plan.md) — current scope and remaining release work
 
 - [Deployment investigations and public GitHub import](docs/deployments.md)
