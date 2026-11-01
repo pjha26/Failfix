@@ -1,0 +1,119 @@
+/* Green-terminal treatment, contained to illustrative landing monitors. */
+.build-glass:has(.crt-screen) {
+  background: linear-gradient(135deg, #30382b, #0d130e 40%, #202b1c);
+  border-color: #788e5e;
+  border-radius: 22px;
+  padding: 5px;
+  box-shadow:
+    inset 0 1px 1px #d6f7a735,
+    0 30px 70px #000a,
+    0 0 65px #8bff4a12;
+}
+.crt-screen {
+  isolation: isolate;
+  overflow: hidden;
+  background: radial-gradient(ellipse at 50% 15%, #173d1b, #07140c 75%);
+  box-shadow: inset 0 0 50px #0007;
+}
+.glass-body.crt-screen {
+  position: relative;
+  border-radius: 8px 8px 16px 16px;
+}
+.crt-screen::before,
+.crt-screen::after {
+  content: '';
+  position: absolute;
+  pointer-events: none;
+  z-index: 3;
+}
+.crt-screen::before {
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0 3px,
+    #051006 3px 4px
+  );
+  opacity: 0.24;
+  border-radius: inherit;
+}
+.crt-screen::after {
+  inset: 0 0 auto;
+  height: 22%;
+  background: linear-gradient(transparent, #bbff8e0d, transparent);
+  opacity: 0;
+}
+.motion-ready .crt-screen::after {
+  opacity: 1;
+  animation: phosphor-scan 9s linear infinite;
+}
+.glass-body.crt-screen h2,
+.crt-screen .terminal-line:not(.failure-line),
+.crt-screen pre,
+.crt-screen .trace-insight > b {
+  color: #c1f9a4;
+  text-shadow: 0 0 14px #9cff5633;
+}
+.glass-body.crt-screen h2 em {
+  color: #a4d98c;
+}
+.crt-screen .glass-log {
+  background: #040d07b3;
+  border-color: #6b955540;
+  color: #b2e6a0;
+  text-shadow: 0 0 8px #9cff5626;
+}
+.crt-screen .glass-step {
+  border-color: #a7e67c24;
+}
+.crt-screen .chapter-output {
+  background: transparent;
+}
+.crt-screen .preview-chrome {
+  background: #152416;
+}
+.phosphor-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.phosphor-indicator i {
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background: #bdff89;
+  box-shadow: 0 0 9px #a0ff69;
+}
+.phosphor-indicator span {
+  color: #c1d8ae;
+  font: 10px var(--mono);
+  letter-spacing: 0.03em;
+}
+.motion-muted .crt-screen::after {
+  animation: none;
+  opacity: 0;
+}
+@keyframes phosphor-scan {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(555%);
+  }
+}
+@media (max-width: 580px) {
+  .crt-screen::before {
+    opacity: 0.15;
+  }
+  .phosphor-indicator {
+    gap: 5px;
+  }
+  .phosphor-indicator span {
+    font-size: 9px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .story-site .crt-screen::after {
+    animation: none;
+    opacity: 0;
+  }
+}

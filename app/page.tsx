@@ -8,6 +8,7 @@ import { BuildSignal } from '@/components/build-signal';
 import { ScrollEvidence } from '@/components/scroll-evidence';
 import './story.css';
 import './scroll-scenes.css';
+import './terminal-effect.css';
 
 export default function Home() {
   return (

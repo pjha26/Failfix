@@ -148,3 +148,41 @@ test('reduced motion keeps the new scenes flat, readable, and within the viewpor
     ),
   ).toBe(true);
 });
+
+test('phosphor monitors keep their overlays noninteractive and stop scanning when motion is paused', async ({
+  page,
+}) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.goto('/');
+  const monitor = page.locator('.glass-body.crt-screen');
+  await expect(page.locator('.crt-screen')).toHaveCount(2);
+  await expect(page.locator('.story-site')).toHaveClass(/motion-ready/);
+  const scan = () =>
+    monitor.evaluate((el) => getComputedStyle(el, '::after').animationName);
+  await expect.poll(scan).toBe('phosphor-scan');
+  expect(
+    await monitor.evaluate(
+      (el) => getComputedStyle(el, '::before').pointerEvents,
+    ),
+  ).toBe('none');
+  expect(
+    await monitor.evaluate(
+      (el) => getComputedStyle(el, '::after').pointerEvents,
+    ),
+  ).toBe('none');
+  await page
+    .getByRole('button', { name: 'Add the context', exact: false })
+    .click();
+  await expect(
+    page.getByLabel('Illustrative investigation preview'),
+  ).toContainText('"dependencies"');
+  await page.getByRole('button', { name: 'Pause animations' }).click();
+  await expect.poll(scan).toBe('none');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await expect.poll(scan).toBe('none');
+  expect(
+    await page.evaluate(
+      () => document.documentElement.scrollWidth <= innerWidth,
+    ),
+  ).toBe(true);
+});

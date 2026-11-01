@@ -215,7 +215,7 @@ export function ScrollInvestigation() {
           </article>
         ))}
       </div>
-      <div className="investigation-preview">
+      <div className="investigation-preview crt-screen">
         <div className="preview-chrome">
           <span>
             <i />

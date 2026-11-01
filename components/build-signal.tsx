@@ -23,11 +23,14 @@ export function BuildSignal() {
       </svg>
       <div className="build-glass">
         <div className="glass-chrome">
-          <span>● ● ●</span>
+          <span className="phosphor-indicator">
+            <i />
+            <span>PHOSPHOR / 01</span>
+          </span>
           <b>FAILFIX / INVESTIGATION</b>
           <span>01</span>
         </div>
-        <div className="glass-body">
+        <div className="glass-body crt-screen">
           <div className="glass-run">
             <span className="run-beacon" /> BUILD SIGNAL{' '}
             <span>ILLUSTRATIVE</span>
