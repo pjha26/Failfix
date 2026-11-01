@@ -50,7 +50,7 @@ The [architecture guide](architecture.md) contains the complete diagrams and req
 - Unified patches come from validated before/after text, not a model-authored diff. Input changes disable stale exports.
 - Validation does not establish valid syntax, semantic correctness, complete test coverage, or safe execution. Developers review generated code before running local checks.
 
-See [README limitations](../README.md#limitations) and the [deployment workflow](deployments.md) for the complete supported boundaries.
+See [README limits and privacy](../README.md#limits-and-privacy) and the [deployment workflow](deployments.md) for the complete supported boundaries.
 
 ## Groq integration and operational behavior
 

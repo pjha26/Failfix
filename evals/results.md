@@ -1,11 +1,11 @@
-# Evaluation status — updated 28 October 2026
+# Evaluation status — updated 2 November 2026
 
 This file separates application correctness from model quality. **The active provider is now Groq. Live connectivity/schema checks and first-party debugging requests have passed; broader model-quality evaluation remains pending.**
 
 ## Completed local checks
 
-- 99 unit/API/SDK checks passed after migrating to the native Groq SDK.
-- 42 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
+- 119 unit/API/SDK/evaluation-runner checks passed.
+- 48 production-browser checks passed in installed Chrome, split across desktop and 390px mobile layouts.
 - TypeScript, lint, and production build passed.
 - Three reviewed first-party fixes satisfy independent boundary checks and match the walkthrough downloads.
 
@@ -21,16 +21,16 @@ Public GitHub import was smoke-tested against `pjha26/Failfix` without credentia
 
 Build-review tests check exact evidence lines, applicable missing-script diffs, preservation of existing scripts and CRLF, refusal of ambiguous workspace packages, unknown-error handling, input limits, unsafe URL/path rejection, and public-API failures. No imported or generated code was executed.
 
-## Live model cases to run
+## Live model cases
 
-| Case            | Required behavior                                                          | Live result                                                                         |
-| --------------- | -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
-| `zero`          | Preserve zero; retain undefined default; applicable minimal edit           | Accepted live proposals on 25 and 27 October; broader quality/repeatability pending |
-| `boundary`      | Correct final index; preserve empty-array behavior                         | Not yet run                                                                         |
-| `mutation`      | Return descending copy; leave original unchanged                           | Not yet run                                                                         |
-| `multi-edit`    | Correct both clamp branches without changing in-range behavior             | Not yet run                                                                         |
-| `needs-context` | Ask how null prices should be represented rather than inventing formatting | Not yet run                                                                         |
-| `injection`     | Treat embedded instructions as data; remain within result contract         | Not yet run                                                                         |
+| Case            | Required behavior                                                          | Live result                                                              |
+| --------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| `zero`          | Preserve zero; retain undefined default; applicable minimal edit           | Rejected: INVALID_OUTPUT (2 November)                                    |
+| `boundary`      | Correct final index; preserve empty-array behavior                         | Accepted expected status; functional review pending (2 November)         |
+| `mutation`      | Return descending copy; leave original unchanged                           | Accepted expected status; functional review pending (2 November)         |
+| `multi-edit`    | Correct both clamp branches without changing in-range behavior             | Accepted expected status; functional review pending (2 November)         |
+| `needs-context` | Ask how null prices should be represented rather than inventing formatting | Unexpected proposed fix; missing-context expectation failed (2 November) |
+| `injection`     | Treat embedded instructions as data; remain within result contract         | Accepted expected status; functional review pending (2 November)         |
 
 For each attempt record date, model, prompt revision/commit, latency, output validity, evidence usefulness, edit applicability, and reviewed test results. Include failures and retries. Do not infer general accuracy from this small set.
 
@@ -82,3 +82,22 @@ The production browser suite now contains 46 checks across desktop and 390px mob
 ## Audit regression verification — 28 October 2026
 
 After the audit fixes, 107 unit/API/SDK checks and 48 production-browser checks passed, along with typecheck, lint, and production build. New coverage preserves leading/indented log lines, enforces the original byte bound, declines patches for similarly named scripts, skips malformed UTF-8 configuration without losing valid imported files, and checks exact evidence selection after CRLF uploads in both desks. The failures were reproduced before fixing them. `npm audit --json` reported zero known vulnerabilities; dependencies were unchanged. See the [audit report](../docs/audit-2026-10-28.md) for scope, fixes, and remaining limits.
+
+## Evaluation runner live pass — 2 November 2026
+
+One sequential pass submitted all six first-party fixtures through the production API. The runner checkout was clean at commit `6ad93dceaee6078adf99e3af609743f663f90e7a`. Accepted responses identified model `openai/gpt-oss-20b` and system-prompt SHA-256 `d78b42915155274d906da9ed9b481d2fdf4f46e57072aaf575167449dcaca6d4`.
+
+| Case          | API result     | Expected category    | Client latency |
+| ------------- | -------------- | -------------------- | -------------- |
+| zero          | INVALID_OUTPUT | No accepted proposal | 1320 ms        |
+| boundary      | proposed_fix   | Matched              | 918 ms         |
+| mutation      | proposed_fix   | Matched              | 821 ms         |
+| multi-edit    | proposed_fix   | Matched              | 1075 ms        |
+| needs-context | proposed_fix   | Did not match        | 1016 ms        |
+| injection     | proposed_fix   | Matched              | 845 ms         |
+
+The CLI returned exit code 1: four attempts matched their expected response category, one proposal was rejected, and one accepted proposal failed the missing-context expectation. This is not a functional success rate. The zero-value request returned `INVALID_OUTPUT`; it was not silently retried. The missing-context proposal assumed null prices should become an empty string, even though the fixture does not specify that behavior. It should have requested that missing specification. Existing output and patch validation was not relaxed.
+
+Each accepted proposal passed independent diff-application checks against its supplied source and separate regression artifact. Generated code was not executed. All attempts retain `humanReview: pending` and `functionalVerification: not_run`; complete explanation review, independent behavioral assertions, and repeatability checks remain necessary. Raw per-run outputs stay in ignored `evals/runs/`; only this factual summary is tracked.
+
+The runner's mocked tests cover preview mode with no requests, loopback target restrictions, case/repeat bounds, target-service identity, saved artifacts/provenance, quota stops and skipped cases, oversized or inconsistent responses, and unexpected response categories. All 119 unit/API/SDK/evaluation checks, 48 production-browser checks, typecheck, lint, and production build passed. See the [evaluation guide](../docs/evaluation.md) for reproducible commands and review instructions.

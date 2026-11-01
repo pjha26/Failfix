@@ -4,52 +4,33 @@
 
 [![CI](https://github.com/pjha26/Failfix/actions/workflows/ci.yml/badge.svg)](https://github.com/pjha26/Failfix/actions/workflows/ci.yml)
 
-FailFix is a review workspace for **build failures and TypeScript + Vitest bugs**. The [deployment desk](docs/deployments.md) imports limited public GitHub configuration, matches build-error signatures, and offers repair steps or narrowly supported patches without a model key. The test-debugging desk handles failing TypeScript/Vitest tests. Bring one source file, its test, and the failure output. Follow a diagnosis back to the supplied lines, inspect a focused source patch, and review a separate regression test before trying the changes locally.
+FailFix is a developer workspace for investigating **TypeScript/Vitest failures and deployment build errors**. Connect an explanation to the supplied evidence, inspect a proposed change, and download artifacts for local verification.
 
-**You can try it without an API key.** Open a saved walkthrough, or bring a JSON proposal from a chat tool you already use. Automatic Groq analysis is implemented, but live connectivity and one first-party debugging request have passed. A broader model-quality evaluation remains pending.
+Use Groq for automatic test diagnosis, bring a proposal from a chat tool through manual review, or investigate deployment logs with transparent signature checks. Public GitHub configuration import and the manual workflow do not require a model key.
 
-![FailFix investigation desk with case explorer, source editor, failure output, and evidence review](docs/images/workspace.jpg)
+![FailFix test desk with source code, failure output, evidence references, and proposed changes](docs/images/workspace.jpg)
 
-[Quick start](#quick-start) · [Usage](#how-to-use-the-test-debugging-desk) · [Architecture](#architecture) · [Complete workflow](#complete-workflow) · [Development](#development) · [Limitations](#limitations)
+[Quick start](#quick-start) · [Workflows](#workflows) · [Architecture](#architecture) · [AI evaluation](#ai-evaluation) · [Development](#development) · [Limits and privacy](#limits-and-privacy)
 
-## The problem
+## What FailFix does
 
-A plausible fix is only the beginning. You still need to understand the failure, check which lines support the explanation, inspect what will change, and decide how to test it.
+- **Investigate a focused test failure.** Supply one TypeScript source file, one Vitest test file, failure output, and optional intended behavior.
+- **Follow the evidence.** Jump from a diagnosis to the referenced source, test, or log lines.
+- **Inspect a proposed repair.** Review the explanation, assumptions, source diff, and separate regression test. Existing tests remain unchanged.
+- **Validate applicability.** Reject malformed proposals, invalid line references, ambiguous source matches, overlapping edits, and unsupported literal test imports.
+- **Review without an API key.** Explore three hand-authored walkthroughs or validate structured JSON from a chat tool you choose.
+- **Bring public build context.** Import supported root configuration and failed GitHub Actions-step metadata pinned to a repository commit, then provide the actual build log.
+- **Export reviewed proposals.** Download a unified patch, fixed source, regression test, or build-review report. Editing inputs disables stale exports.
 
-FailFix puts those review steps in one desk. Its focus is the **review between a proposed fix and local execution**. It fits alongside a coding agent or chat tool: you can bring that tool's proposal into FailFix rather than changing how you generate it.
-
-## What you can do
-
-- **Investigate in an IDE layout.** Switch between source, test, and failure-log tabs; collapse the case explorer without losing edits.
-- **Follow the evidence.** Jump from a diagnosis to referenced lines in the supplied inputs.
-- **Inspect proposed changes.** Review the source diff, assumptions, and a separate regression test. Existing tests stay unchanged.
-- **Check applicability.** Reject malformed proposals, out-of-range evidence, ambiguous source matches, overlapping edits, and unsupported literal test imports.
-- **Export for local verification.** Download a unified patch, fixed source, or regression test. Changing the inputs or a reviewed manual proposal disables stale exports.
-- **Start without provider access.** Use three hand-authored walkthroughs or the manual review flow.
-
-> A patch that matches the supplied source is not proof of a correct fix. FailFix does not execute your code, run tests, or modify your repository.
-
-<details>
-<summary>See the scroll-driven homepage</summary>
-
-![FailFix scroll-driven homepage with a perspective glass investigation window](docs/images/getting-started.jpg)
-
-![Scroll-driven investigation chapter showing repository configuration](docs/images/scroll-workflow.jpg)
-
-![Pinned evidence cards assembling as the page scrolls](docs/images/evidence-sequence.jpg)
-
-</details>
-
-## The interface
-
-The homepage tells the investigation story through a continuous lime signal, a glass investigation window that tilts with scroll, focus-to-sharp section reveals, and a sticky three-chapter preview. A circular dial follows reading progress. A pinned evidence scene assembles log, configuration, and proposed-patch cards; case files settle into alignment and the closing headline fills with light as you scroll. Small or short screens use the normal document layout for the evidence cards. Larger text carries through the landing page and both debugging desks. Motion can be paused and follows reduced-motion preferences; content remains readable without JavaScript. There is no scroll hijacking or animation-library dependency. The build desk at `/deployments` and test desk at `/workspace` keep editing and review interactions separate from the presentation.
+A valid patch means the proposed edits match the supplied text. It does **not** establish correct behavior, successful tests, or a successful deployment. FailFix does not execute uploaded code, apply patches, write to GitHub, or trigger deployments.
 
 ## Quick start
 
 ### Requirements
 
-- Node.js **22.13 or later**, on a release compatible with the locked dependencies.
-- Git and npm. The tested installer is **npm 11.6.4**; npm 11.5.2 encountered a dependency-resolver crash on Windows.
+- Node.js **22.13 or newer**, compatible with the locked dependencies.
+- npm; the repository declares npm **11.6.4**.
+- A Groq API key only for automatic test analysis.
 
 ```sh
 git clone https://github.com/pjha26/Failfix.git
@@ -58,184 +39,179 @@ npx --yes npm@11.6.4 ci
 npm run dev
 ```
 
-Open [localhost:3000](http://localhost:3000). Select **Investigate a build** for public repository context and log review. Scroll to the case files for saved TypeScript walkthroughs, or open `/workspace` for your own source and test.
+Open [localhost:3000](http://localhost:3000). The landing page links to the **test desk** at `/workspace` and **deployment desk** at `/deployments`.
 
-No environment file, account, or API key is required for saved examples and manual review. Inputs and results are kept in memory; refreshing or leaving the workspace loses the session.
+To enable automatic diagnosis, copy `.env.example` to `.env.local`, preserving any existing local configuration, and set the key locally:
 
-## Investigate a deployment failure
-
-Open `/deployments`, import a public GitHub repository or paste package.json, and add the actual failing build output. Select **Investigate build** to view matched error lines, a repair checklist, and an optional supported config patch. You can also start with **Try a build-failure example**.
-
-Public import reads supported root configuration and failed Actions-step metadata at a specific commit. It does not download logs, clone repositories, connect accounts, or write to GitHub. Private repository access and account connection are deferred. No model API is used by build signature review. See [deployment workflow and boundaries](docs/deployments.md).
-
-## How to use the test-debugging desk
-
-| Mode               | What supplies the diagnosis?                      | Provider key in FailFix? | Result label                                  |
-| ------------------ | ------------------------------------------------- | ------------------------ | --------------------------------------------- |
-| Saved walkthrough  | First-party, hand-authored example                | No                       | Saved example                                 |
-| Manual review      | JSON you paste from your chosen chat tool         | No                       | User-supplied proposal                        |
-| Automatic analysis | Server-side Groq Chat Completions API integration | Yes                      | Proposed fix, questions, or unsupported scope |
-
-### 1. Explore a saved case
-
-Choose a case in the homepage case files to see its inputs and reviewed example result immediately. In the workspace, selecting a case loads its inputs; select **Open saved walkthrough** to view the result.
-
-| Case                   | Bug illustrated                           | Proposed change                              |
-| ---------------------- | ----------------------------------------- | -------------------------------------------- |
-| Zero is a value        | A fallback overwrites a valid zero        | Use nullish coalescing instead of logical OR |
-| One step too far       | An index points past the final array item | Use the last valid index                     |
-| The hidden side effect | Sorting changes the caller's array        | Sort a copy                                  |
-
-These are illustrative walkthroughs, not recorded model responses or remotely executed tests.
-
-### 2. Review your own code without a key
-
-1. Open `/workspace`. Paste or open a `.ts` source file and a `.test.ts` or `.spec.ts` test. Set their relative repository paths.
-2. Add the relevant Vitest failure output. Optionally describe what should happen.
-3. Under **Use without an API key**, select **Prepare debugging prompt**. Review the prompt before copying it; it includes the supplied code and logs.
-4. Paste it into a chat tool you already have access to, then copy that tool's JSON response.
-5. Paste the response into **Proposal JSON** and select **Validate proposal**. Plain JSON or one complete JSON code fence is accepted; surrounding prose is rejected.
-6. Inspect the diagnosis, evidence, diff, and proposed regression test. Then download and verify locally.
-
-FailFix prepares the prompt in the browser. It does not send it to a chat service for you. Manual validation sends the inputs and proposal to FailFix's own `/api/review` route, which makes no provider request. External chat services may have their own costs, limits, and privacy terms.
-
-### 3. Enable automatic analysis (optional)
-
-Copy `.env.example` to `.env.local`, set your server-side `GROQ_API_KEY`, and restart the app. Never commit the key or put it in a `NEXT_PUBLIC_*` variable.
-
-| Variable                   | Default                        | Purpose                                                       |
-| -------------------------- | ------------------------------ | ------------------------------------------------------------- |
-| `GROQ_API_KEY`             | Unset                          | Required only for automatic analysis                          |
-| `GROQ_MODEL`               | `openai/gpt-oss-20b`           | Model identifier sent to Groq                                 |
-| `ANALYSIS_ENABLED`         | `true`                         | Set exactly `false` to pause automatic analysis               |
-| `ANALYSIS_SESSION_LIMIT`   | `100`                          | Accepted analyses per server process                          |
-| `APP_ORIGIN`               | Request protocol + Host header | Canonical site origin when deployed behind a proxy            |
-| `TRUSTED_CLIENT_IP_HEADER` | Unset                          | Optional host-verified single-IP header for per-client limits |
-
-Supply the same inputs and select **Analyze failure**. The integration uses the native `groq-sdk` package and Groq Chat Completions with strict JSON-schema output. The default model is `openai/gpt-oss-20b`, hosted by Groq; use a Groq key, not an OpenAI key. Keep examples small enough for the account’s token limits. See [operations](docs/operations.md) before configuring a public host.
-
-### 4. Apply and verify locally
-
-Review the downloaded patch and generated test first. Check that the proposed new test path does not already exist in your repository. From your own project directory:
-
-```sh
-git apply --check failfix.patch
-git apply failfix.patch
-# Use your project's normal test command; for a standard Vitest project:
-npx vitest run
+```dotenv
+GROQ_API_KEY=your_key_here
+GROQ_MODEL=openai/gpt-oss-20b
+ANALYSIS_ENABLED=true
+ANALYSIS_SESSION_LIMIT=100
 ```
 
-Run the apply step only if the check succeeds and you approve the changes. Downloading a file does not apply it. FailFix cannot inspect files outside the two you supplied or detect every collision in your full repository.
+Keep `.env.local` out of Git. Never use `NEXT_PUBLIC_*` for a provider key or paste credentials into source files, logs, or chat. Restart the server after changing its environment.
+
+`npm run check:api` makes a small real connectivity/schema request to Groq. It consumes account resources and does not establish debugging quality. Setup and host configuration are described in the [operations guide](docs/operations.md).
+
+## Workflows
+
+### Test debugging
+
+1. Open `/workspace` and select a saved case or supply your own source, existing test, and failure output.
+2. Add intended behavior when the test does not fully specify it.
+3. Select **Analyze failure** for a live Groq proposal, **Open saved walkthrough** for a labeled teaching example, or the manual workflow below.
+4. Inspect the explanation, evidence, assumptions, source diff, and new regression test.
+5. Review downloaded code before applying it in your own project. Run the original tests, independent checks, and proposed regression test locally.
+
+Cancellation, invalid input, provider errors, and rejected proposals retain the inputs. Editing inputs marks previous results stale.
+
+### Manual proposal review
+
+Under **Use without an API key**, prepare a debugging prompt from your inputs. Review it before sending nonconfidential code to a chat service you choose. Paste that service's JSON proposal into FailFix and select **Validate proposal**.
+
+The manual route checks the proposal and constructs artifacts without calling Groq. A single complete JSON code fence is accepted; surrounding explanations are rejected. Manual results are labeled separately from live responses and saved examples.
+
+### Deployment investigation
+
+Open `/deployments`, enter a public GitHub repository URL, and import supported configuration—or paste configuration yourself. Add the actual failing build output and select **Investigate build**.
+
+The deployment desk recognizes signatures for missing build scripts, lockfile mismatches, Node compatibility, missing environment settings, module resolution, TypeScript errors, and memory pressure. These are rule-based findings. A narrowly supported Next.js missing-build case can produce a proposed `package.json` patch; other findings provide verification steps or ask for more context.
+
+Public import reads limited configuration and failed-run metadata. It does not clone the repository or download logs, artifacts, secrets, or private repositories. Read the [deployment workflow guide](docs/deployments.md) for supported files and boundaries.
 
 ## Architecture
 
-One Next.js application serves the IDE interface and Node.js API routes. There is no database, account system, repository write integration, or hosted code runner. Public GitHub build-context import is described in [the deployment architecture](docs/deployments.md).
+FailFix uses one Next.js application for the browser interface and Node.js API. There is no database or separate backend service.
+
+```mermaid
+flowchart TB
+  Developer[Developer] --> UI[Browser: landing page and review desks]
+  Runner[Local evaluation runner] --> API
+  UI --> API[Next.js Node API routes]
+  API --> Boundary[Bounded input, origin and schema checks]
+  Boundary --> Auto[Automatic test analysis]
+  Boundary --> Manual[Manual proposal review]
+  Boundary --> Deploy[Public import and build investigation]
+  Auto --> Gate[Process-local admission limits]
+  Gate --> Groq[Groq Chat Completions]
+  Groq --> Patch[Result validation and patch construction]
+  Manual --> Patch
+  Saved[Hand-authored walkthroughs] --> Patch
+  UI --> Saved
+  Deploy --> GitHub[GitHub public API]
+  Deploy --> Rules[Build-error signature rules]
+  Patch --> Review[Evidence, proposed changes and downloads]
+  Rules --> Review
+  Review --> Local[Human review and local verification]
+```
+
+### Automatic test-analysis sequence
+
+```mermaid
+sequenceDiagram
+  actor Developer
+  participant Desk as Test desk
+  participant API as POST /api/analyze
+  participant Model as Groq
+  participant Validation as Patch engine
+  Developer->>Desk: Source, test, log and intended behavior
+  Desk->>API: Submit bounded JSON
+  API->>API: Validate input, origin, configuration and limits
+  API->>Model: System prompt and untrusted input data
+  Model-->>API: Structured proposal
+  API->>Validation: Validate response and construct artifacts
+  alt Applicable proposed fix
+    Validation-->>Desk: Evidence, source patch and separate regression test
+    Desk-->>Developer: Review and download
+  else Missing context or unsupported task
+    Validation-->>Desk: Questions or scope explanation without artifacts
+  else Invalid proposal or request failure
+    API-->>Desk: Safe error with inputs retained
+  end
+  Note over Desk,Validation: No submitted or generated code is executed
+```
+
+### Deployment workflow
 
 ```mermaid
 flowchart LR
-  subgraph Browser["Browser · React workspace"]
-    UI["IDE explorer, editor tabs and failure console"]
-    Prompt["Prepare prompt locally"]
-    Review["Evidence, diff and regression-test review"]
-    UI --> Prompt
-  end
-  subgraph App["FailFix · Next.js Node.js server"]
-    Examples["Saved walkthroughs"]
-    Manual["POST /api/review"]
-    Auto["POST /api/analyze"]
-    Boundary["Request and input validation"]
-    Gate["Configuration and admission limits"]
-    Check["Shared result and patch validation"]
-    Artifacts["Generate diff and download content"]
-    Manual --> Boundary
-    Auto --> Boundary
-    Boundary -->|"Manual proposal"| Check
-    Boundary -->|"Automatic request"| Gate
-    Examples --> Check
-    Check --> Artifacts
-  end
-  Chat["User-selected external chat tool"]
-  Provider["Groq Chat Completions API"]
-  Local["Developer's local repository and tests"]
-  UI -->|"Load example"| Examples
-  UI -->|"Inputs and pasted proposal"| Manual
-  UI -->|"Inputs, when configured"| Auto
-  Prompt -.->|"User copies prompt and response"| Chat
-  Gate -->|"Server-side credential"| Provider
-  Provider -->|"Untrusted structured proposal"| Check
-  Artifacts --> Review
-  Review -->|"Download, inspect and apply"| Local
+  URL[Public repository URL] --> Import[Validate locator and read GitHub API]
+  Import --> Snapshot[Commit-pinned configuration and failed-step metadata]
+  Paste[Manually supplied configuration] --> Inspect
+  Snapshot --> Inspect[Validate supplied build context]
+  Log[Actual pasted or uploaded build log] --> Inspect
+  Inspect --> Signatures[Transparent error signatures]
+  Signatures --> Finding[Evidence and repair checklist]
+  Signatures --> Narrow[Supported configuration proposal]
+  Finding --> Human[Review and rebuild locally]
+  Narrow --> Human
 ```
 
-All three modes share `buildArtifacts` in [`lib/patch.ts`](lib/patch.ts). The model or chat tool supplies a structured proposal; FailFix validates it and generates the diff itself. External chat use in manual mode is a user action, not a server integration.
+### API surface
 
-## Complete workflow
+| Route                           | Purpose                                                            |
+| ------------------------------- | ------------------------------------------------------------------ |
+| `POST /api/analyze`             | Groq-assisted test diagnosis followed by local proposal validation |
+| `POST /api/review`              | Validate a user-supplied proposal without a model request          |
+| `GET /api/examples/[id]`        | Return a labeled, validated saved walkthrough                      |
+| `POST /api/github/import`       | Import supported public configuration and run metadata             |
+| `POST /api/deployments/analyze` | Review build-error signatures and supported repair proposals       |
+| `GET /api/health`               | Report application availability without a provider request         |
+
+See [architecture details](docs/architecture.md) for request boundaries and manual-review sequences.
+
+## AI evaluation
+
+The local runner exercises six first-party cases: zero values, boundary indexing, input mutation, multiple edits, missing context, and embedded instruction injection. It records responses for review, rather than asking another model to grade its own work.
 
 ```mermaid
 flowchart TD
-  Start["Open FailFix"] --> Mode{"Choose a mode"}
-  Mode -->|"Saved walkthrough"| Saved["Load first-party inputs and proposal"]
-  Mode -->|"Your own code"| Inputs["Source path and code, test path and code, failure log"]
-  Inputs --> Intent["Optionally describe expected behavior"]
-  Intent --> Choice{"How will you obtain a proposal?"}
-  Choice -->|"No-key manual review"| Prompt["Prepare and inspect prompt in browser"]
-  Prompt --> Chat["User copies prompt to chosen chat tool"]
-  Chat --> Paste["Paste JSON response into FailFix"]
-  Paste --> Manual["POST /api/review"]
-  Choice -->|"Automatic analysis"| Auto["POST /api/analyze"]
-  Auto --> Access{"Valid input, API configuration and capacity?"}
-  Access -->|"No"| Error["Show safe error and retain current inputs"]
-  Access -->|"Yes"| Model["Groq structured response, 90-second deadline"]
-  Model -->|"Provider error or incomplete output"| Error
-  Model -->|"Completed output"| Validate
-  Manual -->|"Request or JSON error"| Error
-  Manual --> Validate["Validate proposal schema and evidence line bounds"]
-  Saved --> Validate
-  Validate -->|"Invalid"| Reject["Reject new result; no new patch accepted"]
-  Validate -->|"Valid"| Status{"Proposal status"}
-  Status -->|"Needs context or unsupported"| Explain["Show questions or scope explanation; no patch"]
-  Status -->|"Proposed fix"| Match["Check unique exact edits, overlaps, no-ops and literal test imports"]
-  Match -->|"Invalid"| Reject
-  Match -->|"Valid"| Build["Generate fixed source, separate regression test and unified patch"]
-  Build --> Review["Review diagnosis, evidence, assumptions and changes"]
-  Review --> Changed{"Inputs or reviewed manual proposal changed?"}
-  Changed -->|"Yes"| Stale["Disable stale downloads and evidence links"]
-  Stale --> Intent
-  Changed -->|"No"| Download["Download reviewed artifacts"]
-  Download --> Local["Check patch, apply and run tests locally"]
-  Local --> Decision["Developer decides whether to keep the change"]
+  Cases[Six known fixtures] --> Preview[No-call preview]
+  Cases --> Live[Explicit live run against local FailFix API]
+  Live --> API[Existing analysis and validation pipeline]
+  API --> Checks[Expected status and independent patch-applicability checks]
+  Checks --> Reports[Per-attempt artifacts and JSON/Markdown reports]
+  Reports --> Gate[Human reviews explanation, source and regression test]
+  Gate --> Local[Independent tests in a disposable local project]
+  Local --> Findings[Recorded functional and explanation-quality findings]
 ```
 
-See [the detailed architecture](docs/architecture.md) for route responsibilities, request sequences, and trust boundaries.
+Preview without a server or provider request:
 
-## Technology and repository layout
-
-| Layer                      | Implementation                                          |
-| -------------------------- | ------------------------------------------------------- |
-| Web application            | Next.js 16 App Router, React 19, TypeScript 6           |
-| Interface                  | CSS, browser text/file APIs, responsive IDE layout      |
-| Validation                 | Zod schemas and explicit UTF-8 byte limits              |
-| Patch generation           | `diff`, exact-text source edits                         |
-| Optional model integration | Native Groq SDK with strict structured Chat Completions |
-| Verification               | Vitest, Playwright, ESLint, TypeScript, GitHub Actions  |
-
-```text
-app/
-  page.tsx                    Scroll-driven investigation story
-  workspace/page.tsx          Test workspace and deep-linked saved cases
-  deployments/page.tsx        Public repository and build-log investigation
-  api/github/import/route.ts  Credential-free public configuration import
-  api/deployments/analyze/route.ts  Build-error signature review
-  api/analyze/route.ts        Optional automatic test diagnosis
-  api/review/route.ts         No-key proposal validation
-  api/examples/[id]/route.ts  Saved walkthrough results
-  api/health/route.ts         Process health, no model call
-components/                  IDE chrome, editor, manual flow, result review
-lib/                         Contracts, request checks, patch engine, provider, limits
-tests/                       Unit, API, SDK-mocked and browser checks
-evals/                       First-party cases and evaluation status
-docs/                        Architecture, operations, demo and project notes
+```sh
+npm run eval:ai
 ```
+
+With a configured local server running, explicitly request one live pass:
+
+```sh
+node scripts/evaluate-ai.mjs --live
+```
+
+Select cases and repeat attempts when investigating consistency:
+
+```sh
+node scripts/evaluate-ai.mjs --live --case zero --case needs-context --repeat 2 --base-url http://127.0.0.1:3000
+```
+
+Live evaluation consumes the configured Groq account's resources. Results are saved under ignored `evals/runs/`; generated source and tests are stored as text and never executed by the runner. Reports distinguish API acceptance, expected response category, patch applicability, pending human review, and unperformed functional checks. **An accepted response is not an accuracy score.**
+
+See the [evaluation guide](docs/evaluation.md) for output files, stopping conditions, provenance, and the review protocol. Detailed observations belong in the [evaluation record](evals/results.md).
+
+## Technology
+
+| Area               | Tools                                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------------------ |
+| Application        | Next.js App Router, React, TypeScript, Node.js                                                         |
+| Interface          | CSS, SVG, native scroll/IntersectionObserver behavior, DM Sans and IBM Plex Mono with system fallbacks |
+| AI                 | Native `groq-sdk`, strict structured Chat Completions output                                           |
+| Validation         | Zod request/result schemas and explicit trust-boundary checks                                          |
+| Patch construction | `diff` unified patches and exact source matching                                                       |
+| Testing            | Vitest, Vite, Playwright                                                                               |
+| Quality and CI     | TypeScript, ESLint, GitHub Actions                                                                     |
+
+Dependency versions are defined in `package.json` and locked in `package-lock.json`. The evaluation runner uses existing dependencies and Node APIs.
 
 ## Development
 
@@ -248,63 +224,50 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-Browser tests launch a **production** server on port `3006`; rebuild after app changes. They exercise saved examples and manual review, and mock provider responses, so CI needs no API key.
+On Windows, installed Chrome can be used by setting `PLAYWRIGHT_CHANNEL=chrome` before the browser command. The browser suite starts a production server on port 3006, so build first and keep that port available. Live model calls are excluded from CI; runner tests use mocked HTTP responses.
 
-On Windows, use installed Chrome instead of downloading Chromium:
-
-```powershell
-$env:PLAYWRIGHT_CHANNEL = 'chrome'
-npm run test:browser
-```
-
-The latest recorded local verification is **107 unit/API/SDK checks and 48 desktop/mobile browser checks**, plus typecheck, lint, and production build. See [evaluation status](evals/results.md); these counts establish application behavior, not live model accuracy.
-
-For a local production preview:
+For a local production server:
 
 ```sh
 npm run build
 npm start
 ```
 
-`npm run check:api` is an optional connectivity check after provider access is available. It makes real API calls and consumes account resources. It is excluded from CI and does not establish debugging quality.
+Relevant source locations:
 
-## Limitations
+```text
+app/                 Routes, layouts and API handlers
+components/          Test desk, deployment desk, result review and landing scenes
+lib/                 Contracts, provider integration, patch engine and build rules
+scripts/             Provider connectivity check and evaluation runner
+tests/               Unit, API, SDK and browser checks
+evals/cases/         First-party evaluation fixtures
+evals/runs/          Ignored generated proposals and per-run reports
+docs/                Architecture, evaluation, deployment and operation guides
+```
 
-| Supported boundary                        | Limit                                                  |
-| ----------------------------------------- | ------------------------------------------------------ |
-| Source and existing test                  | One `.ts` source and one `.test.ts` or `.spec.ts` file |
-| Each code file                            | 20 KiB                                                 |
-| Failure output                            | 12 KiB                                                 |
-| Expected behavior                         | 2 KiB                                                  |
-| Automatic request / manual input object   | 64 KiB                                                 |
-| Manual proposal / combined review request | 48 KiB / 128 KiB                                       |
-| Proposed source edits                     | At most three                                          |
+## Limits and privacy
 
-Whole-repository import, TSX, multi-file repair, dependency installation, automatic patch application, and hosted test execution are outside this release. The separate deployment desk supports limited public configuration import and build-log signature checks, not whole-repository repair. Literal import checks are limited validation, not a sandbox. Evidence bounds do not establish that an explanation is true. Syntax, behavior, safety, and test coverage must be reviewed locally.
+| Boundary              | Supported scope                                                                   |
+| --------------------- | --------------------------------------------------------------------------------- |
+| Test input            | One `.ts` source and one `.test.ts` or `.spec.ts` file, up to 20 KiB each         |
+| Test failure output   | Up to 12 KiB; intended behavior up to 2 KiB                                       |
+| Analysis request      | Up to 64 KiB total                                                                |
+| Manual review         | Proposal up to 48 KiB; combined review body up to 128 KiB                         |
+| Proposed source edits | At most three exact, nonoverlapping edits                                         |
+| Deployment context    | Build log up to 32 KiB and at most four supported text configs, up to 16 KiB each |
+| Repository access     | Limited public configuration and run metadata; read-only                          |
 
-The automatic-analysis limiter allows two concurrent analyses and defaults to 100 accepted analyses per server process. Counters reset on restart and are not shared across replicas. Manual review does not use that provider admission gate. These are demo controls, not durable abuse prevention or a billing guarantee.
+TSX, repository-wide repairs, private-account access, automatic pull requests, automatic patch application, and hosted code/test execution are outside the supported workflow. Literal test-import checks are limited validation, not a sandbox. Explanations, evidence usefulness, syntax, behavior, and safety still require review.
 
-## Privacy and deployment
+Automatic analysis sends supplied code and logs to Groq. Manual review sends its inputs to the FailFix server without a provider call; copying a prompt into another service is your choice. [Groq data controls](https://console.groq.com/docs/your-data) apply. FailFix makes no provider-side zero-retention claim.
 
-Code and results are not saved to a database or browser storage. The app does not log code or prompt text. Manual review sends content to the FailFix server without a provider call; automatic analysis sends it to Groq. [Groq data controls](https://console.groq.com/docs/your-data) apply; this application does not claim provider-side zero retention. Copying a prompt into another service is your choice and subject to that service's privacy terms. Use nonconfidential code and remove secrets. The interface loads Google Fonts with system fallbacks.
+Application inputs and results are held in session memory rather than a database or browser storage. Operational logs contain request metadata rather than source or prompt text. The evaluation CLI explicitly saves its first-party inputs and proposals to local ignored files. The interface requests Google Fonts with system-font fallbacks.
 
-Public hosting is pending. Deploy as a Node.js service, not a static export, with server-side secrets and a timeout compatible with the analysis deadline. The current automatic limiter assumes one process/replica. Read the [operations guide](docs/operations.md) for origin configuration, trusted proxy headers, limits, troubleshooting, and release checks. Recheck dependency advisories before release; the operations and evaluation notes are not a current security certification.
+The analysis gate allows two concurrent requests and defaults to 100 accepted analyses per process lifetime. Counters reset on restart and are not shared across replicas or a durable billing cap. Use a single process/replica with the current limiter and read the [operations guide](docs/operations.md) before hosting publicly.
 
-Design inspiration: the cinematic composition and section pacing of [GetLayers](https://www.getlayers.ai/) informed the homepage. The product-focused staging of [Linear](https://linear.app/) informed the evidence assembly sequence. FailFix uses its own SVG scene, copy, and implementation; no paid templates or assets were imported.
+## Contributing and license
 
-## Project status and contributing
+Report reproducible problems through [GitHub issues](https://github.com/pjha26/Failfix/issues), including expected behavior and a small nonconfidential example. Keep credentials and private source out of reports. For changes, update relevant documentation and run the checks that cover the affected behavior.
 
-FailFix is an independent developer tool maintained by [pjha26](https://github.com/pjha26). The test desk, saved examples, manual proposal review, public GitHub configuration import, and deployment-log investigation are implemented. Automatic test diagnosis uses the native Groq SDK. **Broader live-model evaluation and public deployment remain pending.** Local checks, a real public repository import, and a first-party live debugging request were verified on 27 October 2026; see the [evaluation record](evals/results.md) for results and limitations.
-
-To report a problem, [open an issue](https://github.com/pjha26/Failfix/issues) with reproduction steps, expected behavior, and a small nonconfidential example. Never include API keys or private source. For a change, keep the scope focused, update relevant documentation, and run the applicable checks before opening a pull request.
-
-No project license has been selected yet.
-
-- [Architecture and request sequences](docs/architecture.md)
-- [Operations and deployment](docs/operations.md)
-- [Evaluation status](evals/results.md)
-- [Audit and fixes — 28 October 2026](docs/audit-2026-10-28.md)
-- [Demo walkthrough](docs/demo.md)
-- [Implementation and release plan](docs/implementation-plan.md) — current scope and remaining release work
-
-- [Deployment investigations and public GitHub import](docs/deployments.md)
+FailFix is maintained by [pjha26](https://github.com/pjha26). This repository does not currently declare a project license.
