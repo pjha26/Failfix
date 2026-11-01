@@ -11,7 +11,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:browser": "playwright test",
-    "check:api": "node scripts/check-api.mjs"
+    "check:api": "node scripts/check-api.mjs",
+    "eval:ai": "node scripts/evaluate-ai.mjs"
   },
   "dependencies": {
     "diff": "^9.0.0",

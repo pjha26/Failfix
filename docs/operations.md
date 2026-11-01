@@ -14,7 +14,7 @@ Hosting is deferred at the owner's request. These are setup instructions, not a 
 
 Do not share `.env.local`, print keys, or put keys in `NEXT_PUBLIC_*` variables. The key-check script loads `.env.local` locally. CI needs no API key.
 
-Create a Groq key in the [Groq Console](https://console.groq.com/keys), store it only in ignored `.env.local`, and select a model supporting strict structured outputs. If a key is pasted into chat or a tracked file, revoke it and replace it. Once configured, run `npm run check:api` to test the model list and a tiny real structured response. This checks connectivity/schema compatibility, not debugging quality. Then run the six cases described in `evals/results.md` manually, recording every attempt. Do not run newly generated code before reviewing it.
+Create a Groq key in the [Groq Console](https://console.groq.com/keys), store it only in ignored `.env.local`, and select a model supporting strict structured outputs. If a key is pasted into chat or a tracked file, revoke it and replace it. Once configured, run `npm run check:api` to test the model list and a tiny real structured response. This checks connectivity/schema compatibility, not debugging quality. Use the [evaluation runner](evaluation.md) for the six first-party cases, recording every attempt and reviewing generated code before local functional checks. Do not run newly generated code before reviewing it.
 
 ## Host requirements
 

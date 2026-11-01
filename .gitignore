@@ -8,3 +8,6 @@ test-results/
 !.env.example
 *.tsbuildinfo
 .DS_Store
+
+# Untrusted evaluation proposals and per-run reports
+evals/runs/

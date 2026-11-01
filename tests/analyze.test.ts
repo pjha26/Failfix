@@ -66,6 +66,11 @@ describe('analysis boundary', () => {
     expect(body.artifacts.fixedSource).toContain('n ?? 10');
     expect(body.requestId).toBeTruthy();
     expect(body).not.toHaveProperty('tokens');
+    expect(response.headers.get('x-failfix-model')).toBe('test-model');
+    expect(response.headers.get('x-failfix-prompt-sha256')).toMatch(
+      /^[a-f0-9]{64}$/,
+    );
+    expect(response.headers.get('x-failfix-tokens')).toBe('123');
   });
   it('retains concrete missing-context questions', async () => {
     vi.mocked(analyzeWithGroq).mockResolvedValueOnce({

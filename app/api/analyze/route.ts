@@ -1,4 +1,5 @@
-import { randomUUID } from 'node:crypto';
+import { randomUUID, createHash } from 'node:crypto';
+import { SYSTEM_PROMPT } from '@/lib/prompt';
 import { analyzeWithGroq } from '@/lib/groq';
 import { AnalysisError } from '@/lib/http';
 import { inputSchema } from '@/lib/contracts';
@@ -71,7 +72,21 @@ export async function POST(request: Request) {
         providerRequestId: provider.providerRequestId,
       }),
     );
-    return Response.json({ ...result, requestId, durationMs }, { headers });
+    return Response.json(
+      { ...result, requestId, durationMs },
+      {
+        headers: {
+          ...headers,
+          'X-FailFix-Model': provider.model,
+          'X-FailFix-Prompt-Sha256': createHash('sha256')
+            .update(SYSTEM_PROMPT)
+            .digest('hex'),
+          ...(provider.tokens === undefined
+            ? {}
+            : { 'X-FailFix-Tokens': String(provider.tokens) }),
+        },
+      },
+    );
   } catch (error) {
     const safe =
       error instanceof AnalysisError

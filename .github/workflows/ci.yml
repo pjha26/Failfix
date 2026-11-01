@@ -21,6 +21,7 @@ jobs:
           cache: npm
       - run: npx --yes npm@11.6.4 ci
       - run: npm test
+      - run: npm run eval:ai
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run build
