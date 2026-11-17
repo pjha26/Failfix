@@ -195,7 +195,6 @@ export default function DeploymentWorkspace() {
               review.
             </p>
           </div>
-          <Link href="/workspace">Open test-debugging desk ↗</Link>
         </div>
         <section className="repo-import" aria-label="Public repository import">
           <div>

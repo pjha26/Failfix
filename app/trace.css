@@ -1,0 +1,295 @@
+.trace-cover {
+  background-color: var(--ice);
+  color: var(--navy);
+}
+.trace-grid {
+  background-image: radial-gradient(ellipse at 82% 44%, #6597ff56, transparent 48%), radial-gradient(#5d7cb338 1px, transparent 1px);
+  background-size: auto, 20px 20px;
+}
+.trace-cover .story-header {
+  padding-block: 18px;
+  border-bottom: 1px solid #acbddd;
+}
+.trace-cover .story-brand {
+  font-weight: 750;
+}
+.trace-cover .story-header nav {
+  background: transparent;
+  border: 0;
+  backdrop-filter: none;
+}
+.trace-cover .story-header nav a, .trace-cover .nav-launch {
+  color: #203356;
+  font-weight: 600;
+}
+.trace-cover .story-header nav a:hover, .trace-cover .story-secondary:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.trace-cover .nav-launch {
+  border-color: #889ec7;
+  border-radius: 8px;
+}
+.trace-cover .nav-launch span, .trace-cover .story-secondary span {
+  color: var(--action);
+}
+.trace-cover :focus-visible {
+  outline-color: var(--action) !important;
+}
+.trace-cover .story-hero {
+  padding-block: clamp(44px, 7vw, 96px);
+  min-height: 0;
+}
+.trace-cover .hero-copy {
+  padding-bottom: 0;
+}
+.trace-cover .hero-label, .trace-cover .hero-footnote {
+  color: #425779;
+  font-size: 12px;
+}
+.trace-cover .hero-label > span {
+  background: var(--action);
+  border-radius: 1px;
+  width: 9px;
+  height: 9px;
+  box-shadow: 4px -4px #89aaff;
+}
+.trace-cover h1 {
+  margin-block: 24px;
+  font-weight: 700;
+  line-height: .98;
+}
+.trace-cover .hero-failed {
+  color: inherit;
+}
+.trace-cover h1 em {
+  color: var(--action);
+  font-family: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+}
+.trace-cover .hero-copy > p:not(.hero-footnote) {
+  color: #354765;
+  line-height: 1.55;
+  font-size: clamp(17px, 1.45vw, 21px);
+}
+.trace-cover .story-primary {
+  color: white;
+  background: var(--action);
+  border-color: var(--action);
+  border-radius: 8px;
+  box-shadow: 0 4px 0 #162d99;
+}
+.trace-cover .story-primary:hover {
+  background: #1d3bba;
+}
+.trace-cover .story-secondary {
+  color: #1b3154;
+  font-weight: 600;
+}
+.trace-cover .build-signal {
+  height: clamp(355px, 33vw, 465px);
+  margin: 0 auto;
+}
+.signal-map {
+  color: #3660e4;
+  opacity: .48;
+  filter: none;
+}
+.signal-halo {
+  background: radial-gradient(ellipse at center, #72a8ff48, transparent 65%);
+}
+.build-glass:has(.crt-screen) {
+  left: 5%;
+  width: 90%;
+  top: 8%;
+  border: 1px solid #324972;
+  background: #172642;
+  color: var(--ice);
+  padding: 0;
+  border-radius: 13px;
+  box-shadow: 7px 8px 0 #8daaf0, 9px 10px 0 #5974bb, 0 24px 44px #29498440;
+}
+.glass-chrome {
+  padding: 14px 19px;
+  border-color: #354768;
+  color: #b4c4e6;
+  letter-spacing: .05em;
+}
+.glass-chrome .phosphor-indicator {
+  color: var(--ice);
+  letter-spacing: 0;
+  font-size: 13px;
+}
+.phosphor-indicator i {
+  background: var(--mint);
+  box-shadow: none;
+}
+.glass-body.crt-screen, .investigation-preview.crt-screen {
+  background: #101b31;
+}
+.glass-body.crt-screen {
+  padding: clamp(15px, 2vw, 28px);
+  border-radius: 0 0 12px 12px;
+}
+.glass-body.crt-screen::before {
+  opacity: .08;
+}
+.trace-run-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.trace-run-heading h2 {
+  margin: 0;
+  font: 600 clamp(18px, 1.7vw, 26px)/1.15 'DM Sans', sans-serif;
+}
+.glass-body.crt-screen h2 {
+  color: var(--ice);
+  text-shadow: none;
+}
+.trace-run-heading > span {
+  font: 12px var(--mono);
+  color: #ffb99c;
+  white-space: nowrap;
+}
+.run-timeline {
+  display: grid;
+  row-gap: 12px;
+  margin-block: 22px;
+  padding: 8px 0;
+  background: repeating-linear-gradient(90deg, transparent 0 calc(16.66% - 1px), #849bc525 0 16.66%);
+}
+.run-timeline > div {
+  display: grid;
+  grid-template-columns: 8ch 1fr 1ch;
+  align-items: center;
+  gap: 10px;
+  font: 12px var(--mono);
+}
+.run-timeline i {
+  height: 8px;
+  width: 23%;
+  background: #82b3ff;
+  border-radius: 2px;
+}
+.run-timeline div:nth-child(2) i {
+  margin-left: 23%;
+  width: 40%;
+}
+.run-timeline div:last-child i {
+  margin-left: 63%;
+  width: 17%;
+  background: repeating-linear-gradient(135deg,#ffa78a 0 4px,#cb674a 4px 6px);
+}
+.run-timeline b {
+  color: var(--mint);
+}
+.run-timeline div:last-child b {
+  color: var(--coral);
+}
+.crt-screen .glass-log {
+  color: #d4e1fc;
+  background: #090f20;
+  border-color: #394868;
+  text-shadow: none;
+}
+.glass-log span {
+  color: #9badcb;
+}
+.floating-receipt {
+  width: min(79%, 275px);
+  right: 0;
+  bottom: 0;
+  color: #113b34;
+  border: 1px solid #508979;
+  background: #bbf8df;
+  border-radius: 6px;
+  box-shadow: 3px 5px 0 #527f78;
+  padding: 14px 16px;
+}
+.floating-receipt > span {
+  font-weight: bold;
+}
+.floating-receipt small {
+  color: #34584f;
+  float: right;
+  font-size: 11px;
+}
+.floating-receipt code {
+  color: #124937;
+  margin: 10px 0 0;
+  border-top: 1px solid #71b99e;
+  padding-top: 10px;
+}
+.scope-strip {
+  background: #2547c4;
+  color: white;
+  border-color: #284dc6;
+}
+.story-section .story-primary {
+  color: #101c31;
+}
+.story-section .story-primary:hover {
+  background: #c3d6ff;
+}
+.story-site .story-skip {
+  background: #cae1ff;
+}
+.crt-screen .preview-chrome {
+  background: #192a45;
+}
+.crt-screen .terminal-line:not(.failure-line), .crt-screen pre, .crt-screen .trace-insight > b {
+  color: #b9d9ff;
+  text-shadow: none;
+}
+@media (max-width: 820px) {
+  .trace-cover .story-hero {
+    row-gap: 20px;
+  }
+  .trace-cover .build-signal {
+    height: 370px;
+    margin-top: 10px;
+  }
+}
+@media (max-width: 580px) {
+  .trace-cover .story-header {
+    padding-block: 15px;
+  }
+  .trace-cover .hero-copy {
+    text-align: left;
+  }
+  .trace-cover .hero-label, .trace-cover .hero-actions {
+    justify-content: flex-start;
+  }
+  .trace-cover h1 {
+    font-size: clamp(49px, 12vw, 69px);
+  }
+  .trace-cover .hero-footnote {
+    font-size: 11px;
+  }
+  .trace-cover .build-signal {
+    height: auto;
+    display: grid;
+    padding-top: 15px;
+    gap: 16px;
+  }
+  .build-glass:has(.crt-screen) {
+    position: relative;
+    top: auto;
+    left: 1%;
+    width: 96%;
+  }
+  .trace-cover .floating-receipt {
+    position: relative;
+    justify-self: end;
+    margin-right: 5px;
+  }
+  .glass-chrome {
+    padding: 11px 14px;
+  }
+  .run-timeline {
+    margin-block: 14px;
+  }
+}

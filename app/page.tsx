@@ -9,6 +9,7 @@ import { ScrollEvidence } from '@/components/scroll-evidence';
 import './story.css';
 import './scroll-scenes.css';
 import './terminal-effect.css';
+import './trace.css';
 
 export default function Home() {
   return (
@@ -16,9 +17,10 @@ export default function Home() {
       <a className="story-skip" href="#main-content">
         Skip to content
       </a>
+      <div className="trace-cover">
       <header className="story-header">
         <Link href="/" className="story-brand" aria-label="FailFix home">
-          <span>ƒ↯</span> FailFix<span className="brand-period">.</span>
+          <i className="trace-mark" aria-hidden="true" />FailFix
         </Link>
         <nav aria-label="Main navigation">
           <a href="#workflow">The workflow</a>
@@ -29,41 +31,37 @@ export default function Home() {
           Open build desk <span>↗</span>
         </Link>
       </header>
+      </div>
       <main id="main-content">
+        <div className="trace-cover trace-grid">
         <section className="story-hero" aria-labelledby="hero-title">
           <div className="hero-copy">
             <div className="hero-label">
-              <span /> A CLEARER WAY THROUGH BROKEN BUILDS
+              <span /> BUILD &amp; TEST DEBUGGER
             </div>
             <h1 id="hero-title">
               Build <span className="hero-failed">failed.</span>
               <br />
-              Keep <em>moving.</em>
+              Trace the <em>fix.</em>
             </h1>
             <p>
-              The error is a starting point. Connect the log to the config,
-              understand what broke, and review your next change.
+              Find the failing step in your build log, connect it to the configuration, and review a proposed fix.
             </p>
             <div className="hero-actions">
               <Link className="story-primary" href="/deployments">
                 Investigate a build <span>↗</span>
               </Link>
-              <a className="story-secondary" href="#workflow">
-                Follow the trace <span>↓</span>
-              </a>
+              <Link className="story-secondary" href="/workspace?example=zero">
+                Try a test case <span>→</span>
+              </Link>
             </div>
             <p className="hero-footnote">
               PUBLIC GITHUB IMPORT <b>·</b> NO MODEL KEY REQUIRED
             </p>
           </div>
           <BuildSignal />
-          <div className="hero-bottom">
-            <span>BUILT FOR THE MOMENT THE PIPELINE TURNS RED.</span>
-            <span className="scroll-cue">
-              SCROLL TO INVESTIGATE <i>↓</i>
-            </span>
-          </div>
         </section>
+        </div>
         <div className="scope-strip">
           <span>01 / PUBLIC REPOSITORY CONTEXT</span>
           <span>02 / EVIDENCE FROM YOUR LOGS</span>
@@ -73,7 +71,7 @@ export default function Home() {
         <section className="workflow-section story-section" id="workflow">
           <div className="section-intro" data-reveal>
             <p className="story-kicker">
-              THE INVESTIGATION / THREE DELIBERATE MOVES
+              BUILD INVESTIGATION
             </p>
             <h2>
               Less guessing.
@@ -147,7 +145,7 @@ export default function Home() {
         >
           <div data-reveal>
             <p className="story-kicker">
-              RECOGNIZE THE FAILURE. RESPECT THE BOUNDARY.
+              SUPPORTED BUILD FAILURES
             </p>
             <h2>
               Common breaks.
@@ -199,7 +197,7 @@ export default function Home() {
         >
           <div className="cases-heading" data-reveal>
             <div>
-              <p className="story-kicker">SMALL BUGS. FAMILIAR CONSEQUENCES.</p>
+              <p className="story-kicker">TYPESCRIPT TEST CASES</p>
               <h2>
                 Open a <span>case file.</span>
               </h2>
@@ -267,7 +265,7 @@ export default function Home() {
           className="story-faq story-section"
           aria-label="Frequently asked questions"
         >
-          <p className="story-kicker">BEFORE YOUR NEXT BUILD</p>
+          <p className="story-kicker">COMMON QUESTIONS</p>
           <div>
             <details>
               <summary>Can I use this without an API key?</summary>
@@ -313,7 +311,7 @@ export default function Home() {
       </main>
       <footer className="story-footer">
         <Link href="/" className="story-brand">
-          <span>ƒ↯</span> FailFix.
+          <i className="trace-mark" aria-hidden="true" />FailFix
         </Link>
         <p>Small changes. Clear reasoning.</p>
         <a

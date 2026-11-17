@@ -10,16 +10,17 @@ export function IdeHeader({
   return (
     <header className="ide-titlebar">
       <Link href="/" className="ide-brand" aria-label="FailFix home">
-        <span>
-          f<span>↯</span>
-        </span>{' '}
+        <i className="trace-mark" aria-hidden="true" />
         FailFix
       </Link>
       <span className="ide-breadcrumb">
         review studio <span>/</span>{' '}
         {context || (workspace ? 'untitled session' : 'getting started')}
       </span>
-      <Link href="/deployments">Build investigations ↗</Link>
+      <nav className="desk-switch" aria-label="Debugging desks">
+        <Link href="/deployments" aria-current={workspace ? undefined : 'page'}>Build desk</Link>
+        <Link href="/workspace" aria-current={workspace ? 'page' : undefined}>Test desk</Link>
+      </nav>
     </header>
   );
 }

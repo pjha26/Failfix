@@ -22,13 +22,13 @@
 }
 .assembly-heading h2 em {
   font-family: Georgia, serif;
-  color: var(--lime);
+  color: var(--accent);
   font-weight: 400;
 }
 .assembly-heading > p:last-child {
   font-size: 16px;
   line-height: 1.7;
-  color: #b4beaa;
+  color: #c2d0e7;
 }
 .assembly-stage {
   position: relative;
@@ -42,9 +42,9 @@
   position: relative;
   z-index: 2;
   min-width: 0;
-  border: 1px solid #62734b;
+  border: 1px solid #486188;
   border-radius: 12px;
-  background: linear-gradient(140deg, #293422ed, #10180ff7 70%);
+  background: linear-gradient(140deg, #223957, #101c32 70%);
   box-shadow:
     0 20px 55px #0006,
     inset 0 1px #d0f99916;
@@ -61,7 +61,7 @@
 }
 .assembly-card header b {
   font: 20px var(--mono);
-  color: var(--lime);
+  color: var(--accent);
 }
 .assembly-card h3 {
   font-size: clamp(18px, 1.8vw, 26px);
@@ -92,10 +92,10 @@
   color: var(--coral);
 }
 .assembly-patch {
-  border-color: #a0c36a;
+  border-color: #519f92;
 }
 .assembly-patch pre {
-  color: #d0f6a5;
+  color: var(--mint);
 }
 .assembly-dot {
   display: inline-block;
@@ -133,8 +133,8 @@
 .assembly-rail i {
   display: block;
   height: 2px;
-  background: var(--lime);
-  box-shadow: 0 0 18px #b7fc7a;
+  background: var(--accent);
+  box-shadow: 0 0 18px #7dbaff;
 }
 .assembly-caption {
   display: flex;
@@ -213,7 +213,7 @@
 }
 .motion-ready .review-principle .scroll-ink {
   color: #84917b;
-  background: linear-gradient(90deg, #edeee5 0%, #d2f3a9 100%) no-repeat;
+  background: linear-gradient(90deg, #edeee5 0%, #aacaef 100%) no-repeat;
   background-size: calc(var(--scene-progress, 1) * 100%) 100%;
   background-clip: text;
   -webkit-background-clip: text;

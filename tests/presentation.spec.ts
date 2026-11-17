@@ -140,7 +140,7 @@ test('reduced motion keeps the new scenes flat, readable, and within the viewpor
   );
   await expect(page.locator('.scroll-ink')).toHaveCSS(
     '-webkit-text-fill-color',
-    'rgb(237, 238, 229)',
+    await page.locator('.review-principle').evaluate((el) => getComputedStyle(el).color),
   );
   expect(
     await page.evaluate(

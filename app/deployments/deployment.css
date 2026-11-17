@@ -35,7 +35,7 @@
 }
 .repo-import {
   border: 1px solid var(--line);
-  background: #202127;
+  background: #19233a;
   padding: 25px;
   display: grid;
   grid-template-columns: 0.75fr 1.25fr;
@@ -69,7 +69,7 @@
 .repo-import input {
   min-width: 0;
   flex: 1;
-  background: #17181c;
+  background: #10182b;
   border: 1px solid #45414d;
   border-radius: 2px;
   color: var(--text);
@@ -439,3 +439,10 @@
     flex-direction: column;
   }
 }
+
+.deployment-intro { padding-left: 18px; border-left: 4px solid #6a90ff; }
+.deployment-ide .repo-import { background: linear-gradient(115deg, #23385c, #17243d 68%); border-color: #455c85; border-radius: 12px; }
+.deployment-grid { border-radius: 10px; }
+.deployment-intro .deploy-kicker { color: #b0ccff; }
+.deployment-ide .primary-button { background: var(--action); color: white; border-radius: 6px; }
+.deployment-review { border-top: 2px solid #5eac99; }
