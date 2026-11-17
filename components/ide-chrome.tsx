@@ -1,3 +1,4 @@
+import { ThemePicker } from './theme-picker';
 import Link from 'next/link';
 
 export function IdeHeader({
@@ -21,6 +22,7 @@ export function IdeHeader({
         <Link href="/deployments" aria-current={workspace ? undefined : 'page'}>Build desk</Link>
         <Link href="/workspace" aria-current={workspace ? 'page' : undefined}>Test desk</Link>
       </nav>
+      <ThemePicker />
     </header>
   );
 }

@@ -1,3 +1,4 @@
+import { ThemePicker } from '@/components/theme-picker';
 import { pageMetadata } from '@/lib/site-metadata';
 import Link from 'next/link';
 import { examples } from '@/lib/examples';
@@ -34,6 +35,7 @@ export default function Home() {
           <a href="#cases">Case files</a>
           <Link href="/workspace">Test desk</Link>
         </nav>
+        <ThemePicker />
         <Link className="nav-launch" href="/deployments">
           Open build desk <span>↗</span>
         </Link>

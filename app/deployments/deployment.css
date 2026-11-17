@@ -35,7 +35,7 @@
 }
 .repo-import {
   border: 1px solid var(--line);
-  background: #19233a;
+  background: var(--panel);
   padding: 25px;
   display: grid;
   grid-template-columns: 0.75fr 1.25fr;
@@ -58,7 +58,7 @@
 }
 .repo-import form > label {
   font: 12px var(--mono);
-  color: #c1b9ca;
+  color: var(--muted);
   display: block;
   margin-bottom: 9px;
 }
@@ -69,8 +69,8 @@
 .repo-import input {
   min-width: 0;
   flex: 1;
-  background: #10182b;
-  border: 1px solid #45414d;
+  background: var(--bg);
+  border: 1px solid var(--line);
   border-radius: 2px;
   color: var(--text);
   padding: 12px;
@@ -78,7 +78,7 @@
 }
 .deployment-ide .primary-button {
   border-radius: 2px;
-  background: var(--green);
+  background: var(--action);
   padding: 12px 15px;
   font-size: 12px;
 }
@@ -98,9 +98,9 @@
 }
 .repo-snapshot {
   margin-top: 20px;
-  border: 1px solid #494e3f;
+  border: 1px solid var(--line);
   padding: 20px 24px;
-  background: #23281e;
+  background: var(--panel);
 }
 .repo-snapshot > div {
   display: flex;
@@ -114,7 +114,7 @@
   font: 13px var(--mono);
 }
 .repo-snapshot > div > span {
-  color: #b6c3a1;
+  color: var(--muted);
   font: 12px var(--mono);
 }
 .repo-snapshot > label {
@@ -127,16 +127,16 @@
 }
 .repo-snapshot select,
 .config-editor-heading select {
-  background: #1a1c1b;
-  border: 1px solid #4c5146;
-  color: #d4dcc8;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--text);
   padding: 8px;
   max-width: 100%;
   font: 12px var(--mono);
 }
 .repo-snapshot details {
   font-size: 12px;
-  color: #b2bda4;
+  color: var(--muted);
   margin-top: 15px;
 }
 .repo-snapshot summary {
@@ -145,7 +145,7 @@
 .repo-snapshot li {
   font-size: 12px;
   line-height: 1.8;
-  color: #bec5b2;
+  color: var(--muted);
   overflow-wrap: anywhere;
 }
 .deployment-grid {
@@ -188,16 +188,16 @@
   margin: 0 20px;
   min-height: 230px;
   padding: 14px;
-  background: #141619;
-  border: 1px solid #3c3742;
-  color: #dfc6b4;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
   font: 12px/20px var(--mono);
   resize: vertical;
   tab-size: 2;
 }
 .build-config-editor {
   min-height: 210px;
-  color: #d3d5c4;
+  color: var(--text);
 }
 .deployment-editor-meta {
   display: flex;
@@ -213,13 +213,13 @@
   margin-left: 8px;
 }
 .config-path {
-  color: #bbb2c4;
+  color: var(--muted);
   font: 12px var(--mono);
   padding: 0 20px;
   overflow-wrap: anywhere;
 }
 .config-path span {
-  color: #8f9c7d;
+  color: var(--muted);
 }
 .build-actions {
   display: flex;
@@ -241,14 +241,14 @@
 }
 .deployment-empty {
   padding: 65px 35px;
-  color: #aaa1b2;
+  color: var(--muted);
 }
 .deployment-empty > span {
   color: var(--orange);
   font: 38px var(--mono);
 }
 .deployment-empty h3 {
-  color: #e5ddcf;
+  color: var(--text);
   font:
     29px/1.25 Georgia,
     serif;
@@ -278,7 +278,7 @@
 }
 .deployment-provenance span {
   display: block;
-  color: #b7bca4;
+  color: var(--muted);
   margin-top: 6px;
 }
 .deployment-report > h3 {
@@ -290,7 +290,7 @@
 .deployment-report li {
   font-size: 12px;
   line-height: 1.9;
-  color: #beb6c7;
+  color: var(--muted);
 }
 .build-finding {
   padding: 24px 0;
@@ -301,7 +301,7 @@
 .build-verification h4 {
   font-size: 13px;
   margin: 0;
-  color: #e1dbca;
+  color: var(--text);
 }
 .build-finding ol {
   padding-left: 20px;
@@ -312,12 +312,12 @@
 .build-evidence button {
   display: block;
   width: 100%;
-  border: 1px solid #4a3b34;
-  background: #29221e;
+  border: 1px solid var(--line);
+  background: var(--panel);
   padding: 13px;
   text-align: left;
   margin-bottom: 6px;
-  color: #dfc6ac;
+  color: var(--text);
 }
 .build-evidence b {
   display: block;
@@ -345,8 +345,8 @@
 }
 .build-patch pre {
   font: 12px/1.9 var(--mono);
-  background: #111713;
-  border: 1px solid #394532;
+  background: var(--bg);
+  border: 1px solid var(--line);
   padding: 14px;
   max-height: 320px;
   overflow: auto;
@@ -357,8 +357,8 @@
 }
 .build-verification {
   padding: 20px;
-  border: 1px solid #464b3d;
-  background: #262b21;
+  border: 1px solid var(--line);
+  background: var(--raised);
   margin-bottom: 22px;
 }
 .build-verification ul {
@@ -440,9 +440,9 @@
   }
 }
 
-.deployment-intro { padding-left: 18px; border-left: 4px solid #6a90ff; }
-.deployment-ide .repo-import { background: linear-gradient(115deg, #23385c, #17243d 68%); border-color: #455c85; border-radius: 12px; }
+.deployment-intro { padding-left: 18px; border-left: 4px solid var(--line); }
+.deployment-ide .repo-import { background: linear-gradient(115deg, var(--raised), var(--panel) 68%); border-color: var(--line); border-radius: 12px; }
 .deployment-grid { border-radius: 10px; }
-.deployment-intro .deploy-kicker { color: #b0ccff; }
-.deployment-ide .primary-button { background: var(--action); color: white; border-radius: 6px; }
-.deployment-review { border-top: 2px solid #5eac99; }
+.deployment-intro .deploy-kicker { color: var(--text); }
+.deployment-ide .primary-button { background: var(--action); color: var(--on-action); border-radius: 6px; }
+.deployment-review { border-top: 2px solid var(--line); }

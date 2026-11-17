@@ -1,0 +1,88 @@
+/* Blueprint in daylight, an amber terminal at night, and a paper proof for monochrome. */
+:root {
+  color-scheme: light dark;
+  --bg: light-dark(#eff4fb, #101416);
+  --panel: light-dark(#ffffff, #1b2123);
+  --raised: light-dark(#e3ebf8, #283031);
+  --line: light-dark(#b3bfd1, #465253);
+  --text: light-dark(#142844, #f5eee0);
+  --muted: light-dark(#435672, #bac4be);
+  --action: light-dark(#224cc5, #ffd079);
+  --on-action: light-dark(#ffffff, #271e0b);
+  --green: light-dark(#006951, #91dfbc);
+  --orange: light-dark(#a13122, #ffa694);
+  --add-bg: light-dark(#daf2e8, #203c32);
+  --remove-bg: light-dark(#ffe6df, #422b29);
+}
+:root[data-theme='light'], :root[data-theme='mono'] { color-scheme: light; }
+:root[data-theme='dark'] { color-scheme: dark; }
+:root[data-theme='mono'] {
+  --bg: #f2f2f2;
+  --panel: #fff;
+  --raised: #e5e5e5;
+  --line: #747474;
+  --text: #111;
+  --muted: #454545;
+  --action: #202020;
+  --on-action: #fff;
+  --green: #202020;
+  --orange: #151515;
+  --add-bg: #eee;
+  --remove-bg: #dedede;
+}
+
+.theme-picker {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  position: relative;
+  color: var(--text);
+}
+.theme-picker select {
+  color: inherit;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  font: 500 13px/1.4 'DM Sans', Arial, sans-serif;
+  padding: 7px 4px 7px 28px;
+  min-height: 36px;
+  cursor: pointer;
+}
+.theme-swatch {
+  position: absolute;
+  left: 9px;
+  width: 12px;
+  height: 12px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: linear-gradient(90deg, var(--text) 50%, var(--panel) 50%);
+  pointer-events: none;
+}
+.theme-picker select:focus-visible { outline: 2px solid var(--action); outline-offset: 3px; }
+.story-header .theme-picker { margin-left: auto; }
+.story-header nav { margin-left: auto; }
+html[data-theme='mono'] :is(.ide-titlebar, .story-header, .assembly-card, .build-glass, .repo-import, .story-primary, .nav-launch, .theme-picker select) {
+  border-radius: 0;
+}
+html[data-theme='mono'] :is(.story-hero h1, .story-section h2, .deployment-intro h1) {
+  font-family: Georgia, serif;
+}
+html[data-theme='mono'] :is(.assembly-error, .build-finding, .error-message) {
+  border-inline-start: 3px dashed var(--text);
+}
+html[data-theme='mono'] :is(.diff-remove, .preview-diff-remove) {
+  border-inline-start: 2px dashed var(--text);
+}
+html[data-theme='mono'] :is(.diff-add, .preview-diff-add) {
+  border-inline-start: 2px solid var(--text);
+}
+html[data-theme='mono'] .trace-mark { filter: grayscale(1); }
+@media (max-width: 580px) {
+  .story-header:has(.theme-picker), .ide-titlebar:has(.theme-picker) { gap: 7px; flex-wrap: wrap; }
+  .story-header .nav-launch { padding-inline: 8px; }
+  .story-header .nav-launch span { margin-left: 2px; }
+  .ide-titlebar:has(.theme-picker) { padding-block: 4px; }
+}
+@media (scripting: none) {
+  .theme-picker { display: none; }
+}

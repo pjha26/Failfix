@@ -1,18 +1,18 @@
-/* Green-terminal treatment, contained to illustrative landing monitors. */
+/* Scanlines stay inside the illustrative landing monitors. */
 .build-glass:has(.crt-screen) {
-  background: linear-gradient(135deg, #30382b, #0d130e 40%, #202b1c);
-  border-color: #788e5e;
+  background: linear-gradient(135deg, var(--raised), var(--bg) 40%, var(--panel));
+  border-color: var(--line);
   border-radius: 22px;
   padding: 5px;
   box-shadow:
-    inset 0 1px 1px #d6f7a735,
+    inset 0 1px 1px color-mix(in srgb, var(--action) 21%, transparent),
     0 30px 70px #000a,
-    0 0 65px #8bff4a12;
+    0 0 65px color-mix(in srgb, var(--action) 7%, transparent);
 }
 .crt-screen {
   isolation: isolate;
   overflow: hidden;
-  background: radial-gradient(ellipse at 50% 15%, #173d1b, #07140c 75%);
+  background: radial-gradient(ellipse at 50% 15%, var(--raised), var(--bg) 75%);
   box-shadow: inset 0 0 50px #0007;
 }
 .glass-body.crt-screen {
@@ -31,7 +31,7 @@
   background: repeating-linear-gradient(
     to bottom,
     transparent 0 3px,
-    #051006 3px 4px
+    var(--bg) 3px 4px
   );
   opacity: 0.24;
   border-radius: inherit;
@@ -39,7 +39,7 @@
 .crt-screen::after {
   inset: 0 0 auto;
   height: 22%;
-  background: linear-gradient(transparent, #bbff8e0d, transparent);
+  background: linear-gradient(transparent, color-mix(in srgb, var(--action) 5%, transparent), transparent);
   opacity: 0;
 }
 .motion-ready .crt-screen::after {
@@ -50,26 +50,26 @@
 .crt-screen .terminal-line:not(.failure-line),
 .crt-screen pre,
 .crt-screen .trace-insight > b {
-  color: #c1f9a4;
-  text-shadow: 0 0 14px #9cff5633;
+  color: var(--orange);
+  text-shadow: 0 0 14px color-mix(in srgb, var(--action) 20%, transparent);
 }
 .glass-body.crt-screen h2 em {
-  color: #a4d98c;
+  color: var(--text);
 }
 .crt-screen .glass-log {
-  background: #040d07b3;
-  border-color: #6b955540;
-  color: #b2e6a0;
-  text-shadow: 0 0 8px #9cff5626;
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
+  border-color: color-mix(in srgb, var(--line) 25%, transparent);
+  color: var(--text);
+  text-shadow: 0 0 8px color-mix(in srgb, var(--action) 15%, transparent);
 }
 .crt-screen .glass-step {
-  border-color: #a7e67c24;
+  border-color: color-mix(in srgb, var(--line) 14%, transparent);
 }
 .crt-screen .chapter-output {
   background: transparent;
 }
 .crt-screen .preview-chrome {
-  background: #152416;
+  background: var(--panel);
 }
 .phosphor-indicator {
   display: inline-flex;
@@ -80,11 +80,11 @@
   height: 5px;
   width: 5px;
   border-radius: 50%;
-  background: #bdff89;
-  box-shadow: 0 0 9px #a0ff69;
+  background: var(--green);
+  box-shadow: 0 0 9px var(--action);
 }
 .phosphor-indicator span {
-  color: #c1d8ae;
+  color: var(--text);
   font: 10px var(--mono);
   letter-spacing: 0.03em;
 }
