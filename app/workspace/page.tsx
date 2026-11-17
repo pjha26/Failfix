@@ -1,15 +1,16 @@
-import type { Metadata } from 'next';
+import { pageMetadata } from '@/lib/site-metadata';
 import '../manual.css';
 import '../ide.css';
 import Workspace from '@/components/workspace';
 import { examples } from '@/lib/examples';
 import { buildArtifacts } from '@/lib/patch';
 
-export const metadata: Metadata = {
-  title: 'Debugging workspace — FailFix',
-  description:
-    'Inspect a TypeScript test failure, follow the evidence, and review a focused patch.',
-};
+export const metadata = pageMetadata(
+  '/workspace',
+  'TypeScript & Vitest debugging workspace | FailFix',
+  'Inspect failing TypeScript tests, trace evidence to source lines, and review a proposed patch and regression test. Explore saved examples or bring your own failure.',
+);
+
 export default async function WorkspacePage({
   searchParams,
 }: {

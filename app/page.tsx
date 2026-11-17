@@ -1,3 +1,4 @@
+import { pageMetadata } from '@/lib/site-metadata';
 import Link from 'next/link';
 import { examples } from '@/lib/examples';
 import {
@@ -10,6 +11,12 @@ import './story.css';
 import './scroll-scenes.css';
 import './terminal-effect.css';
 import './trace.css';
+
+export const metadata = pageMetadata(
+  '/',
+  'FailFix | Build log analyzer and TypeScript test debugger',
+  'Trace failed builds through GitHub configuration and log evidence. Debug TypeScript and Vitest failures, inspect the proposed patch, and choose what to apply.',
+);
 
 export default function Home() {
   return (
