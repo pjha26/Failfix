@@ -69,6 +69,9 @@ export default function Home() {
             </p>
           </div>
           <BuildSignal />
+          <Link className="build-example-link" href="/deployments?example=missing-build#build-log">
+            Inspect this failure <span aria-hidden="true">↗</span>
+          </Link>
         </section>
         </div>
         <div className="scope-strip">

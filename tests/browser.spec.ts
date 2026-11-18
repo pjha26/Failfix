@@ -9,6 +9,8 @@ test('a saved walkthrough exports applicable changes and invalidates stale resul
   await page.goto('/workspace');
   await page.getByRole('button', { name: /Zero is a value/ }).click();
   await page.getByRole('button', { name: 'Open saved walkthrough' }).click();
+  await page.getByRole('link', { name: /View findings/ }).click();
+  await expect(page.locator('#test-findings')).toBeFocused();
   await expect(
     page.getByText('Saved example · hand-authored walkthrough'),
   ).toBeVisible();
@@ -34,6 +36,7 @@ test('a saved walkthrough exports applicable changes and invalidates stale resul
   await page
     .getByRole('textbox', { name: 'Source code', exact: true })
     .fill('export const changed = true;');
+  await expect(page.getByRole('link', { name: /View findings/ })).toHaveCount(0);
   await expect(page.getByText(/Inputs changed. Reanalyze/)).toBeVisible();
   await expect(
     page.getByRole('button', { name: 'Download patch' }),

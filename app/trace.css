@@ -91,6 +91,21 @@
   height: clamp(355px, 33vw, 465px);
   margin: 0 auto;
 }
+.build-example-link {
+  grid-column: 2;
+  justify-self: end;
+  padding: 9px 13px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--action);
+  font-weight: 600;
+  font-size: 14px;
+}
+.story-site .build-example-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
 .signal-map {
   color: var(--muted);
   opacity: .48;
@@ -245,6 +260,9 @@
   text-shadow: none;
 }
 @media (max-width: 820px) {
+  .build-example-link {
+    grid-column: 1;
+  }
   .trace-cover .story-hero {
     row-gap: 20px;
   }

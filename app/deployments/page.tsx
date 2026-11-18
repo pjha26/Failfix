@@ -9,6 +9,12 @@ export const metadata = pageMetadata(
   'Investigate a failed deployment with public GitHub configuration and build logs. Find the failing step and review a configuration fix or verification checklist.',
 );
 
-export default function DeploymentPage() {
-  return <DeploymentWorkspace />;
+export default async function DeploymentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ example?: string | string[] }>;
+}) {
+  const { example } = await searchParams;
+  const showExample = example === 'missing-build';
+  return <DeploymentWorkspace key={showExample ? 'example' : 'blank'} showExample={showExample} />;
 }

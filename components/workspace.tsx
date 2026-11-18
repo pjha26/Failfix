@@ -561,6 +561,11 @@ export default function Workspace({
                     Open saved walkthrough
                   </button>
                 )}
+                <div className="findings-jump">
+                  <span role="status">{result && !stale && !loading && !reviewing ? 'Test review ready.' : ''}</span>
+                  {result && !stale && !loading && !reviewing && <a href="#test-findings">View findings ↓</a>}
+                  {error && <a href="#test-findings">View review error ↓</a>}
+                </div>
               </div>
               <div id="manual-review">
                 <ManualWorkflow
@@ -593,6 +598,8 @@ export default function Workspace({
               </p>
             </div>
             <div
+              id="test-findings"
+              tabIndex={-1}
               className="output-panel"
               aria-label="Evidence and patch review"
             >

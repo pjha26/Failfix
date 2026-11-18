@@ -991,6 +991,23 @@
 .workspace-ide .tabs button[aria-selected='true'] { border-top: 2px solid var(--action); color: var(--text); font-weight: 600; }
 .workspace-ide .output-panel { border-top: 2px solid var(--green); }
 .workspace-ide .session-bar h1 { font: 600 15px 'DM Sans', sans-serif; }
+.findings-jump {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 12px;
+  align-items: baseline;
+  color: var(--muted);
+}
+.findings-jump span:empty { position: absolute; }
+.findings-jump:not(:has(a)) { display: contents; }
+.findings-jump a {
+  padding-block: 8px;
+  color: var(--action);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+#build-findings, #test-findings, #build-log { scroll-margin-block-start: 20px; }
 @media (max-width: 380px) {
   .desk-switch a { padding-inline: 7px; }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, type ChangeEvent } from 'react';
+import { useEffect, useRef, useState, type ChangeEvent } from 'react';
 import Link from 'next/link';
 import { IdeHeader, IdeStatus } from './ide-chrome';
 import { byteLength } from '@/lib/contracts';
@@ -34,6 +34,7 @@ const demo: DeploymentInput = {
     },
   ],
 };
+const demoNotice = 'Example build loaded. Select Investigate build to check the failure.';
 
 function download(filename: string, content: string) {
   const url = URL.createObjectURL(
@@ -48,10 +49,10 @@ function download(filename: string, content: string) {
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
-export default function DeploymentWorkspace() {
+export default function DeploymentWorkspace({ showExample = false }: { showExample?: boolean }) {
   const [repository, setRepository] = useState('');
   const [snapshot, setSnapshot] = useState<GithubSnapshot | null>(null);
-  const [input, setInput] = useState<DeploymentInput>({
+  const [input, setInput] = useState<DeploymentInput>(showExample ? demo : {
     log: '',
     files: [{ path: 'package.json', text: '' }],
   });
@@ -60,12 +61,21 @@ export default function DeploymentWorkspace() {
   const [reviewedInput, setReviewedInput] = useState('');
   const [busy, setBusy] = useState<'import' | 'review' | null>(null);
   const [error, setError] = useState('');
-  const [notice, setNotice] = useState('');
-  const [isDemo, setIsDemo] = useState(false);
+  const [notice, setNotice] = useState(showExample ? demoNotice : '');
+  const [isDemo, setIsDemo] = useState(showExample);
   const logRef = useRef<HTMLTextAreaElement>(null);
   const currentInput = JSON.stringify(input);
   const stale = !!report && currentInput !== reviewedInput;
   const selectedFile = input.files[fileIndex];
+
+  useEffect(() => {
+    if (!showExample || window.location.hash !== '#build-log') return;
+    const area = logRef.current;
+    if (!area) return;
+    const errorStart = demo.log.indexOf('\n') + 1;
+    area.focus({ preventScroll: true });
+    area.setSelectionRange(errorStart, demo.log.indexOf('\n', errorStart));
+  }, [showExample]);
 
   async function importRepository(runId?: number) {
     setBusy('import');
@@ -153,6 +163,7 @@ export default function DeploymentWorkspace() {
       );
       if (text.includes('\0')) throw Error('Binary log');
       setInput((old) => ({ ...old, log: text }));
+      setIsDemo(false);
       setError('');
     } catch {
       setError('Choose a valid UTF-8 text log.');
@@ -177,9 +188,7 @@ export default function DeploymentWorkspace() {
     setReport(null);
     setIsDemo(true);
     setError('');
-    setNotice(
-      'Hand-authored build failure loaded. Select Investigate build to run the real signature checks.',
-    );
+    setNotice(demoNotice);
   }
 
   return (
@@ -336,9 +345,10 @@ export default function DeploymentWorkspace() {
               id="build-log"
               className="build-log-editor"
               value={input.log}
-              onChange={(event) =>
-                setInput((old) => ({ ...old, log: event.target.value }))
-              }
+              onChange={(event) => {
+                setIsDemo(false);
+                setInput((old) => ({ ...old, log: event.target.value }));
+              }}
               placeholder={
                 'Paste the actual error and nearby output from GitHub Actions, Vercel, Netlify, or your local build…'
               }
@@ -380,7 +390,8 @@ export default function DeploymentWorkspace() {
               id="build-config"
               className="build-config-editor"
               value={selectedFile?.text || ''}
-              onChange={(event) =>
+              onChange={(event) => {
+                setIsDemo(false);
                 setInput((old) => ({
                   ...old,
                   files: old.files.map((file, index) =>
@@ -388,8 +399,8 @@ export default function DeploymentWorkspace() {
                       ? { ...file, text: event.target.value }
                       : file,
                   ),
-                }))
-              }
+                }));
+              }}
               placeholder={
                 'Paste package.json here to enable narrowly scoped config patch suggestions.'
               }
@@ -414,6 +425,10 @@ export default function DeploymentWorkspace() {
                 <span>→</span>
               </button>
               <span>No model API required</span>
+              <div className="findings-jump">
+                <span role="status">{report && !stale && !busy ? 'Build review ready.' : ''}</span>
+                {report && !stale && !busy && <a href="#build-findings">View findings ↓</a>}
+              </div>
             </div>
             <p className="deployment-privacy">
               Logs and config are sent to this FailFix server for signature
@@ -422,7 +437,7 @@ export default function DeploymentWorkspace() {
               it never clones or changes a repository.
             </p>
           </section>
-          <section className="deployment-review" aria-label="Build review">
+          <section id="build-findings" tabIndex={-1} className="deployment-review" aria-label="Build review">
             <div className="panel-heading">
               <h2>
                 <span>03</span> Evidence &amp; repair plan

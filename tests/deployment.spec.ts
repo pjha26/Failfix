@@ -2,6 +2,22 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { applyPatch } from 'diff';
 
+test('the landing sample opens the failing line and makes its findings reachable', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('link', { name: 'Inspect this failure' }).click();
+  await expect(page).toHaveURL(/\/deployments\?example=missing-build#build-log$/);
+  const log = page.getByRole('textbox', { name: 'Failing build output' });
+  await expect(log).toBeFocused();
+  await expect.poll(() => log.evaluate((area: HTMLTextAreaElement) =>
+    area.value.slice(area.selectionStart, area.selectionEnd),
+  )).toBe('npm error Missing script: "build"');
+  await expect(page.getByRole('textbox', { name: /Configuration/ })).toHaveValue(/example-storefront/);
+  await page.getByRole('button', { name: 'Investigate build' }).click();
+  await page.getByRole('link', { name: /View findings/ }).click();
+  await expect(page.getByRole('region', { name: 'Build review' })).toBeFocused();
+  await expect(page.getByRole('heading', { name: 'The requested build script is missing' })).toBeInViewport();
+});
+
 test('a build failure produces a real no-key patch and invalidates exports after edits', async ({
   page,
 }) => {
