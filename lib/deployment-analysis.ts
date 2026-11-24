@@ -5,8 +5,31 @@ import {
   type DeploymentFinding,
 } from './deployment-contracts';
 
+function readPackage(text: string) {
+  try {
+    const data = JSON.parse(text);
+    return data && typeof data === 'object' && !Array.isArray(data)
+      ? data
+      : null;
+  } catch {
+    return null;
+  }
+}
+
+function readSetting(value: unknown) {
+  const text = typeof value === 'string' ? value.trim() : '';
+  return /^[a-z0-9@.^~*<>=|+ -]{1,100}$/i.test(text) ? text : '';
+}
+
 export function inspectDeployment(untrusted: unknown): DeploymentReport {
   const input = deploymentInputSchema.parse(untrusted);
+  const packageFile = input.files.find((file) => file.path === 'package.json');
+  const packageData = packageFile ? readPackage(packageFile.text) : null;
+  const packageManager = readSetting(packageData?.packageManager);
+  const nodeRange = readSetting(packageData?.engines?.node);
+  const nvmVersion = readSetting(
+    input.files.find((file) => file.path === '.nvmrc')?.text,
+  );
   const lines = input.log.split(/\r?\n/);
   const findings: DeploymentFinding[] = [];
   const add = (
@@ -37,11 +60,13 @@ export function inspectDeployment(untrusted: unknown): DeploymentReport {
   );
   add(
     'lockfile',
-    /npm ci can only install|package\.json and package-lock\.json.*(?:sync|match)|frozen.lockfile|ERR_PNPM_OUTDATED_LOCKFILE|EUSAGE/i,
+    /`?npm ci`?(?: command)? can only install|package\.json and package-lock\.json.*(?:sync|match)|ERR_PNPM_(?:OUTDATED_LOCKFILE|NO_LOCKFILE)|lockfile would have been modified/i,
     'The install step may be blocked by the lockfile',
     'These install errors commonly indicate a missing or out-of-date lockfile, or a package-manager mismatch. The log signature is a clue, not a complete diagnosis.',
     [
-      'Use the package manager and version declared by the project.',
+      packageManager
+        ? `package.json declares ${packageManager}. Check that the install step uses this package manager and version.`
+        : 'Use the package manager and version declared by the project.',
       'Regenerate the correct lockfile locally after reviewing dependency changes, then commit it with package.json.',
       'Re-run the frozen install command. Do not bypass it just to hide a mismatch.',
     ],
@@ -52,7 +77,12 @@ export function inspectDeployment(untrusted: unknown): DeploymentReport {
     'The build runtime may not meet the project requirements',
     'The error references a Node.js compatibility requirement. A package.json engine declaration alone does not change the runtime on a hosting service.',
     [
-      'Read the exact required version in the log and package.json engines field.',
+      nodeRange
+        ? `package.json declares engines.node as ${nodeRange}. Compare it with the actual runtime in the failing run.`
+        : 'Read the exact required version in the log and package.json engines field.',
+      ...(nvmVersion
+        ? [`.nvmrc specifies ${nvmVersion}. Check that the host uses a version compatible with both the project and the failing dependency.`]
+        : []),
       'Set a compatible supported Node version in the CI setup or hosting runtime settings.',
       'Use the same runtime locally and in the build service, then repeat the install and build.',
     ],
@@ -103,51 +133,40 @@ export function inspectDeployment(untrusted: unknown): DeploymentReport {
   );
 
   let patch: DeploymentReport['patch'] = null;
-  const packageFile = input.files.find((file) => file.path === 'package.json');
   if (
     packageFile &&
+    packageData &&
     findings.some((finding) => finding.id === 'missing-build')
   ) {
-    try {
-      const data = JSON.parse(packageFile.text);
-      const scripts = data.scripts;
-      const hasNext =
-        typeof data.dependencies?.next === 'string' ||
-        typeof data.devDependencies?.next === 'string';
-      if (
-        data &&
-        typeof data === 'object' &&
-        !Array.isArray(data) &&
-        hasNext &&
-        (scripts === undefined ||
-          (scripts &&
-            typeof scripts === 'object' &&
-            !Array.isArray(scripts))) &&
-        !Object.hasOwn(scripts || {}, 'build') &&
-        data.workspaces === undefined
-      ) {
-        data.scripts = { ...scripts, build: 'next build' };
-        const eol = packageFile.text.includes('\r\n') ? '\r\n' : '\n';
-        const indent = packageFile.text.match(/\n([\t ]+)"/)?.[1] || '  ';
-        const after =
-          JSON.stringify(data, null, indent).replace(/\n/g, eol) + eol;
-        patch = {
-          path: packageFile.path,
-          before: packageFile.text,
+    const scripts = packageData.scripts;
+    const hasNext =
+      typeof packageData.dependencies?.next === 'string' ||
+      typeof packageData.devDependencies?.next === 'string';
+    if (
+      hasNext &&
+      (scripts === undefined ||
+        (scripts && typeof scripts === 'object' && !Array.isArray(scripts))) &&
+      !Object.hasOwn(scripts || {}, 'build') &&
+      packageData.workspaces === undefined
+    ) {
+      const eol = packageFile.text.includes('\r\n') ? '\r\n' : '\n';
+      const indent = packageFile.text.match(/\n([\t ]+)"/)?.[1] || '  ';
+      const updated = { ...packageData, scripts: { ...scripts, build: 'next build' } };
+      const after = JSON.stringify(updated, null, indent).replace(/\n/g, eol) + eol;
+      patch = {
+        path: packageFile.path,
+        before: packageFile.text,
+        after,
+        diff: createTwoFilesPatch(
+          'a/package.json',
+          'b/package.json',
+          packageFile.text,
           after,
-          diff: createTwoFilesPatch(
-            'a/package.json',
-            'b/package.json',
-            packageFile.text,
-            after,
-            '',
-            '',
-            { context: 3 },
-          ),
-        };
-      }
-    } catch {
-      /* An invalid package file remains review context, never an automatic edit. */
+          '',
+          '',
+          { context: 3 },
+        ),
+      };
     }
   }
   return {

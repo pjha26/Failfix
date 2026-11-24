@@ -127,6 +127,29 @@ describe('deployment signature review', () => {
       patch: null,
     });
   });
+  it('anchors npm findings to specific error lines and uses available project settings', () => {
+    const npmLockfileLine = 'npm error The `npm ci` command can only install with an existing package-lock.json or';
+    const files = [
+      { path: 'package.json', text: '{"packageManager":"npm@11.5.2","engines":{"node":">=999"}}' },
+      { path: '.nvmrc', text: '22.13.1\n' },
+    ];
+    const lockfile = inspectDeployment({
+      log: ['npm error code EUSAGE', 'npm error', npmLockfileLine].join('\n'),
+      files,
+    });
+    expect(lockfile.findings[0].evidence).toEqual([{ line: 3, text: npmLockfileLine }]);
+    expect(lockfile.findings[0].steps.join(' ')).toContain('npm@11.5.2');
+    expect(lockfile.patch).toBeNull();
+
+    const runtime = inspectDeployment({ log: 'npm error code EBADENGINE\nnpm error engine Unsupported engine', files });
+    expect(runtime.findings[0].id).toBe('node-version');
+    expect(runtime.findings[0].steps.join(' ')).toContain('engines.node as >=999');
+    expect(runtime.findings[0].steps.join(' ')).toContain('.nvmrc specifies 22.13.1');
+    expect(runtime.patch).toBeNull();
+
+    const usage = inspectDeployment({ log: '> pnpm install --frozen-lockfile\nnpm error code EUSAGE', files });
+    expect(usage.status).toBe('needs_context');
+  });
 });
 
 describe('audit regressions: deployment evidence and script matching', () => {
