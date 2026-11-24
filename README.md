@@ -61,8 +61,9 @@ Keep `.env.local` out of Git. Never use `NEXT_PUBLIC_*` for a provider key or pa
 1. Open `/workspace` and select a saved case or supply your own source, existing test, and failure output.
 2. Add intended behavior when the test does not fully specify it.
 3. Select **Analyze failure** for a live Groq proposal, **Open saved walkthrough** for a labeled teaching example, or the manual workflow below.
-4. Inspect the explanation, evidence, assumptions, source diff, and new regression test.
-5. Review downloaded code before applying it in your own project. Run the original tests, independent checks, and proposed regression test locally.
+4. If Groq asks for more context, answer in the review panel and select **Reanalyze with context**. FailFix resubmits the same source, test, and log with the clarified behavior.
+5. Inspect the explanation, evidence, assumptions, source diff, and new regression test.
+6. Review downloaded code before applying it in your own project. Run the original tests, independent checks, and proposed regression test locally. Record the outcome beside the patch for the current session.
 
 Cancellation, invalid input, provider errors, and rejected proposals retain the inputs. Editing inputs marks previous results stale.
 

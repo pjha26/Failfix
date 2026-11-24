@@ -95,7 +95,7 @@ test('provider errors preserve input and provide a recovery message', async ({
   ).toBeEnabled();
 });
 
-test('missing context shows questions without downloads', async ({ page }) => {
+test('a context answer survives an API error and becomes part of the reviewed inputs', async ({ page }) => {
   const analysis = {
     ...examples[0].analysis,
     status: 'needs_context',
@@ -103,11 +103,25 @@ test('missing context shows questions without downloads', async ({ page }) => {
     regressionTest: null,
     questions: ['What should a missing input return?'],
   };
-  await page.route('**/api/analyze', (route) =>
-    route.fulfill({
-      json: { analysis, artifacts: null, requestId: 'context', durationMs: 50 },
-    }),
-  );
+  const requests: (typeof examples)[number]['input'][] = [];
+  await page.route('**/api/analyze', (route) => {
+    requests.push(route.request().postDataJSON());
+    if (requests.length === 1) {
+      return route.fulfill({
+        json: { analysis, artifacts: null, requestId: 'context', durationMs: 50 },
+      });
+    }
+    if (requests.length === 2) {
+      return route.fulfill({ status: 502, json: { error: 'Groq is busy' } });
+    }
+    return route.fulfill({
+      json: {
+        ...buildArtifacts(examples[0].input, examples[0].analysis),
+        requestId: 'fix-' + requests.length,
+        durationMs: 50,
+      },
+    });
+  });
   await page.goto('/workspace');
   await page.getByRole('button', { name: /Zero is a value/ }).click();
   await page.getByRole('button', { name: 'Analyze failure' }).click();
@@ -117,6 +131,27 @@ test('missing context shows questions without downloads', async ({ page }) => {
   await expect(
     page.getByRole('button', { name: 'Download patch' }),
   ).toHaveCount(0);
+  const answer = page.getByLabel('Clarify expected behavior');
+  const reanalyze = page.getByRole('button', { name: 'Reanalyze with context' });
+  const clarification = 'Return 3 only for an undefined value. Preserve 0.';
+  await expect(reanalyze).toBeDisabled();
+  await answer.fill('€'.repeat(683));
+  await expect(reanalyze).toBeDisabled();
+  await answer.fill(clarification);
+  await reanalyze.click();
+  await expect(page.getByRole('alert', { name: 'Analysis error' })).toContainText('Groq is busy');
+  await expect(answer).toHaveValue(clarification);
+  await reanalyze.click();
+  await expect(page.getByRole('button', { name: 'Download patch' })).toBeEnabled();
+  await expect(page.getByLabel('What should happen?')).toHaveValue(clarification);
+  expect(requests[2]).toEqual({ ...requests[0], expectedBehavior: clarification });
+
+  const outcome = page.getByLabel('Local test outcome');
+  await expect(outcome).toHaveValue('not-run');
+  await outcome.selectOption('passed');
+  await expect(outcome).toHaveValue('passed');
+  await page.getByRole('button', { name: 'Analyze failure' }).click();
+  await expect(outcome).toHaveValue('not-run');
 });
 
 test('the workspace fits the viewport and is reachable by keyboard', async ({

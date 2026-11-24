@@ -1,6 +1,10 @@
 'use client';
 import { useState } from 'react';
-import type { AnalysisInput, AnalysisResponse } from '@/lib/contracts';
+import {
+  byteLength,
+  type AnalysisInput,
+  type AnalysisResponse,
+} from '@/lib/contracts';
 
 function download(filename: string, content: string) {
   const url = URL.createObjectURL(
@@ -19,22 +23,35 @@ export function ResultPanel({
   result,
   input,
   stale,
+  busy,
   savedExample,
   onEvidence,
+  onReanalyze,
 }: {
   result: AnalysisResponse;
   input: AnalysisInput;
   stale: boolean;
+  busy: boolean;
   savedExample: string | null;
   onEvidence: (
     kind: 'source' | 'test' | 'log',
     start: number,
     end: number,
   ) => void;
+  onReanalyze?: (expectedBehavior: string) => void;
 }) {
   const [view, setView] = useState<'patch' | 'test'>('patch');
   const [copyStatus, setCopyStatus] = useState('');
+  const [expectedBehavior, setExpectedBehavior] = useState(
+    input.expectedBehavior,
+  );
+  const [verification, setVerification] = useState('not-run');
   const { analysis, artifacts } = result;
+  const updatedBehavior = expectedBehavior.trim();
+  const behaviorTooLong = byteLength(updatedBehavior) > 2048;
+  const canReanalyze =
+    !busy && !behaviorTooLong && !!updatedBehavior &&
+    updatedBehavior !== input.expectedBehavior.trim();
   async function copy(value: string) {
     try {
       await navigator.clipboard.writeText(value);
@@ -117,6 +134,34 @@ export function ResultPanel({
               <li key={question}>{question}</li>
             ))}
           </ul>
+          {analysis.status === 'needs_context' && !stale && onReanalyze && (
+            <form
+              className="context-answer"
+              onSubmit={(event) => {
+                event.preventDefault();
+                if (canReanalyze) onReanalyze(updatedBehavior);
+              }}
+            >
+              <label htmlFor="review-expected-behavior">Clarify expected behavior</label>
+              <textarea
+                id="review-expected-behavior"
+                aria-describedby="review-context-help"
+                aria-invalid={behaviorTooLong}
+                rows={3}
+                value={expectedBehavior}
+                onChange={(event) => setExpectedBehavior(event.target.value)}
+                disabled={busy}
+              />
+              <p id="review-context-help">
+                {behaviorTooLong
+                  ? 'Keep the expected behavior within 2048 bytes.'
+                  : 'Include the relevant existing behavior and answer the questions in full. Reanalysis sends your inputs and this answer to Groq.'}
+              </p>
+              <button className="primary-button" disabled={!canReanalyze}>
+                Reanalyze with context
+              </button>
+            </form>
+          )}
         </section>
       )}
       {!!analysis.assumptions.length && (
@@ -246,6 +291,27 @@ export function ResultPanel({
               your project’s normal test command. Don’t overwrite an existing
               file with the regression-test name.
             </p>
+            {!stale && (
+              <>
+                <p>
+                  Rerun <code>{input.test.path}</code> and{' '}
+                  <code>{artifacts.regressionPath}</code>.
+                </p>
+                <label className="verification-outcome">
+                  Local test outcome
+                  <select
+                    value={verification}
+                    disabled={busy}
+                    onChange={(event) => setVerification(event.target.value)}
+                  >
+                    <option value="not-run">Not run</option>
+                    <option value="passed">Passed</option>
+                    <option value="still-failing">Still failing</option>
+                  </select>
+                </label>
+                <p>Your report applies to this result and stays in this browser tab.</p>
+              </>
+            )}
           </div>
         </>
       )}

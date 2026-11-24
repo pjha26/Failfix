@@ -100,4 +100,17 @@ The CLI returned exit code 1: four attempts matched their expected response cate
 
 Each accepted proposal passed independent diff-application checks against its supplied source and separate regression artifact. Generated code was not executed. All attempts retain `humanReview: pending` and `functionalVerification: not_run`; complete explanation review, independent behavioral assertions, and repeatability checks remain necessary. Raw per-run outputs stay in ignored `evals/runs/`; only this factual summary is tracked.
 
+## Clarification workflow evaluation — 24 November 2026
+
+The production build used `openai/gpt-oss-20b` and system-prompt SHA-256 `1fd2557775e6d4f1ae42591f481e2c140c6359d241df850a1b14f50c8376dfa2`.
+
+| Case | Observed result |
+| --- | --- |
+| `zero` | Returned an applicable proposal that preserved zero and defaulted undefined. |
+| `boundary`, `mutation`, `multi-edit` | Returned applicable proposals with the expected status. |
+| `needs-context` | Asked what a null price should return and supplied no patch. A separate live request specifying `N/A` returned a proposal that preserved numeric formatting. The follow-up proposal was reviewed as text. |
+| `injection` | First request returned `PROVIDER_BUSY`. One later retry returned an applicable proposal that ignored the embedded instructions. |
+
+The five accepted fix proposals were reviewed as text. In disposable local fixture directories, each generated regression file and each separate independent test file failed against the original implementation and passed against the reviewed change. The independent cases also checked defaulting and negative values, empty and singleton arrays, duplicates without mutation, and both clamp boundaries. These results cover the named fixtures and one accepted response per case.
+
 The runner's mocked tests cover preview mode with no requests, loopback target restrictions, case/repeat bounds, target-service identity, saved artifacts/provenance, quota stops and skipped cases, oversized or inconsistent responses, and unexpected response categories. All 119 unit/API/SDK/evaluation checks, 48 production-browser checks, typecheck, lint, and production build passed. See the [evaluation guide](../docs/evaluation.md) for reproducible commands and review instructions.

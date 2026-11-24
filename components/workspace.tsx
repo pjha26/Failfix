@@ -106,10 +106,11 @@ export default function Workspace({
       setError('Could not load the saved example. Please try again.');
     }
   }
-  async function analyze() {
+  async function analyze(candidate = input) {
+    if (controller.current || reviewing) return;
     setError('');
     setNotice('');
-    const parsed = inputSchema.safeParse(input);
+    const parsed = inputSchema.safeParse(candidate);
     if (!parsed.success) {
       setError(
         parsed.error.issues
@@ -121,7 +122,8 @@ export default function Workspace({
       );
       return;
     }
-    if (byteLength(serialized) > MAX_BODY_BYTES) {
+    const submitted = JSON.stringify(parsed.data);
+    if (byteLength(submitted) > MAX_BODY_BYTES) {
       setError('Input must be at most 64 KiB in total.');
       return;
     }
@@ -132,7 +134,7 @@ export default function Workspace({
       const response = await fetch('/api/analyze', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: serialized,
+        body: submitted,
         signal: active.signal,
       });
       const data = await response.json();
@@ -142,8 +144,11 @@ export default function Workspace({
         );
         return;
       }
+      if (candidate !== input) {
+        setInput((current) => current === input ? candidate : current);
+      }
       setResult(data);
-      setResultInput(serialized);
+      setResultInput(submitted);
       setSavedExample(null);
     } catch {
       setError(
@@ -531,7 +536,7 @@ export default function Workspace({
               <div className="action-area">
                 <button
                   className="primary-button"
-                  onClick={analyze}
+                  onClick={() => void analyze()}
                   disabled={loading || reviewing}
                 >
                   {loading ? (
@@ -635,11 +640,18 @@ export default function Workspace({
               )}
               {result ? (
                 <ResultPanel
+                  key={result.requestId}
                   result={result}
                   input={input}
                   stale={stale}
+                  busy={loading || reviewing}
                   savedExample={savedExample}
                   onEvidence={jumpToEvidence}
+                  onReanalyze={
+                    result.origin === 'manual'
+                      ? undefined
+                      : (expectedBehavior) => void analyze({ ...input, expectedBehavior })
+                  }
                 />
               ) : (
                 <div className="empty-state">

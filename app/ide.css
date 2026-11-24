@@ -720,6 +720,30 @@
   border-color: var(--line);
   border-radius: 2px;
 }
+.context-answer {
+  display: grid;
+  gap: 8px;
+  margin-block: 12px 20px;
+}
+.context-answer textarea,
+.verification-outcome select {
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 8px;
+}
+.context-answer textarea { width: 100%; resize: vertical; }
+.context-answer p { margin: 0; }
+.context-answer button { justify-self: start; }
+.verification-outcome {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.workspace-ide .verify-note code { overflow-wrap: anywhere; }
 .workspace-ide .empty-state {
   min-height: 480px;
   padding: 65px 22px;
